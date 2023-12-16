@@ -32,8 +32,10 @@ class Template{
 
   //DIRECTORY_SEPARATOR pour adapter slash cheminement
   public static function include_view($view) {
+    //echo 'Including view: ' . $view . '<br>'; //Débogage
     include(ROOT_PATH . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $view . '.php');
 }
+
 
   public static function send_json($json = []){
     header('Content-Type: application/json; charset=utf-8');
