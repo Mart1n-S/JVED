@@ -2,7 +2,7 @@
 
 ## 📸Diagrammes de cas d'utilisation
 
-![vue diagramme_cas_utilisation1](.github/assets/diagrammeCasUtilisation1.png)![vue diagramme_cas_utilisation2](.github/assets/diagrammeCasUtilisation2.png)<br>
+![vue diagramme_cas_utilisation1](.github/assets/DiagrammeCasUtilisation1.png) ![vue diagramme_cas_utilisation2](.github/assets/diagrammeCasUtilisation2.png)<br>
 
 ## 📸MCD
 
