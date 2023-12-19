@@ -1,8 +1,13 @@
 <h1 align="center">JV&D</h1>
 
-## 📸Diagramme de cas d'utilisation
-![vue diagramme_cas_utilisation](.github/assets/diagrammeCasUtilisation.png)<br>
+## 📸Diagrammes de cas d'utilisation
+
+![vue diagramme_cas_utilisation1](.github/assets/diagrammeCasUtilisation1.png)![vue diagramme_cas_utilisation2](.github/assets/diagrammeCasUtilisation2.png)<br>
+
 ## 📸MCD
-![vue diagramme_cas_utilisation](.github/assets/MCD.png)<br>
+
+![vue MCD](.github/assets/MCD.png)<br>
+
 ## 📸Diagramme de classe
-![vue diagramme_cas_utilisation](.github/assets/diagrammeClasse.png)<br>
+
+![vue diagramme_classe](.github/assets/diagrammeClasse.png)<br>
