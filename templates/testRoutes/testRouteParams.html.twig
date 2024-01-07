@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+{% block title %}Avec Params
+{% endblock %}
+{% block body %}
+	<h1>id :
+		{{param_id}}</h1>
+
+	<a href="{{ path('accueil') }}">
+		<button>Accueil</button>
+	</a>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+	<h1>{{title}}</h1>
+	<a href="{{ path('test') }}">
+		<button>sans paraam</button>
+	</a>
+	<a href="{{ path('test2', {'id': 2}) }}">
+		<button>avec params 2</button>
+	</a>
+	<a href="{{ path('test2', {'id': 1}) }}">
+		<button>avec params non valide</button>
+	</a>
+{% endblock %}

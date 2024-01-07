@@ -1,0 +1,12 @@
+{% extends "base.html.twig" %}
+{% block title %}Erreur
+	{{typeErreur}}
+{% endblock %}
+{% block body %}
+	<h1>404 Page Not Found
+		{{param_id}}</h1>
+
+	<a href="{{ path('accueil') }}">
+		<button>Accueil</button>
+	</a>
+{% endblock %}
