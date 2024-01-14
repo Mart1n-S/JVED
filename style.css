@@ -1,3 +1,135 @@
+@import url("https://fonts.googleapis.com/css2?family=Fuzzy+Bubbles&family=Manrope:wght@500&family=Open+Sans:wght@300&family=Poppins:wght@300;400;500;600;700&display=swap");
+:root {
+  --bg-color-dark-1: #323149;
+  --bg-color-dark-light: #474664;
+  --bg-color-2: radial-gradient(
+      211.88% 141.42% at 100% 100%,
+      #c5aa4a 0.01%,
+      #4e959a 52.08%,
+      #4d37a3 100%
+    )
+    no-repeat;
+  --bg-color-button-purple: #6d67e4;
+  --color-text-white: #fff;
+}
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border: 0;
+  text-decoration: none;
+}
+
+body {
+  font-family: monospace, sans-serif;
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.navigationLien {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+.navigationLien a {
+  color: var(--color-text-white);
+  font-weight: bold;
+}
+.navigationLien .navigationLienConnexion {
+  border-radius: 14px;
+  background-color: var(--bg-color-button-purple);
+  padding: 7px 16px;
+}
+
+footer {
+  margin-top: 64px;
+  display: flex;
+  justify-content: center;
+  color: var(--color-text-white);
+}
+
+body {
+  background: var(--bg-color-2);
+  padding: 4px;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+}
+
+.accueil {
+  display: flex;
+  flex-direction: column;
+  color: var(--color-text-white);
+  margin-top: 64px;
+}
+.accueilTitre {
+  margin: 32px 0;
+}
+.accueilTitrePrincipal {
+  font-size: 50px;
+  margin-bottom: 32px;
+}
+.accueilTitreTexte {
+  font-size: 18px;
+}
+.accueilTendance {
+  margin: 32px 0;
+}
+.accueilTendanceTitre {
+  font-size: 18px;
+}
+.accueilTendanceTableau {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+}
+.accueilTendanceTableauLien {
+  text-align: end;
+  margin: 32px 0 16px 0;
+  font-size: 14px;
+}
+.accueilTendanceTableauLien a {
+  color: var(--color-text-white);
+}
+.accueilTendanceTableauContent {
+  border-collapse: collapse;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+}
+.accueilTendanceTableauContent thead {
+  background-color: var(--bg-color-dark-1);
+}
+.accueilTendanceTableauContent th,
+.accueilTendanceTableauContent td {
+  padding: 16px;
+  text-align: center;
+}
+.accueilTendanceTableauContent th:first-child {
+  border-radius: 12px 0 0 0;
+}
+.accueilTendanceTableauContent th:last-child {
+  border-radius: 0 12px 0 0;
+}
+.accueilTendanceTableauContent tr:last-child {
+  border-radius: 0 0 12px 12px;
+}
+.accueilTendanceTableauContent tr:last-child td:first-child {
+  border-radius: 0 0 0 12px;
+}
+.accueilTendanceTableauContent tr:last-child td:last-child {
+  border-radius: 0 0 12px 0;
+}
+.accueilTendanceTableauContentOdd-row {
+  background-color: var(--bg-color-dark-1);
+}
+.accueilTendanceTableauContentEven-row {
+  background-color: var(--bg-color-dark-light);
+}
 
 /*# sourceMappingURL=style.css.map */

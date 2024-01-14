@@ -1,14 +1,48 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-	<h1>{{title}}</h1>
-	<a href="{{ path('test') }}">
-		<button>sans paraam</button>
-	</a>
-	<a href="{{ path('test2', {'id': 2}) }}">
-		<button>avec params 2</button>
-	</a>
-	<a href="{{ path('test2', {'id': 1}) }}">
-		<button>avec params non valide</button>
-	</a>
+	{{ include('./partials/header.html.twig') }}
+	<main>
+		<section class="accueil">
+			<div class="accueilTitre">
+				<h1 class="accueilTitrePrincipal">Bienvenue sur
+					<br>
+					Jeux Vidéos & débats !
+				</h1>
+				<p class="accueilTitreTexte">Vous trouverez ici toutes les actualités liées aux jeux et des forums
+					<br>
+					pour partager vos passions</p>
+			</div>
+			<div class="accueilTendance">
+				<h2 class="accueilTendanceTitre">LISTE DES DERNIERS FORUMS TENDANCES</h2>
+				<div class="accueilTendanceTableau">
+					<div class="accueilTendanceTableauLien">
+						<a href="#">Voir tous les forums ></a>
+					</div>
+					<table class="accueilTendanceTableauContent">
+						<thead>
+							<tr>
+								<th>SUJET</th>
+								<th>AUTEUR</th>
+								<th>MESSAGE</th>
+								<th>DERNIERE ACTIVITE</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for topic in topTopics %}
+								<tr class="{{ cycle(['accueilTendanceTableauContentOdd-row', 'accueilTendanceTableauContentEven-row'], loop.index) }}">
+									<td>{{ topic.nom }}</td>
+									<td>{{ topic.auteur }}</td>
+									<td>{{ topic.nb_messages is not null ? topic.nb_messages : 0 }}</td>
+									<td>{{ topic.derniere_activite|date("d-m-Y") }}</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	{{ include('./partials/footer.html.twig') }}
 {% endblock %}

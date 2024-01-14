@@ -47,4 +47,31 @@ class Database
 
         return $this->connexion;
     }
+
+    /**
+     * Méthode pour obtenir les cinq sujets les plus commentés.
+     *
+     * @return array|null Retourne un tableau des sujets les plus commentés ou null en cas d'erreur
+     */
+    public function getTopTopics()
+    {
+        try {
+            $query = "
+                SELECT nom, topic.auteur, topic.updatedAt AS derniere_activite, COUNT(content.id) AS nombre_commentaires
+                FROM topic 
+                LEFT JOIN content ON topic.id = idTopic
+                GROUP BY topic.id
+                ORDER BY COUNT(content.id) DESC, topic.updatedAt DESC
+                LIMIT 5;
+            ";
+
+            $stmt = $this->connect()->prepare($query);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
 }

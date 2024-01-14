@@ -4,10 +4,11 @@ require_once './config/twig_config.php';
 require_once './routes/routes.php';
 require_once './models/class_database.php';
 require_once './config/config.php';
+require_once './models/class_affichage.php';
 
 // Connexion à la base de données
 $db = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
-$connexionDB = $db->connect();
+
 
 // Récupérer l'instance du routeur en utilisant la méthode statique de la classe Routes
 $router = Routes::getRouter();
@@ -26,7 +27,7 @@ if (is_array($match)) {
     $twigConfig = new TwigConfig($router);
 
     // Instancier le contrôleur en passant l'instance de TwigConfig et de PDO et appeler la méthode associée
-    $controller = new $controllerName($twigConfig, $connexionDB);
+    $controller = new $controllerName($twigConfig, $db);
 
     call_user_func_array([$controller, $methodName], [$match]);
 } else {

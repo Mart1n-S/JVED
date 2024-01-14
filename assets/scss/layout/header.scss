@@ -1,0 +1,31 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border: 0;
+  text-decoration: none;
+}
+
+body {
+  font-family: monospace, sans-serif;
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  &Lien {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+    a {
+      color: var(--color-text-white);
+      font-weight: bold;
+    }
+    .navigationLienConnexion {
+      border-radius: 14px;
+      background-color: var(--bg-color-button-purple);
+      padding: 7px 16px;
+    }
+  }
+}
