@@ -6,8 +6,8 @@
 
 ## 📸MCD
 
-![vue MCD](.github/assets/MCD.png)<br>
+![vue MCD](.github/assets/v2MCD.png)<br>
 
 ## 📸Diagramme de classe
 
-![vue diagramme_classe](.github/assets/diagrammeClasse.png)<br>
+![vue diagramme_classe](.github/assets/diagrammeClasseV2.png)<br>

@@ -1,0 +1,79 @@
+body {
+  background: var(--bg-color-2);
+  padding: 4px;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+}
+
+.accueil {
+  display: flex;
+  flex-direction: column;
+  color: var(--color-text-white);
+  margin-top: 64px;
+  &Titre {
+    margin: 32px 0;
+    &Principal {
+      font-size: 50px;
+      margin-bottom: 32px;
+    }
+    &Texte {
+      font-size: 18px;
+    }
+  }
+  &Tendance {
+    margin: 32px 0;
+    &Titre {
+      font-size: 18px;
+    }
+    &Tableau {
+      display: flex;
+      flex-direction: column;
+      padding: 4px;
+      &Lien {
+        a {
+          color: var(--color-text-white);
+        }
+        text-align: end;
+        margin: 32px 0 16px 0;
+        font-size: 14px;
+      }
+      &Content {
+        border-collapse: collapse;
+        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+        border-radius: 12px;
+        thead {
+          background-color: var(--bg-color-dark-1);
+        }
+        th,
+        td {
+          padding: 16px;
+          text-align: center;
+        }
+        th:first-child {
+          border-radius: 12px 0 0 0;
+        }
+        th:last-child {
+          border-radius: 0 12px 0 0;
+        }
+        tr:last-child {
+          border-radius: 0 0 12px 12px;
+        }
+        tr:last-child td:first-child {
+          border-radius: 0 0 0 12px;
+        }
+        tr:last-child td:last-child {
+          border-radius: 0 0 12px 0;
+        }
+        &Odd-row {
+          background-color: var(--bg-color-dark-1);
+        }
+        &Even-row {
+          background-color: var(--bg-color-dark-light);
+        }
+      }
+    }
+  }
+}

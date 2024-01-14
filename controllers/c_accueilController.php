@@ -24,12 +24,13 @@ class c_accueilController
      */
     public function index(): void
     {
+        $affichage = new Affichage($this->connexionDB);
         // Chargement du template spécifique à la page d'accueil
         $template = $this->twig->getTwig()->load('accueil/index.html.twig');
 
         // Affichage du template avec les données nécessaires
         $template->display([
-            'title' => 'Page d\'accueil',
+            'topTopics' => $affichage->getTopTopicsAccueil()
         ]);
     }
 }
