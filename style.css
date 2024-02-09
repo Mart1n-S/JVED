@@ -9,8 +9,11 @@
       #4d37a3 100%
     )
     no-repeat;
+  --bg-color-white: #fff;
   --bg-color-button-purple: #6d67e4;
   --color-text-white: #fff;
+  --color-text-grey: #525252;
+  --color-text-purple: #6d67e4;
 }
 
 * {
@@ -29,6 +32,7 @@ body {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  padding: 4px 4px 0 4px;
 }
 .navigationLien {
   display: flex;
@@ -54,12 +58,12 @@ footer {
 
 body {
   background: var(--bg-color-2);
-  padding: 4px;
 }
 
-main {
+.mainAccueil {
   display: flex;
   justify-content: center;
+  padding: 4px 4px 0 4px;
 }
 
 .accueil {
@@ -130,6 +134,216 @@ main {
 }
 .accueilTendanceTableauContentEven-row {
   background-color: var(--bg-color-dark-light);
+}
+
+.mainLogin {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  height: 100vh;
+}
+
+.back {
+  width: 50%;
+  position: absolute;
+  padding: 32px 0 0 32px;
+}
+.back a {
+  color: var(--color-text-grey);
+  font-size: 64px;
+  font-weight: bolder;
+}
+
+.login {
+  background-color: var(--bg-color-white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+  padding: 64px;
+}
+.loginTitre {
+  font-size: 39px;
+  margin-bottom: 64px;
+  text-align: center;
+}
+.loginContent {
+  width: 420px;
+}
+.loginContentForm {
+  display: flex;
+  flex-direction: column;
+}
+.loginContentFormInput {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.loginContentFormInput input {
+  border: 1px #c2c2c2 solid;
+  border-radius: 16px;
+  padding: 12px;
+  width: 100%;
+}
+.loginContentFormInputPassword {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+.loginContentFormInputPassword span {
+  position: absolute;
+  right: 12px;
+  color: var(--color-text-grey);
+  cursor: pointer;
+}
+.loginContentFormResetPassword {
+  text-align: end;
+  margin: 12px 0 64px 0;
+}
+.loginContentFormResetPassword a {
+  color: var(--color-text-grey);
+  text-decoration: underline;
+}
+.loginContentFormButton {
+  align-self: center;
+  background-color: var(--bg-color-button-purple);
+  color: var(--bg-color-white);
+  font-weight: bold;
+  border-radius: 32px;
+  width: 200px;
+  height: 42px;
+  font-size: 18px;
+}
+.loginContentFormNouveauUser {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+.loginContentFormNouveauUser a {
+  margin-left: 12px;
+  color: var(--color-text-purple);
+  font-weight: bold;
+}
+
+.mainInscription {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  height: 100vh;
+}
+
+.back {
+  width: 50%;
+  position: absolute;
+  padding: 32px 0 0 32px;
+}
+.back a {
+  color: var(--color-text-grey);
+  font-size: 64px;
+  font-weight: bolder;
+}
+
+.inscription {
+  background-color: var(--bg-color-white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+  padding: 64px;
+}
+.inscriptionTitre {
+  font-size: 39px;
+  margin-bottom: 64px;
+  text-align: center;
+}
+.inscriptionContent {
+  width: 420px;
+}
+.inscriptionContentForm {
+  display: flex;
+  flex-direction: column;
+}
+.inscriptionContentFormInput {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.inscriptionContentFormInput input {
+  border: 1px #c2c2c2 solid;
+  border-radius: 16px;
+  padding: 12px;
+  width: 100%;
+}
+.inscriptionContentFormInputPassword, .inscriptionContentFormInputConfirmPassword {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+.inscriptionContentFormInputPassword span, .inscriptionContentFormInputConfirmPassword span {
+  position: absolute;
+  right: 12px;
+  color: var(--color-text-grey);
+  cursor: pointer;
+}
+.inscriptionContentFormInputCritere {
+  display: none;
+  flex-direction: column;
+  margin-left: 12px;
+  gap: 4px;
+}
+.inscriptionContentFormInputCritere span {
+  color: red;
+  transition: color 0.3s ease;
+}
+.inscriptionContentFormInputCritere span.valid {
+  color: green;
+}
+.inscriptionContentFormInputCritere span.invalid {
+  color: red;
+}
+.inscriptionContentFormInputError {
+  text-align: center;
+}
+.inscriptionContentFormInputError span {
+  display: none;
+  color: red;
+}
+.inscriptionContentFormInputError #error_c {
+  display: block;
+  color: red;
+}
+.inscriptionContentFormInputSuccess {
+  text-align: center;
+}
+.inscriptionContentFormInputSuccess #success {
+  color: green;
+}
+.inscriptionContentFormButton {
+  align-self: center;
+  background-color: var(--bg-color-button-purple);
+  color: var(--bg-color-white);
+  font-weight: bold;
+  border-radius: 32px;
+  width: 200px;
+  height: 42px;
+  font-size: 18px;
+  margin: 64px 0 16px 0;
+}
+.inscriptionContentFormLogin {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+.inscriptionContentFormLogin a {
+  margin-left: 12px;
+  color: var(--color-text-purple);
+  font-weight: bold;
 }
 
 /*# sourceMappingURL=style.css.map */

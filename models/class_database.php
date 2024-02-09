@@ -29,7 +29,7 @@ class Database
      *
      * @return PDO|null Retourne l'instance PDO ou null en cas d'erreur de connexion
      */
-    public function connect()
+    public function connect(): PDO|null
     {
         $this->connexion = null;
 
@@ -53,7 +53,7 @@ class Database
      *
      * @return array|null Retourne un tableau des sujets les plus commentés ou null en cas d'erreur
      */
-    public function getTopTopics()
+    public function getTopTopics(): array|null
     {
         try {
             $query = "
@@ -69,6 +69,115 @@ class Database
             $stmt->execute();
 
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
+
+    /**
+     * Récupère le nombre d'utilisateurs avec l'email spécifié.
+     *
+     * @param string $email L'email de l'utilisateur à rechercher.
+     * @return int|false Le nombre d'utilisateurs avec l'email spécifié ou false si une erreur se produit.
+     */
+    public function getUserMail(string $email): int|false
+    {
+        try {
+            $query = "
+                SELECT COUNT(*)
+                FROM user 
+                WHERE email = :email;
+            ";
+
+            $stmt = $this->connect()->prepare($query);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+
+            return $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
+
+    /**
+     * Récupère tous les rôles disponibles.
+     *
+     * @return array|null Un tableau associatif contenant les rôles ou null en cas d'erreur.
+     */
+    public function getRoles(): array|null
+    {
+        try {
+            $query = "
+                SELECT *
+                FROM role;
+            ";
+
+            $stmt = $this->connect()->prepare($query);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
+
+    /**
+     * Crée un nouvel utilisateur dans la base de données.
+     *
+     * @param string $pseudo Le pseudo de l'utilisateur.
+     * @param string $email L'email de l'utilisateur.
+     * @param string $password Le mot de passe de l'utilisateur.
+     * @param string $userRoleId L'ID du rôle de l'utilisateur.
+     * @param string $token Le token générer pour check le mail.
+     * @param string $dateToken Date de validité (24h).
+     * @return bool|null True si l'utilisateur a été créé avec succès, sinon null en cas d'erreur.
+     */
+    public function createUser(string $pseudo, string $email, string $password, string $userRoleId, string $token, string $dateToken): bool
+    {
+        try {
+            $query = "INSERT INTO user (pseudo, email, password, idRole, token, dateToken) VALUES (:pseudo, :email, :pass, :userRoleId, :token, :dateToken)";
+
+            $stmt = $this->connect()->prepare($query);
+            $stmt->bindParam(':pseudo', $pseudo, PDO::PARAM_STR);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->bindParam(':pass', $password, PDO::PARAM_STR);
+            $stmt->bindParam(':userRoleId', $userRoleId, PDO::PARAM_STR);
+            $stmt->bindParam(':token', $token, PDO::PARAM_STR);
+            $stmt->bindParam(':dateToken', $dateToken, PDO::PARAM_STR);
+
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
+
+    /**
+     * Récupère les informations de l'utilisateur à partir de son email.
+     *
+     * @param string $email L'email de l'utilisateur à rechercher.
+     * @return array|bool Retourne un tableau contenant les informations de l'utilisateur s'il est trouvé, sinon false en cas d'échec ou d'erreur.
+     */
+    public function getUser(string $email): array|bool
+    {
+        try {
+            $query = "
+            SELECT user.*, roleName as role 
+            FROM user 
+            INNER JOIN role ON user.idRole = role.id 
+            WHERE (bloque IS NULL OR bloque <> 1) 
+            AND emailCheck != 0 
+            AND email = :email;
+            ";
+
+            $stmt = $this->connect()->prepare($query);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return null;

@@ -14,7 +14,17 @@
 				<a href="{{path('accueil')}}">Jeux Vidéos</a>
 			</li>
 			<li>
-				<a class="navigationLienConnexion" href="{{path('accueil')}}">Connexion</a>
+
+				{# Vérifiez si l'utilisateur est connecté #}
+				{% if user is not null %}
+
+					<a class="navigationLienConnexion" href="{{ path('deconnexion') }}">
+						Se déconnecter</a>
+				{% else %}
+
+					<a class="navigationLienConnexion" href="{{ path('login') }}">Connexion</a>
+				{% endif %}
+
 			</li>
 		</ul>
 

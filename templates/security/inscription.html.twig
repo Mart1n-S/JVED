@@ -1,0 +1,75 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+	<main class="mainInscription">
+		<div class="back">
+			<span class="material-symbols-outlined">
+				<a href="{{path('accueil')}}">
+
+					arrow_back</a>
+			</span>
+
+
+		</div>
+
+		<section class="inscription">
+			<div class="inscriptionTitre">
+				<h1>Créer un compte</h1>
+			</div>
+			<div class="inscriptionContent">
+				<form class="inscriptionContentForm" method="post" action="{{path('inscription')}}" onsubmit="return validateForm()">
+					<div class="inscriptionContentFormInput">
+						<input type="text" name="pseudo" placeholder="Pseudo" minlength="3" maxlength="15" required>
+						<input type="mail" name="mail" placeholder="Adresse email" required>
+						<div class="inscriptionContentFormInputPassword">
+							<input type="password" name="password" id="password" oninput="updatePasswordCriteria()" class="password" placeholder="Mot de passe" autocomplete="on" title="Taille 8-24 caractères avec au moins : 1 minuscule / 1 majuscule / 1 chiffre / 1 caractère spécial" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,24}$" required>
+							<span onclick="changeVisibility()" class="material-symbols-outlined">
+								visibility
+							</span>
+						</div>
+						<div id="passwordRequirements" class="inscriptionContentFormInputCritere">
+							<span id="lowercase">Au moins une minuscule</span>
+							<span id="uppercase">Au moins une majuscule</span>
+							<span id="digit">Au moins un chiffre</span>
+							<span id="specialChar">Au moins un caractère spécial</span>
+							<span id="length">Longueur minimale de 8 caractères</span>
+						</div>
+						<div class="inscriptionContentFormInputConfirmPassword">
+							<input type="password" name="confirmPassword" id="confirmPassword" oninput="validatePasswordMatch()" class="password" placeholder="Confirmer le mot de passe" autocomplete="on" required>
+						</div>
+						<div class="inscriptionContentFormInputError">
+							{% if error is defined and error is not empty %}
+								<div>
+									<ul>
+										{% for errorMessage in error %}
+											<li id="error_c">{{ errorMessage }}</li>
+										{% endfor %}
+									</ul>
+								</div>
+							{% endif %}
+							<span id="passwordMatchMessage">Les mots de passe ne correspondent pas</span>
+							<span id="error">Merci de remplir tous les champs</span>
+						</div>
+						<div class="inscriptionContentFormInputSuccess">
+							{% if success is defined and success is not empty  %}
+								<div>
+									<p id="success">{{ success }}</p>
+								</div>
+							{% endif %}
+						</div>
+					</div>
+					<button class="inscriptionContentFormButton" type="submit">S'inscrire</button>
+					<div class="inscriptionContentFormLogin">
+						<p>Déjà inscrit ?</p>
+						<a href="{{path('login')}}">Se connecter</a>
+					</div>
+				</form>
+
+			</div>
+		</section>
+	</main>
+
+{% endblock %}
+{% block javascripts %}
+	<script src="{{ asset('js/security.js') }}"></script>
+{% endblock %}

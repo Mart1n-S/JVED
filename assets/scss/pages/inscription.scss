@@ -1,0 +1,124 @@
+.mainInscription {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  height: 100vh;
+}
+
+.back {
+  width: 50%;
+  position: absolute;
+  padding: 32px 0 0 32px;
+  a {
+    color: var(--color-text-grey);
+    font-size: 64px;
+    font-weight: bolder;
+  }
+}
+
+.inscription {
+  background-color: var(--bg-color-white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+  padding: 64px;
+  &Titre {
+    font-size: 39px;
+    margin-bottom: 64px;
+    text-align: center;
+  }
+  &Content {
+    width: 420px;
+    &Form {
+      display: flex;
+      flex-direction: column;
+      &Input {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        input {
+          border: 1px #c2c2c2 solid;
+          border-radius: 16px;
+          padding: 12px;
+          width: 100%;
+        }
+        &Password,
+        &ConfirmPassword {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          position: relative;
+          span {
+            position: absolute;
+            right: 12px;
+            color: var(--color-text-grey);
+            cursor: pointer;
+          }
+        }
+        &Critere {
+          display: none;
+          flex-direction: column;
+          margin-left: 12px;
+          gap: 4px;
+          // #passwordRequirements 
+          span {
+            color: red;
+            transition: color 0.3s ease;
+          }
+
+          // #passwordRequirements 
+          span.valid {
+            color: green;
+          }
+
+          // #passwordRequirements 
+          span.invalid {
+            color: red;
+          }
+        }
+        &Error {
+          text-align: center;
+          span{
+              display: none;
+              color: red;
+          }
+          #error_c{
+            display: block;
+            color: red;
+          }
+        
+        }
+        &Success{
+          text-align: center;
+          #success{
+            color: green;
+          }
+        }
+      }
+      &Button {
+        align-self: center;
+        background-color: var(--bg-color-button-purple);
+        color: var(--bg-color-white);
+        font-weight: bold;
+        border-radius: 32px;
+        width: 200px;
+        height: 42px;
+        font-size: 18px;
+        margin: 64px 0 16px 0;
+      }
+      &Login {
+        display: flex;
+        justify-content: center;
+        margin-top: 32px;
+        a {
+          margin-left: 12px;
+          color: var(--color-text-purple);
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}

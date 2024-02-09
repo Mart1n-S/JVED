@@ -1,11 +1,12 @@
 <?php
+session_start();
 require_once './vendor/autoload.php';
 require_once './config/twig_config.php';
 require_once './routes/routes.php';
 require_once './models/class_database.php';
 require_once './config/config.php';
 require_once './models/class_affichage.php';
-
+require_once './models/class_user.php';
 // Connexion à la base de données
 $db = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
 
