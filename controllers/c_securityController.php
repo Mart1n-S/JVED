@@ -323,7 +323,7 @@ class c_securityController
         $headers .= " Content-Type: text/html; charset=UTF-8\r\n";
 
         // Utiliser l'adresse IP du conteneur MailDev comme hôte SMTP (mettre à jour à chaque docker-compose up -d car l'ip du conteneur change)
-        $smtpHost = '172.21.0.2';
+        $smtpHost = MAILDEV_IP;
         $smtpPort = 1025;
 
         // Fonction mail() de PHP pour envoyer l'e-mail
