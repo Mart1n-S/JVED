@@ -18,6 +18,25 @@
   --color-text-red: red;
 }
 
+.template1 {
+  --bg-color-dark-1: #3e4931;
+  --bg-color-dark-light: #556446;
+  --bg-color-2: radial-gradient(
+      211.88% 141.42% at 100% 100%,
+      #75c54a 0.01%,
+      #7d4e9a 52.08%,
+      #a37137 100%
+    )
+    no-repeat;
+  --bg-color-white: #fff;
+  --bg-color-button-purple: #aae467;
+  --color-text-white: #fff;
+  --color-text-grey: #525252;
+  --color-text-purple: #6d67e4;
+  --color-text-green:green;
+  --color-text-red: red;
+}
+
 * {
   margin: 0;
   padding: 0;

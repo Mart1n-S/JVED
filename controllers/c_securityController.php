@@ -5,6 +5,7 @@ class c_securityController
     private $twig;
     private $connexionDB;
     private $security;
+    private $userSession;
 
     /**
      * Constructeur prenant une instance de TwigConfig en paramètre
@@ -12,11 +13,12 @@ class c_securityController
      * @param $twig Instance de TwigConfig
      * @param $connexionDB Instance de PDO pour la connexion à la base de données
      */
-    public function __construct($twig, $connexionDB)
+    public function __construct($twig, $connexionDB, $userSession)
     {
         $this->twig = $twig;
         $this->connexionDB = $connexionDB;
         $this->security = new Security($this->connexionDB);
+        $this->userSession = $userSession;
 
     }
 
@@ -28,9 +30,9 @@ class c_securityController
     public function index(): void
     {
 
-        $user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
+        
 
-        if ($user) {
+        if ( $this->userSession) {
             header('Location: /');
             exit;
         }
@@ -90,9 +92,9 @@ class c_securityController
      */
     public function inscription(): void
     {
-        $user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
+       
 
-        if ($user) {
+        if ( $this->userSession) {
             header('Location: /');
             exit;
         }
@@ -225,7 +227,8 @@ class c_securityController
         $template->display([
             'token' => $token,
             'error' => $errorMessages,
-            'success' => $successMessage
+            'success' => $successMessage,
+            'user' =>  $this->userSession
         ]);
     }
 
@@ -290,7 +293,8 @@ class c_securityController
         // Affichage du template avec les données nécessaires
         $template->display([
             'error' => $errorMessages,
-            'success' => $successMessage
+            'success' => $successMessage,
+            'user' =>  $this->userSession
         ]);
     }
 
@@ -354,7 +358,8 @@ class c_securityController
         // Affichage du template avec les données nécessaires
         $template->display([
             'error' => $errorMessages,
-            'success' => $successMessage
+            'success' => $successMessage,
+            'user' =>  $this->userSession
         ]);
     }
 
@@ -422,7 +427,8 @@ class c_securityController
         $template->display([
             'token' => $token,
             'error' => $errorMessages,
-            'success' => $successMessage
+            'success' => $successMessage,
+            'user' =>  $this->userSession
         ]);
     }
 

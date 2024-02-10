@@ -4,6 +4,7 @@ class c_accueilController
 {
     private $twig;
     private $connexionDB;
+    private $userSession;
 
     /**
      * Constructeur prenant une instance de TwigConfig en paramètre
@@ -11,10 +12,11 @@ class c_accueilController
      * @param $twig Instance de TwigConfig
      * @param $connexionDB Instance de PDO pour la connexion à la base de données
      */
-    public function __construct($twig, $connexionDB)
+    public function __construct($twig, $connexionDB, $userSession)
     {
         $this->twig = $twig;
         $this->connexionDB = $connexionDB;
+        $this->userSession = $userSession;
     }
 
     /**
@@ -24,8 +26,6 @@ class c_accueilController
      */
     public function index(): void
     {
-        // Vérifiez si l'utilisateur est connecté
-        $user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
         $affichage = new Affichage($this->connexionDB);
         // Chargement du template spécifique à la page d'accueil
         $template = $this->twig->getTwig()->load('accueil/index.html.twig');
@@ -33,7 +33,7 @@ class c_accueilController
         // Affichage du template avec les données nécessaires
         $template->display([
             'topTopics' => $affichage->getTopTopicsAccueil(),
-            'user' => $user
+            'user' =>  $this->userSession
         ]);
     }
 }
