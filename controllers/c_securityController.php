@@ -4,6 +4,7 @@ class c_securityController
 {
     private $twig;
     private $connexionDB;
+    private $security;
 
     /**
      * Constructeur prenant une instance de TwigConfig en paramètre
@@ -15,6 +16,8 @@ class c_securityController
     {
         $this->twig = $twig;
         $this->connexionDB = $connexionDB;
+        $this->security = new Security($this->connexionDB);
+
     }
 
     /**
@@ -45,12 +48,12 @@ class c_securityController
                     $errorMessages[] = "Le champ $field est manquant.";
                 }
             }
-
+            
             // Vérifier que toutes les valeurs sont non vides
             if (empty($errorMessages)) {
                 $errorMessages = array_merge(
                     $errorMessages,
-                    $this->validateEmail($values['mail'])
+                    $this->security->validateEmail($values['mail'])
                 );
 
                 if (empty($errorMessages)) {
@@ -58,7 +61,7 @@ class c_securityController
                     $user = $user->getUser($values['mail']);
 
                     if ($user != null && password_verify($values['password'], $user['password'] ?? "")) {
-                        $this->storeUserDataInSession($user);
+                        $this->security->storeUserDataInSession($user);
 
                         header('Location: /');
                         exit;
@@ -114,10 +117,10 @@ class c_securityController
             if (empty($errorMessages)) {
                 $errorMessages = array_merge(
                     $errorMessages,
-                    $this->validatePseudo($values['pseudo']),
-                    $this->validateEmail($values['mail']),
-                    $this->validatePassword($values['password'], $values['confirmPassword']),
-                    $this->checkDoublonEmail($values['mail'])
+                    $this->security->validatePseudo($values['pseudo']),
+                    $this->security->validateEmail($values['mail']),
+                    $this->security->validatePassword($values['password'], $values['confirmPassword']),
+                    $this->security->checkDoublonEmail($values['mail'])
                 );
 
                 if (empty($errorMessages)) {
@@ -132,16 +135,12 @@ class c_securityController
                             break;
                         }
                     }
-                    $token = $this->generateToken();
-                    $currentTime = new DateTime();
-                    $expirationDate = $currentTime->setTimezone(new DateTimeZone('Europe/Paris'));
-                    $expirationDate->modify('+24 hours');
-                    $formattedExpirationDate = $expirationDate->format('Y-m-d H:i:s');
+                    $tokenData = $this->security->generateToken();
 
-                    $resultat = $user->setUser($values['pseudo'], $values['mail'], $hashedPassword, $userRoleId, $token, $formattedExpirationDate);
+                    $resultat = $user->setUser($values['pseudo'], $values['mail'], $hashedPassword, $userRoleId, $tokenData['token'], $tokenData['expiration_date']);
 
                     if ($resultat) {
-                        $sendMail = $this->sendMail($values['pseudo'], $values['mail'], $token);
+                        $sendMail = $this->security->sendMail($values['pseudo'], $values['mail'], $tokenData['token']);
                         if ($sendMail) {
                             $successMessage = "Inscription terminée. Un email de confirmation vous a été envoyé pour confirmer votre adresse email.";
                         } else {
@@ -195,7 +194,7 @@ class c_securityController
             if (empty($errorMessages)) {
                 $errorMessages = array_merge(
                     $errorMessages,
-                    $this->validateEmail($values['mail'])
+                    $this->security->validateEmail($values['mail'])
                 );
 
                 if (empty($errorMessages)) {
@@ -259,21 +258,17 @@ class c_securityController
             if (empty($errorMessages)) {
                 $errorMessages = array_merge(
                     $errorMessages,
-                    $this->validateEmail($values['mail'])
+                    $this->security->validateEmail($values['mail'])
                 );
 
                 if (empty($errorMessages)) {
-                    $token = $this->generateToken();
-                    $currentTime = new DateTime();
-                    $expirationDate = $currentTime->setTimezone(new DateTimeZone('Europe/Paris'));
-                    $expirationDate->modify('+24 hours');
-                    $formattedExpirationDate = $expirationDate->format('Y-m-d H:i:s');
+                    $tokenData = $this->security->generateToken();
 
                     $user = new User($this->connexionDB);
-                    $resultat = $user->reVerificationEmailUser($values['mail'],$token,$formattedExpirationDate);
+                    $resultat = $user->reVerificationEmailUser($values['mail'],$tokenData['token'],$tokenData['expiration_date']);
 
                     if ($resultat) {
-                        $sendMail = $this->sendMail($resultat, $values['mail'], $token);
+                        $sendMail = $this->security->sendMail($resultat, $values['mail'], $tokenData['token']);
                         if ($sendMail) {
                             $successMessage = "Un email de confirmation vous a été envoyé pour confirmer votre adresse email.";
                         } else {
@@ -327,21 +322,17 @@ class c_securityController
             if (empty($errorMessages)) {
                 $errorMessages = array_merge(
                     $errorMessages,
-                    $this->validateEmail($values['mail'])
+                   $this->security->validateEmail($values['mail'])
                 );
 
                 if (empty($errorMessages)) {
-                    $token = $this->generateToken();
-                    $currentTime = new DateTime();
-                    $expirationDate = $currentTime->setTimezone(new DateTimeZone('Europe/Paris'));
-                    $expirationDate->modify('+24 hours');
-                    $formattedExpirationDate = $expirationDate->format('Y-m-d H:i:s');
+                    $tokenData =$this->security->generateToken();
 
                     $user = new User($this->connexionDB);
-                    $resultat = $user->demandeResetPassword($values['mail'],$token,$formattedExpirationDate);
+                    $resultat = $user->demandeResetPassword($values['mail'],$tokenData['token'],$tokenData['expiration_date']);
 
                     if ($resultat) {
-                        $sendMail = $this->sendMail($resultat, $values['mail'], $token, 'resetMdp');
+                        $sendMail = $this->security->sendMail($resultat, $values['mail'], $tokenData['token'], 'resetMdp');
                         if ($sendMail) {
                             $successMessage = "Un email pour réinitialiser votre mot de passe vous a été envoyé.";
                         } else {
@@ -396,8 +387,8 @@ class c_securityController
             if (empty($errorMessages)) {
                 $errorMessages = array_merge(
                     $errorMessages,
-                    $this->validateEmail($values['mail']),
-                    $this->validatePassword($values['password'], $values['confirmPassword'])
+                   $this->security->validateEmail($values['mail']),
+                   $this->security->validatePassword($values['password'], $values['confirmPassword'])
                 );
 
                 if (empty($errorMessages)) {
@@ -436,100 +427,6 @@ class c_securityController
     }
 
     /**
-     * Valide la longueur du pseudo.
-     *
-     * @param string $pseudo Le pseudo à valider.
-     * @return array Tableau des erreurs. S'il n'y a pas d'erreur, le tableau est vide.
-     */
-    private function validatePseudo(string $pseudo): array
-    {
-        $errors = [];
-
-        if (strlen($pseudo) < 3 || strlen($pseudo) > 15) {
-            $errors[] = "La longueur du champ 'pseudo' doit être entre 3 et 15 caractères.";
-        }
-
-        return $errors;
-    }
-
-    /**
-     * Valide la format de l'adresse e-mail.
-     *
-     * @param string $email L'adresse e-mail à valider.
-     * @return array Tableau des erreurs. S'il n'y a pas d'erreur, le tableau est vide.
-     */
-    private function validateEmail(string $email): array
-    {
-        $errors = [];
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors[] = "L'adresse e-mail n'est pas valide.";
-        }
-
-        return $errors;
-    }
-
-    /**
-     * Valide le mot de passe en termes de longueur, de caractères spéciaux et de correspondance avec le champ de confirmation.
-     *
-     * @param string $password Le mot de passe à valider.
-     * @param string $confirmPassword Le champ de confirmation du mot de passe.
-     * @return array Tableau des erreurs. S'il n'y a pas d'erreur, le tableau est vide.
-     */
-    private function validatePassword(string $password, string $confirmPassword): array
-    {
-        $errors = [];
-
-        if (strlen($password) < 8 || strlen($password) > 24 || !preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,24}$/', $password)) {
-            $errors[] = "Le mot de passe doit avoir entre 8 et 24 caractères et contenir au moins 1 minuscule, 1 majuscule, 1 chiffre, 1 caractère spécial.";
-        }
-
-        if ($password !== $confirmPassword) {
-            $errors[] = "Les mots de passe ne correspondent pas.";
-        }
-
-        return $errors;
-    }
-
-    /**
-     * Vérifie si le mail n'existe pas déjà
-     *
-     * @param string $email le mail à vérifier.
-     * @return array Tableau des erreurs. S'il n'y a pas d'erreur, le tableau est vide.
-     */
-    private function checkDoublonEmail(string $email): array
-    {
-        $errors = [];
-        $user = new User($this->connexionDB);
-        $result = $user->getUserMail($email);
-
-        // Si le résultat n'est pas vide, cela signifie qu'un utilisateur avec cet e-mail existe déjà
-        if ($result > 0) {
-            $errors[] = "L'adresse e-mail est déjà utilisée par un autre utilisateur.";
-        }
-
-        // Sinon, l'e-mail n'existe pas encore dans la base de données
-        return $errors;
-    }
-
-    /**
-     * Stocke les informations spécifiques de l'utilisateur en session
-     *
-     * @param array $userData Les données de l'utilisateur
-     * @return void
-     */
-    public function storeUserDataInSession(array $userData): void
-    {
-        $_SESSION['user'] = [
-            'id' => $userData['id'],
-            'pseudo' => $userData['pseudo'],
-            'email' => $userData['email'],
-            'role' => $userData['role'],
-            'template' => $userData['template']
-        ];
-    }
-
-    /**
      * Détruit la session
      *
      * @return void
@@ -545,77 +442,4 @@ class c_securityController
         exit;
     }
 
-    /**
-     * Génère un token aléatoire.
-     *
-     * @return string Le token généré.
-     */
-    private function generateToken(): string
-    {
-        $token = bin2hex(random_bytes(32));
-        return $token;
-    }
-
-    /**
-     * Construit l'URL de vérification.
-     *
-     * @param string $token Le token généré.
-     * @param string $var la variable pour savoir si on envoie un mail pour réinitialiser le mdp ou pour valider l'email
-     * @return string L'URL de vérification.
-     */
-    public function createVerificationUrl(string $token, string $var): string
-    {
-        if($var !== 'resetMdp'){
-            $tokenUrl = "http://localhost:8080/verification?token=" . $token;
-       }else{
-        $tokenUrl = "http://localhost:8080/reset-password?token=" . $token;
-       }
-
-     
-
-        return $tokenUrl;
-    }
-
-    /**
-     * Envoie un e-mail de vérification à l'utilisateur.
-     *
-     * @param string $pseudo Le pseudo de l'utilisateur.
-     * @param string $email L'adresse e-mail de l'utilisateur.
-     * @param string $token Le token généré pour créer l'url de vérification.
-     * @param string $var la variable pour savoir si on envoie un mail pour réinitialiser le mdp ou pour valider l'email
-     * @return bool True si l'e-mail est envoyé avec succès, sinon false.
-     */
-    public function sendMail(string $pseudo, string $emailUser, string $token, string $var = null): bool
-    {
-
-        // Générer l'URL de vérification
-        $verificationUrl = $this->createVerificationUrl($token,$var);
-
-        if($var !== 'resetMdp'){
-             // Construire le sujet et le message de l'e-mail
-        $subject = 'Vérifiez votre adresse e-mail sur JVED';
-        $message = "Bonjour $pseudo,\n\nVeuillez cliquer sur le lien suivant pour vérifier votre adresse e-mail sur JVED :\n$verificationUrl\n\nCordialement,\nL'équipe JVED";
-
-        }else{
-                 // Construire le sujet et le message de l'e-mail
-        $subject = 'Réinitialiser votre mot de passe';
-        $message = "Bonjour $pseudo,\n\nVeuillez cliquer sur le lien suivant pour réinitialiser votre adresse e-mail sur JVED :\n$verificationUrl\n\nCordialement,\nL'équipe JVED";
-
-        }
-       
-        // Construire les en-têtes de l'e-mail
-        $headers = 'From: jved@contact.fr' . "\r\n";
-        $headers .= " Content-Type: text/html; charset=UTF-8\r\n";
-
-        // Utiliser l'adresse IP du conteneur MailDev comme hôte SMTP (mettre à jour à chaque docker-compose up -d car l'ip du conteneur change)
-        $smtpHost = MAILDEV_IP;
-        $smtpPort = 1025;
-
-        // Fonction mail() de PHP pour envoyer l'e-mail
-        if (mail($emailUser, $subject, $message, $headers, "-f jved@contact.fr -S $smtpHost:$smtpPort")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }
