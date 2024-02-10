@@ -210,7 +210,7 @@ class c_securityController
                         $successMessage = "Votre email est vérifié. Vous pouvez maintenant vous connecter.";
 
                     } else {
-                        $errorMessages[] = "Une erreur est survenue : votre adresse e-mail est invalide ou votre token a expiré. </br>Veuillez refaire une demande de vérification.";
+                        $errorMessages[] = "Une erreur est survenue : votre adresse e-mail est invalide ou votre token a expiré. Veuillez refaire une demande de vérification.";
                     }
                 }
             } else {
@@ -294,6 +294,142 @@ class c_securityController
 
         // Affichage du template avec les données nécessaires
         $template->display([
+            'error' => $errorMessages,
+            'success' => $successMessage
+        ]);
+    }
+
+     /**
+     * Méthode d'affichage de la page de demande de réinitialisation du mot de passe 
+     *
+     * @return void 
+     */
+    public function demandeReset(): void
+    {
+        
+        $errorMessages = [];
+        $successMessage = null;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $requiredFields = ['mail'];
+            $values = [];
+
+            // Vérifier la présence des champs requis et construire le tableau $values
+            foreach ($requiredFields as $field) {
+                if (isset($_POST[$field])) {
+                    $values[$field] = trim($_POST[$field]);
+                } else {
+                    $errorMessages[] = "Le champ $field est manquant.";
+                }
+            }
+
+            // Vérifier que toutes les valeurs sont non vides
+            if (empty($errorMessages)) {
+                $errorMessages = array_merge(
+                    $errorMessages,
+                    $this->validateEmail($values['mail'])
+                );
+
+                if (empty($errorMessages)) {
+                    $token = $this->generateToken();
+                    $currentTime = new DateTime();
+                    $expirationDate = $currentTime->setTimezone(new DateTimeZone('Europe/Paris'));
+                    $expirationDate->modify('+24 hours');
+                    $formattedExpirationDate = $expirationDate->format('Y-m-d H:i:s');
+
+                    $user = new User($this->connexionDB);
+                    $resultat = $user->demandeResetPassword($values['mail'],$token,$formattedExpirationDate);
+
+                    if ($resultat) {
+                        $sendMail = $this->sendMail($resultat, $values['mail'], $token, 'resetMdp');
+                        if ($sendMail) {
+                            $successMessage = "Un email pour réinitialiser votre mot de passe vous a été envoyé.";
+                        } else {
+                            $errorMessages[] =  "Une erreur s'est produite lors de l'envoi de l'email de réinitialisation de votre mot de passe.";
+                        }
+                    } else {
+                        $errorMessages[] = "Aucun compte avec cette email.";
+                    }
+                }
+            } else {
+                $errorMessages[] = "Merci de remplir tous les champs.";
+            }
+        }
+
+       
+        // Chargement du template spécifique au formulaire de reverification de l'email
+        $template = $this->twig->getTwig()->load('security/demandeResetPassword.html.twig');
+
+        // Affichage du template avec les données nécessaires
+        $template->display([
+            'error' => $errorMessages,
+            'success' => $successMessage
+        ]);
+    }
+
+     /**
+     * Méthode d'affichage de la page de resetPassword
+     *
+     * @return void 
+     */
+    public function resetPassword(): void
+    {
+        // Récupérer le token depuis l'URL
+        $token = $_GET['token'] ?? null;
+        $errorMessages = [];
+        $successMessage = null;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $requiredFields = ['mail', 'token','password', 'confirmPassword'];
+            $values = [];
+
+            // Vérifier la présence des champs requis et construire le tableau $values
+            foreach ($requiredFields as $field) {
+                if (isset($_POST[$field])) {
+                    $values[$field] = trim($_POST[$field]);
+                } else {
+                    $errorMessages[] = "Le champ $field est manquant.";
+                }
+            }
+
+            // Vérifier que toutes les valeurs sont non vides
+            if (empty($errorMessages)) {
+                $errorMessages = array_merge(
+                    $errorMessages,
+                    $this->validateEmail($values['mail']),
+                    $this->validatePassword($values['password'], $values['confirmPassword'])
+                );
+
+                if (empty($errorMessages)) {
+                    // Hasher le mot de passe avec Bcrypt
+                    $hashedPassword = password_hash($values['password'], PASSWORD_BCRYPT);
+                    $user = new User($this->connexionDB);
+
+                    $currentTime = new DateTime();
+                    $expirationDate = $currentTime->setTimezone(new DateTimeZone('Europe/Paris'));
+                    $formattedExpirationDate = $expirationDate->format('Y-m-d H:i:s');
+
+                    $resultat = $user->updatePassword($values['mail'],$hashedPassword, $values['token'], $formattedExpirationDate);
+
+                    if ($resultat) {
+                        $successMessage = "Votre mot de passe à été réinitialiser.";
+
+                    } else {
+                        $errorMessages[] = "Une erreur est survenue : votre adresse e-mail est invalide ou votre token a expiré. Veuillez refaire une demande de réinitialisation.";
+                    }
+                }
+            } else {
+                $errorMessages[] = "Merci de remplir tous les champs.";
+            }
+        }
+
+       
+        // Chargement du template spécifique au formulaire de resetPassword
+        $template = $this->twig->getTwig()->load('security/resetPassword.html.twig');
+
+        // Affichage du template avec les données nécessaires
+        $template->display([
+            'token' => $token,
             'error' => $errorMessages,
             'success' => $successMessage
         ]);
@@ -424,12 +560,18 @@ class c_securityController
      * Construit l'URL de vérification.
      *
      * @param string $token Le token généré.
+     * @param string $var la variable pour savoir si on envoie un mail pour réinitialiser le mdp ou pour valider l'email
      * @return string L'URL de vérification.
      */
-    public function createVerificationUrl(string $token): string
+    public function createVerificationUrl(string $token, string $var): string
     {
+        if($var !== 'resetMdp'){
+            $tokenUrl = "http://localhost:8080/verification?token=" . $token;
+       }else{
+        $tokenUrl = "http://localhost:8080/reset-password?token=" . $token;
+       }
 
-        $tokenUrl = "http://localhost:8080/verification?token=" . $token;
+     
 
         return $tokenUrl;
     }
@@ -440,17 +582,27 @@ class c_securityController
      * @param string $pseudo Le pseudo de l'utilisateur.
      * @param string $email L'adresse e-mail de l'utilisateur.
      * @param string $token Le token généré pour créer l'url de vérification.
+     * @param string $var la variable pour savoir si on envoie un mail pour réinitialiser le mdp ou pour valider l'email
      * @return bool True si l'e-mail est envoyé avec succès, sinon false.
      */
-    public function sendMail(string $pseudo, string $emailUser, string $token): bool
+    public function sendMail(string $pseudo, string $emailUser, string $token, string $var = null): bool
     {
-        // Générer l'URL de vérification
-        $verificationUrl = $this->createVerificationUrl($token);
 
-        // Construire le sujet et le message de l'e-mail
+        // Générer l'URL de vérification
+        $verificationUrl = $this->createVerificationUrl($token,$var);
+
+        if($var !== 'resetMdp'){
+             // Construire le sujet et le message de l'e-mail
         $subject = 'Vérifiez votre adresse e-mail sur JVED';
         $message = "Bonjour $pseudo,\n\nVeuillez cliquer sur le lien suivant pour vérifier votre adresse e-mail sur JVED :\n$verificationUrl\n\nCordialement,\nL'équipe JVED";
 
+        }else{
+                 // Construire le sujet et le message de l'e-mail
+        $subject = 'Réinitialiser votre mot de passe';
+        $message = "Bonjour $pseudo,\n\nVeuillez cliquer sur le lien suivant pour réinitialiser votre adresse e-mail sur JVED :\n$verificationUrl\n\nCordialement,\nL'équipe JVED";
+
+        }
+       
         // Construire les en-têtes de l'e-mail
         $headers = 'From: jved@contact.fr' . "\r\n";
         $headers .= " Content-Type: text/html; charset=UTF-8\r\n";

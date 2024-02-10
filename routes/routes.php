@@ -19,6 +19,8 @@ class Routes
         $router->map('GET|POST', '/inscription', 'c_securityController#inscription', 'inscription');
         $router->map('GET|POST', '/verification[.:format]?', 'c_securityController#verification', 'verification');
         $router->map('GET|POST', '/verification-email', 'c_securityController#reverification', 'reverification');
+        $router->map('GET|POST', '/demande-reset-password', 'c_securityController#demandeReset', 'demandeReset');
+        $router->map('GET|POST', '/reset-password[.:format]?', 'c_securityController#resetPassword', 'resetPassword');
         $router->map('GET|POST', '/test', 'c_testController#index', 'test');
         $router->map('GET', '/test/[i:id]', 'c_testController#index', 'test2');
 

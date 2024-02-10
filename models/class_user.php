@@ -88,4 +88,31 @@ class User
     {
         return $this->db->reVerificationEmailUser($email, $token, $dateToken);
     }
+
+    /**
+     * Permet de créer un nouveau token pour réinitialiser son mot de passe
+     *
+     * @param string $email L'email de l'utilisateur.
+     * @param string $token Le token généré.
+     * @param string $dateToken Date de validité (24h).
+     * @return bool True si la mise à jour du token à marché, sinon false.
+     */
+    public function demandeResetPassword(string $email, string $token, string $dateToken): bool
+    {
+        return $this->db->updateTokenAndDateToken($email, $token, $dateToken);
+    }
+
+    /**
+     * Met à jour le mot de passe 
+     *
+     * @param string $email L'email de l'utilisateur.
+     * @param string $password Le nouveau mot de passe à mettre à jour.
+     * @param string $token Le token à vérifier.
+     * @param string $dateToken La date du jour.
+     * @return bool True si la mise à jour a réussi et au moins une ligne a été affectée, false sinon.
+     */
+
+    public function updatePassword(string $email, string $password, string $token, string $dateToken){
+        return $this->db->updatePassword($email, $password, $token, $dateToken);
+    }
 }

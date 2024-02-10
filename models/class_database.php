@@ -251,20 +251,12 @@ class Database
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($result && $result['emailCheck'] == 0) {
-                // Mise à jour du token et de la dateToken
-                $updateQuery = "
-            UPDATE user 
-            SET token = :token, dateToken = :dateToken 
-            WHERE email = :email
-            ";
-
-                $updateStmt = $this->connect()->prepare($updateQuery);
-                $updateStmt->bindParam(':email', $email, PDO::PARAM_STR);
-                $updateStmt->bindParam(':token', $token, PDO::PARAM_STR);
-                $updateStmt->bindParam(':dateToken', $dateToken, PDO::PARAM_STR);
-                $updateStmt->execute();
-
-                return $result['pseudo'];
+                // Appel à la méthode pour mettre à jour le token et la dateToken
+                if ($this->updateTokenAndDateToken($email, $token, $dateToken)) {
+                    return $result['pseudo'];
+                } else {
+                    return false;
+                }
             } else {
                 // L'email est déjà vérifié ou n'existe pas
                 return false;
@@ -275,5 +267,91 @@ class Database
         }
     }
 
+    /**
+     * Met à jour le token et la dateToken en base de données pour l'email correspondant.
+     *
+     * @param string $email L'email de l'utilisateur.
+     * @param string $token Le nouveau token à mettre à jour.
+     * @param string $dateToken La nouvelle date de validité du token.
+     * @return bool True si la mise à jour a réussi, false sinon.
+     */
+    public function updateTokenAndDateToken(string $email, string $token, string $dateToken): bool
+    {
+        try {
+            $updateQuery = "
+            UPDATE user 
+            SET token = :token, dateToken = :dateToken 
+            WHERE email = :email
+        ";
+
+            $updateStmt = $this->connect()->prepare($updateQuery);
+            $updateStmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $updateStmt->bindParam(':token', $token, PDO::PARAM_STR);
+            $updateStmt->bindParam(':dateToken', $dateToken, PDO::PARAM_STR);
+            $updateStmt->execute();
+
+            // Vérifier si au moins une ligne a été affectée par la mise à jour
+            if ($updateStmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    /**
+     * Met à jour le mot de passe en base de données pour l'email correspondant si la date est inférieure à la dateToken.
+     * Si au moins une ligne a été affectée, met à jour le token et la dateToken à null pour l'email correspondant et retourne true.
+     * Sinon, retourne false.
+     *
+     * @param string $email L'email de l'utilisateur.
+     * @param string $password Le nouveau mot de passe à mettre à jour.
+     * @param string $token Le token à vérifier.
+     * @param string $date La date du jour.
+     * @return bool True si la mise à jour a réussi et au moins une ligne a été affectée, false sinon.
+     */
+    public function updatePassword(string $email, string $password, string $token, string $date): bool
+    {
+        try {
+            $query = "
+            UPDATE user 
+            SET password = :password 
+            WHERE email = :email 
+            AND token = :token 
+            AND dateToken > :dateToken
+        ";
+
+            $stmt = $this->connect()->prepare($query);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->bindParam(':password', $password, PDO::PARAM_STR);
+            $stmt->bindParam(':token', $token, PDO::PARAM_STR);
+            $stmt->bindParam(':dateToken', $date, PDO::PARAM_STR);
+            $stmt->execute();
+
+            // Vérifier si au moins une ligne a été affectée
+            if ($stmt->rowCount() > 0) {
+                // Mettre à jour le token et la dateToken à null
+                $nullUpdateQuery = "
+                UPDATE user 
+                SET token = NULL, dateToken = NULL 
+                WHERE email = :email
+            ";
+
+                $nullUpdateStmt = $this->connect()->prepare($nullUpdateQuery);
+                $nullUpdateStmt->bindParam(':email', $email, PDO::PARAM_STR);
+                $nullUpdateStmt->execute();
+
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
 
 }
