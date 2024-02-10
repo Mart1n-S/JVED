@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : mysql
--- Généré le : sam. 10 fév. 2024 à 20:04
+-- Généré le : sam. 10 fév. 2024 à 16:12
 -- Version du serveur : 8.3.0
 -- Version de PHP : 8.2.8
 
@@ -117,7 +117,7 @@ CREATE TABLE `user` (
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `idRole` int NOT NULL,
-  `template` varchar(25) DEFAULT NULL,
+  `template` int DEFAULT NULL,
   `bloque` tinyint(1) DEFAULT NULL,
   `createdAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -132,7 +132,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `pseudo`, `email`, `password`, `idRole`, `template`, `bloque`, `createdAt`, `updatedAt`, `deletedAt`, `emailCheck`, `token`, `dateToken`) VALUES
-(1, 'Martin', 'martinsimongo@gmail.com', '$2y$10$Vgu2ZsFhsV145h11VHzYq.RBcGRsJLbs36ElKh9DmjbRb0qXq4tB6', 3, 'template1', NULL, '2024-02-07 20:45:53', '2024-02-10 19:40:12', NULL, 1, NULL, NULL);
+(1, 'Martin', 'martinsimongo@gmail.com', '$2y$10$Vgu2ZsFhsV145h11VHzYq.RBcGRsJLbs36ElKh9DmjbRb0qXq4tB6', 3, NULL, NULL, '2024-02-07 20:45:53', '2024-02-10 14:19:55', NULL, 1, NULL, NULL);
 
 --
 -- Index pour les tables déchargées
@@ -220,7 +220,7 @@ ALTER TABLE `topic`
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- Contraintes pour les tables déchargées
