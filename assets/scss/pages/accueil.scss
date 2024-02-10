@@ -1,11 +1,11 @@
 body {
   background: var(--bg-color-2);
-  padding: 4px;
 }
 
-main {
+.mainAccueil {
   display: flex;
   justify-content: center;
+  padding: 4px 4px 0 4px;
 }
 
 .accueil {

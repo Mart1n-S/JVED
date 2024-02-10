@@ -1,0 +1,41 @@
+.mainVerification {
+    @extend .mainLogin;
+}
+
+
+
+.verification {
+    @extend .login;
+
+    &Titre {
+        @extend .loginTitre;
+    }
+
+    &Content {
+        @extend .loginContent;
+
+        &Form {
+            @extend .loginContentForm;
+
+            &Input {
+                @extend .loginContentFormInput;
+
+                &Error {
+                    @extend .inscriptionContentFormInputError;
+                }
+                &Success{
+                    @extend .inscriptionContentFormInputSuccess;
+                }
+            }
+
+
+            &Button {
+                @extend .loginContentFormButton;
+            }
+
+            &Recheck {
+                @extend .loginContentFormRecheck;
+            }
+        }
+    }
+}

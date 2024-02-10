@@ -24,13 +24,16 @@ class c_accueilController
      */
     public function index(): void
     {
+        // Vérifiez si l'utilisateur est connecté
+        $user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
         $affichage = new Affichage($this->connexionDB);
         // Chargement du template spécifique à la page d'accueil
         $template = $this->twig->getTwig()->load('accueil/index.html.twig');
 
         // Affichage du template avec les données nécessaires
         $template->display([
-            'topTopics' => $affichage->getTopTopicsAccueil()
+            'topTopics' => $affichage->getTopTopicsAccueil(),
+            'user' => $user
         ]);
     }
 }

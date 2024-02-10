@@ -9,8 +9,13 @@
       #4d37a3 100%
     )
     no-repeat;
+  --bg-color-white: #fff;
   --bg-color-button-purple: #6d67e4;
   --color-text-white: #fff;
+  --color-text-grey: #525252;
+  --color-text-purple: #6d67e4;
+  --color-text-green:green;
+  --color-text-red: red;
 }
 
 * {
@@ -29,6 +34,7 @@ body {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  padding: 4px 4px 0 4px;
 }
 .navigationLien {
   display: flex;
@@ -54,12 +60,12 @@ footer {
 
 body {
   background: var(--bg-color-2);
-  padding: 4px;
 }
 
-main {
+.mainAccueil {
   display: flex;
   justify-content: center;
+  padding: 4px 4px 0 4px;
 }
 
 .accueil {
@@ -130,6 +136,140 @@ main {
 }
 .accueilTendanceTableauContentEven-row {
   background-color: var(--bg-color-dark-light);
+}
+
+.mainLogin, .mainReset, .mainDemandeReset, .mainReverification, .mainVerification, .mainInscription {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  height: 100vh;
+}
+
+.back {
+  width: 50%;
+  position: absolute;
+  padding: 32px 0 0 32px;
+}
+.back a {
+  color: var(--color-text-grey);
+  font-size: 64px;
+  font-weight: bolder;
+}
+
+.login, .reset, .demandeReset, .reverification, .verification, .inscription {
+  background-color: var(--bg-color-white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+  padding: 64px;
+}
+.loginTitre, .resetTitre, .demandeResetTitre, .reverificationTitre, .verificationTitre, .inscriptionTitre {
+  font-size: 32px;
+  margin-bottom: 64px;
+  text-align: center;
+}
+.loginContent, .resetContent, .demandeResetContent, .reverificationContent, .verificationContent, .inscriptionContent {
+  width: 420px;
+}
+.loginContentForm, .resetContentForm, .demandeResetContentForm, .reverificationContentForm, .verificationContentForm, .inscriptionContentForm {
+  display: flex;
+  flex-direction: column;
+}
+.loginContentFormInput, .resetContentFormInput, .demandeResetContentFormInput, .reverificationContentFormInput, .verificationContentFormInput, .inscriptionContentFormInput {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-bottom: 12px;
+}
+.loginContentFormInput input, .resetContentFormInput input, .demandeResetContentFormInput input, .reverificationContentFormInput input, .verificationContentFormInput input, .inscriptionContentFormInput input {
+  border: 1px #c2c2c2 solid;
+  border-radius: 16px;
+  padding: 12px;
+  width: 100%;
+}
+.loginContentFormInputPassword, .resetContentFormInputPassword, .resetContentFormInputConfirmPassword, .inscriptionContentFormInputPassword, .inscriptionContentFormInputConfirmPassword {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+.loginContentFormInputPassword span, .resetContentFormInputPassword span, .resetContentFormInputConfirmPassword span, .inscriptionContentFormInputPassword span, .inscriptionContentFormInputConfirmPassword span {
+  position: absolute;
+  right: 12px;
+  color: var(--color-text-grey);
+  cursor: pointer;
+}
+.loginContentFormResetPassword {
+  text-align: end;
+  margin: 12px 0 64px 0;
+}
+.loginContentFormResetPassword a {
+  color: var(--color-text-grey);
+  text-decoration: underline;
+}
+.loginContentFormButton, .demandeResetContentFormButton, .reverificationContentFormButton, .verificationContentFormButton, .inscriptionContentFormButton, .resetContentFormButton {
+  align-self: center;
+  background-color: var(--bg-color-button-purple);
+  color: var(--bg-color-white);
+  font-weight: bold;
+  border-radius: 32px;
+  width: 200px;
+  height: 42px;
+  font-size: 18px;
+}
+.loginContentFormButton:hover, .demandeResetContentFormButton:hover, .reverificationContentFormButton:hover, .verificationContentFormButton:hover, .inscriptionContentFormButton:hover, .resetContentFormButton:hover {
+  cursor: pointer;
+}
+.loginContentFormNouveauUser, .inscriptionContentFormLogin, .loginContentFormRecheck, .resetContentFormRecheck, .verificationContentFormRecheck {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+.loginContentFormNouveauUser a, .inscriptionContentFormLogin a, .loginContentFormRecheck a, .resetContentFormRecheck a, .verificationContentFormRecheck a {
+  margin-left: 12px;
+  color: var(--color-text-purple);
+  font-weight: bold;
+}
+
+.inscriptionContentFormInputCritere, .resetContentFormInputCritere {
+  display: none;
+  flex-direction: column;
+  margin-left: 12px;
+  gap: 4px;
+}
+.inscriptionContentFormInputCritere span, .resetContentFormInputCritere span {
+  color: var(--color-text-red);
+  transition: color 0.3s ease;
+}
+.inscriptionContentFormInputCritere span.valid, .resetContentFormInputCritere span.valid {
+  color: var(--color-text-green);
+}
+.inscriptionContentFormInputCritere span.invalid, .resetContentFormInputCritere span.invalid {
+  color: var(--color-text-red);
+}
+.inscriptionContentFormInputError, .resetContentFormInputError, .demandeResetContentFormInputError, .reverificationContentFormInputError, .verificationContentFormInputError {
+  text-align: center;
+  margin-bottom: 12px;
+}
+.inscriptionContentFormInputError span, .resetContentFormInputError span, .demandeResetContentFormInputError span, .reverificationContentFormInputError span, .verificationContentFormInputError span {
+  display: none;
+  color: var(--color-text-red);
+}
+.inscriptionContentFormInputError #error_c, .resetContentFormInputError #error_c, .demandeResetContentFormInputError #error_c, .reverificationContentFormInputError #error_c, .verificationContentFormInputError #error_c {
+  display: block;
+  color: var(--color-text-red);
+}
+.inscriptionContentFormInputSuccess, .resetContentFormInputSuccess, .demandeResetContentFormInputSuccess, .reverificationContentFormInputSuccess, .verificationContentFormInputSuccess {
+  text-align: center;
+}
+.inscriptionContentFormInputSuccess #success, .resetContentFormInputSuccess #success, .demandeResetContentFormInputSuccess #success, .reverificationContentFormInputSuccess #success, .verificationContentFormInputSuccess #success {
+  color: var(--color-text-green);
+}
+.inscriptionContentFormButton, .resetContentFormButton {
+  margin: 64px 0 16px 0;
 }
 
 /*# sourceMappingURL=style.css.map */

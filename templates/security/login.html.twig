@@ -1,0 +1,64 @@
+{% extends "base.html.twig" %}
+{% block title %}Connexion
+{% endblock %}
+{% block body %}
+	<main class="mainLogin">
+		<div class="back">
+			<span class="material-symbols-outlined">
+				<a href="{{path('accueil')}}">
+
+					arrow_back</a>
+			</span>
+
+
+		</div>
+
+		<section class="login">
+			<div class="loginTitre">
+				<h1>Se connecter</h1>
+			</div>
+			<div class="loginContent">
+				<form class="loginContentForm" method="post" action="{{path('login')}}">
+					<div class="loginContentFormInput">
+						<input type="email" name="mail" placeholder="Email" required>
+						<div class="loginContentFormInputPassword">
+							<input type="password" name="password" id="password" class="password" placeholder="Mot de passe" autocomplete="on" title="Taille 8-24 caractères avec au moins : 1 minuscule / 1 majuscule / 1 chiffre / 1 caractère spécial" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,24}$" required>
+							<span onclick="changeVisibility()" class="material-symbols-outlined">
+								visibility
+							</span>
+						</div>
+						<div class="inscriptionContentFormInputError">
+							{% if error is defined %}
+								<div>
+									<ul>
+										{% for errorMessage in error %}
+											<li id="error_c">{{ errorMessage|raw }}</li>
+										{% endfor %}
+									</ul>
+								</div>
+							{% endif %}
+							<span id="error">Merci de remplir tous les champs</span>
+						</div>
+
+					</div>
+					<div class="loginContentFormResetPassword">
+						<a href="{{path('demandeReset')}}">Mot de passe oublié ?</a>
+					</div>
+					<button class="loginContentFormButton" type="submit">Se connecter</button>
+					<div class="loginContentFormNouveauUser">
+						<p>Nouveau ?</p>
+						<a href="{{path('inscription')}}">S'inscrire</a>
+					</div>
+					<div class="loginContentFormRecheck">
+						<a href="{{path('reverification')}}">Renvoyer email de validation</a>
+					</div>
+				</form>
+
+			</div>
+		</section>
+	</main>
+
+{% endblock %}
+{% block javascripts %}
+	<script src="{{ asset('js/security.js') }}"></script>
+{% endblock %}

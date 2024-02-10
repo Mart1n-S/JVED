@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : mysql
--- Généré le : sam. 10 fév. 2024 à 16:12
--- Version du serveur : 8.3.0
+-- Généré le : dim. 14 jan. 2024 à 15:13
+-- Version du serveur : 8.2.0
 -- Version de PHP : 8.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -64,15 +64,6 @@ CREATE TABLE `role` (
   `roleName` varchar(35) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `role`
---
-
-INSERT INTO `role` (`id`, `roleName`) VALUES
-(1, 'superAdmin'),
-(2, 'moderateur'),
-(3, 'user');
-
 -- --------------------------------------------------------
 
 --
@@ -116,23 +107,15 @@ CREATE TABLE `user` (
   `pseudo` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `dateNaissance` date DEFAULT NULL,
   `idRole` int NOT NULL,
-  `template` int DEFAULT NULL,
   `bloque` tinyint(1) DEFAULT NULL,
   `createdAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deletedAt` timestamp NULL DEFAULT NULL,
-  `emailCheck` tinyint(1) DEFAULT '0',
-  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `token` varchar(13) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `dateToken` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `user`
---
-
-INSERT INTO `user` (`id`, `pseudo`, `email`, `password`, `idRole`, `template`, `bloque`, `createdAt`, `updatedAt`, `deletedAt`, `emailCheck`, `token`, `dateToken`) VALUES
-(1, 'Martin', 'martinsimongo@gmail.com', '$2y$10$Vgu2ZsFhsV145h11VHzYq.RBcGRsJLbs36ElKh9DmjbRb0qXq4tB6', 3, NULL, NULL, '2024-02-07 20:45:53', '2024-02-10 14:19:55', NULL, 1, NULL, NULL);
 
 --
 -- Index pour les tables déchargées
@@ -202,7 +185,7 @@ ALTER TABLE `content`
 -- AUTO_INCREMENT pour la table `role`
 --
 ALTER TABLE `role`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `sujet`
@@ -220,7 +203,7 @@ ALTER TABLE `topic`
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- Contraintes pour les tables déchargées

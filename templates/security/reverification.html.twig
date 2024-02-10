@@ -1,0 +1,58 @@
+{% extends "base.html.twig" %}
+{% block title %}Re-vérification
+{% endblock %}
+{% block body %}
+	<main class="mainReverification">
+		<div class="back">
+			<span class="material-symbols-outlined">
+				<a href="{{path('accueil')}}">
+
+					arrow_back</a>
+			</span>
+
+
+		</div>
+
+		<section class="reverification">
+			<div class="reverificationTitre">
+				<h1>Re-vérifier votre email</h1>
+			</div>
+			<div class="reverificationContent">
+				<form class="reverificationContentForm" method="post" action="{{path('reverification')}}">
+					<div class="reverificationContentFormInput">
+						<input type="email" name="mail" placeholder="Email" required>
+						<div class="reverificationContentFormInputError">
+							{% if error is defined %}
+								<div>
+									<ul>
+										{% for errorMessage in error %}
+											<li id="error_c">{{ errorMessage|raw }}</li>
+										{% endfor %}
+									</ul>
+								</div>
+							{% endif %}
+							<span id="error">Merci de remplir tous les champs</span>
+						</div>
+
+						{% if success is defined and success is not empty  %}
+							<div class="reverificationContentFormInputSuccess">
+								<div>
+									<p id="success">{{ success }}</p>
+								</div>
+							</div>
+						{% endif %}
+
+
+					</div>
+					<button class="reverificationContentFormButton" type="submit">Re-vérifier</button>
+
+				</form>
+
+			</div>
+		</section>
+	</main>
+
+{% endblock %}
+{% block javascripts %}
+	<script src="{{ asset('js/security.js') }}"></script>
+{% endblock %}
