@@ -1,10 +1,10 @@
-.mainVerification {
+.mainReverification {
     @extend .mainLogin;
 }
 
 
 
-.verification {
+.reverification {
     @extend .login;
 
     &Titre {
@@ -33,9 +33,6 @@
                 @extend .loginContentFormButton;
             }
 
-            &Recheck {
-                @extend .loginContentFormRecheck;
-            }
         }
     }
 }

@@ -1,5 +1,6 @@
 {% extends "base.html.twig" %}
-
+{% block title %}Connexion
+{% endblock %}
 {% block body %}
 	<main class="mainLogin">
 		<div class="back">
@@ -47,6 +48,9 @@
 					<div class="loginContentFormNouveauUser">
 						<p>Nouveau ?</p>
 						<a href="{{path('inscription')}}">S'inscrire</a>
+					</div>
+					<div class="loginContentFormRecheck">
+						<a href="{{path('reverification')}}">Renvoyer email de validation</a>
 					</div>
 				</form>
 

@@ -138,7 +138,7 @@ body {
   background-color: var(--bg-color-dark-light);
 }
 
-.mainLogin, .mainVerification, .mainInscription {
+.mainLogin, .mainReverification, .mainVerification, .mainInscription {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -156,7 +156,7 @@ body {
   font-weight: bolder;
 }
 
-.login, .verification, .inscription {
+.login, .reverification, .verification, .inscription {
   background-color: var(--bg-color-white);
   display: flex;
   flex-direction: column;
@@ -166,25 +166,25 @@ body {
   height: 100%;
   padding: 64px;
 }
-.loginTitre, .verificationTitre, .inscriptionTitre {
+.loginTitre, .reverificationTitre, .verificationTitre, .inscriptionTitre {
   font-size: 39px;
   margin-bottom: 64px;
   text-align: center;
 }
-.loginContent, .verificationContent, .inscriptionContent {
+.loginContent, .reverificationContent, .verificationContent, .inscriptionContent {
   width: 420px;
 }
-.loginContentForm, .verificationContentForm, .inscriptionContentForm {
+.loginContentForm, .reverificationContentForm, .verificationContentForm, .inscriptionContentForm {
   display: flex;
   flex-direction: column;
 }
-.loginContentFormInput, .verificationContentFormInput, .inscriptionContentFormInput {
+.loginContentFormInput, .reverificationContentFormInput, .verificationContentFormInput, .inscriptionContentFormInput {
   display: flex;
   flex-direction: column;
   gap: 32px;
   margin-bottom: 12px;
 }
-.loginContentFormInput input, .verificationContentFormInput input, .inscriptionContentFormInput input {
+.loginContentFormInput input, .reverificationContentFormInput input, .verificationContentFormInput input, .inscriptionContentFormInput input {
   border: 1px #c2c2c2 solid;
   border-radius: 16px;
   padding: 12px;
@@ -210,7 +210,7 @@ body {
   color: var(--color-text-grey);
   text-decoration: underline;
 }
-.loginContentFormButton, .verificationContentFormButton, .inscriptionContentFormButton {
+.loginContentFormButton, .reverificationContentFormButton, .verificationContentFormButton, .inscriptionContentFormButton {
   align-self: center;
   background-color: var(--bg-color-button-purple);
   color: var(--bg-color-white);
@@ -220,12 +220,15 @@ body {
   height: 42px;
   font-size: 18px;
 }
-.loginContentFormNouveauUser, .verificationContentFormRenvoi, .inscriptionContentFormLogin {
+.loginContentFormButton:hover, .reverificationContentFormButton:hover, .verificationContentFormButton:hover, .inscriptionContentFormButton:hover {
+  cursor: pointer;
+}
+.loginContentFormNouveauUser, .inscriptionContentFormLogin, .loginContentFormRecheck, .verificationContentFormRecheck {
   display: flex;
   justify-content: center;
   margin-top: 32px;
 }
-.loginContentFormNouveauUser a, .verificationContentFormRenvoi a, .inscriptionContentFormLogin a {
+.loginContentFormNouveauUser a, .inscriptionContentFormLogin a, .loginContentFormRecheck a, .verificationContentFormRecheck a {
   margin-left: 12px;
   color: var(--color-text-purple);
   font-weight: bold;
@@ -247,29 +250,26 @@ body {
 .inscriptionContentFormInputCritere span.invalid {
   color: var(--color-text-red);
 }
-.inscriptionContentFormInputError, .verificationContentFormInputError {
+.inscriptionContentFormInputError, .reverificationContentFormInputError, .verificationContentFormInputError {
   text-align: center;
   margin-bottom: 12px;
 }
-.inscriptionContentFormInputError span, .verificationContentFormInputError span {
+.inscriptionContentFormInputError span, .reverificationContentFormInputError span, .verificationContentFormInputError span {
   display: none;
   color: var(--color-text-red);
 }
-.inscriptionContentFormInputError #error_c, .verificationContentFormInputError #error_c {
+.inscriptionContentFormInputError #error_c, .reverificationContentFormInputError #error_c, .verificationContentFormInputError #error_c {
   display: block;
   color: var(--color-text-red);
 }
-.inscriptionContentFormInputSuccess, .verificationContentFormInputSuccess {
+.inscriptionContentFormInputSuccess, .reverificationContentFormInputSuccess, .verificationContentFormInputSuccess {
   text-align: center;
 }
-.inscriptionContentFormInputSuccess #success, .verificationContentFormInputSuccess #success {
+.inscriptionContentFormInputSuccess #success, .reverificationContentFormInputSuccess #success, .verificationContentFormInputSuccess #success {
   color: var(--color-text-green);
 }
 .inscriptionContentFormButton {
   margin: 64px 0 16px 0;
-}
-.verificationContentFormRenvoi a {
-  margin: 0;
 }
 
 /*# sourceMappingURL=style.css.map */

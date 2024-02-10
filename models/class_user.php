@@ -75,4 +75,17 @@ class User
     {
         return $this->db->verificationEmailUser($email, $token, $date);
     }
+
+    /**
+     * Permet de re-valider l'email de l'utilisateur après son inscription
+     *
+     * @param string $email L'email de l'utilisateur à valider.
+     * @param string $token Le token généré.
+     * @param string $dateToken Date de validité (24h).
+     * @return string|bool Le pseudo si la nouvelle verification à marché, sinon false.
+     */
+    public function reVerificationEmailUser(string $email, string $token, string $dateToken): string|bool
+    {
+        return $this->db->reVerificationEmailUser($email, $token, $dateToken);
+    }
 }

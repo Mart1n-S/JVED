@@ -230,6 +230,75 @@ class c_securityController
         ]);
     }
 
+    
+    /**
+     * Méthode d'affichage de la page de revérification
+     *
+     * @return void 
+     */
+    public function reverification(): void
+    {
+        
+        $errorMessages = [];
+        $successMessage = null;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $requiredFields = ['mail'];
+            $values = [];
+
+            // Vérifier la présence des champs requis et construire le tableau $values
+            foreach ($requiredFields as $field) {
+                if (isset($_POST[$field])) {
+                    $values[$field] = trim($_POST[$field]);
+                } else {
+                    $errorMessages[] = "Le champ $field est manquant.";
+                }
+            }
+
+            // Vérifier que toutes les valeurs sont non vides
+            if (empty($errorMessages)) {
+                $errorMessages = array_merge(
+                    $errorMessages,
+                    $this->validateEmail($values['mail'])
+                );
+
+                if (empty($errorMessages)) {
+                    $token = $this->generateToken();
+                    $currentTime = new DateTime();
+                    $expirationDate = $currentTime->setTimezone(new DateTimeZone('Europe/Paris'));
+                    $expirationDate->modify('+24 hours');
+                    $formattedExpirationDate = $expirationDate->format('Y-m-d H:i:s');
+
+                    $user = new User($this->connexionDB);
+                    $resultat = $user->reVerificationEmailUser($values['mail'],$token,$formattedExpirationDate);
+
+                    if ($resultat) {
+                        $sendMail = $this->sendMail($resultat, $values['mail'], $token);
+                        if ($sendMail) {
+                            $successMessage = "Un email de confirmation vous a été envoyé pour confirmer votre adresse email.";
+                        } else {
+                            $errorMessages[] =  "Une erreur s'est produite lors de l'envoi de l'email de confirmation. Veuillez faire une demande de renvoi de confirmation.";
+                        }
+                    } else {
+                        $errorMessages[] = "Votre email est déjà vérifié ou n'existe pas.";
+                    }
+                }
+            } else {
+                $errorMessages[] = "Merci de remplir tous les champs.";
+            }
+        }
+
+       
+        // Chargement du template spécifique au formulaire de reverification de l'email
+        $template = $this->twig->getTwig()->load('security/reverification.html.twig');
+
+        // Affichage du template avec les données nécessaires
+        $template->display([
+            'error' => $errorMessages,
+            'success' => $successMessage
+        ]);
+    }
+
     /**
      * Valide la longueur du pseudo.
      *

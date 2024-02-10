@@ -226,4 +226,54 @@ class Database
         }
     }
 
+    /**
+     * Met à jour le token et la dateToken en base de données pour l'email correspondant si emailCheck = 0.
+     *
+     * @param string $email L'email de l'utilisateur.
+     * @param string $token Le nouveau token à mettre à jour.
+     * @param string $dateToken La nouvelle date de validité du token.
+     * @return string|bool Le pseudo si la mise à jour a réussi, false sinon.
+     */
+    public function reVerificationEmailUser(string $email, string $token, string $dateToken): string|bool
+    {
+        try {
+            $query = "
+        SELECT pseudo, emailCheck 
+        FROM user 
+        WHERE email = :email 
+        AND emailCheck = 0
+        ";
+
+            $stmt = $this->connect()->prepare($query);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($result && $result['emailCheck'] == 0) {
+                // Mise à jour du token et de la dateToken
+                $updateQuery = "
+            UPDATE user 
+            SET token = :token, dateToken = :dateToken 
+            WHERE email = :email
+            ";
+
+                $updateStmt = $this->connect()->prepare($updateQuery);
+                $updateStmt->bindParam(':email', $email, PDO::PARAM_STR);
+                $updateStmt->bindParam(':token', $token, PDO::PARAM_STR);
+                $updateStmt->bindParam(':dateToken', $dateToken, PDO::PARAM_STR);
+                $updateStmt->execute();
+
+                return $result['pseudo'];
+            } else {
+                // L'email est déjà vérifié ou n'existe pas
+                return false;
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
+
 }
