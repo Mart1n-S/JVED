@@ -21,7 +21,7 @@
 					<div class="loginContentFormInput">
 						<input type="email" name="mail" placeholder="Email" required>
 						<div class="loginContentFormInputPassword">
-							<input type="password" name="password" id="password" class="password" placeholder="Mot de passe" autocomplete="on" required>
+							<input type="password" name="password" id="password" class="password" placeholder="Mot de passe" autocomplete="on" title="Taille 8-24 caractères avec au moins : 1 minuscule / 1 majuscule / 1 chiffre / 1 caractère spécial" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,24}$" required>
 							<span onclick="changeVisibility()" class="material-symbols-outlined">
 								visibility
 							</span>

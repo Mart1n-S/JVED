@@ -167,6 +167,70 @@ class c_securityController
     }
 
     /**
+     * Méthode d'affichage de la page de vérification
+     *
+     * @return void 
+     */
+    public function verification(): void
+    {
+        // Récupérer le token depuis l'URL
+        $token = $_GET['token'] ?? null;
+        $errorMessages = [];
+        $successMessage = null;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $requiredFields = ['mail', 'token'];
+            $values = [];
+
+            // Vérifier la présence des champs requis et construire le tableau $values
+            foreach ($requiredFields as $field) {
+                if (isset($_POST[$field])) {
+                    $values[$field] = trim($_POST[$field]);
+                } else {
+                    $errorMessages[] = "Le champ $field est manquant.";
+                }
+            }
+
+            // Vérifier que toutes les valeurs sont non vides
+            if (empty($errorMessages)) {
+                $errorMessages = array_merge(
+                    $errorMessages,
+                    $this->validateEmail($values['mail'])
+                );
+
+                if (empty($errorMessages)) {
+                    $currentTime = new DateTime();
+                    $expirationDate = $currentTime->setTimezone(new DateTimeZone('Europe/Paris'));
+                    $formattedExpirationDate = $expirationDate->format('Y-m-d H:i:s');
+
+                    $user = new User($this->connexionDB);
+                    $resultat = $user->verificationEmailUser($values['mail'],$values['token'],$formattedExpirationDate);
+
+                    if ($resultat) {
+                        $successMessage = "Votre email est vérifié. Vous pouvez maintenant vous connecter.";
+
+                    } else {
+                        $errorMessages[] = "Une erreur est survenue : votre adresse e-mail est invalide ou votre token a expiré. </br>Veuillez refaire une demande de vérification.";
+                    }
+                }
+            } else {
+                $errorMessages[] = "Merci de remplir tous les champs.";
+            }
+        }
+
+       
+        // Chargement du template spécifique au formulaire de verification de l'email
+        $template = $this->twig->getTwig()->load('security/verification.html.twig');
+
+        // Affichage du template avec les données nécessaires
+        $template->display([
+            'token' => $token,
+            'error' => $errorMessages,
+            'success' => $successMessage
+        ]);
+    }
+
+    /**
      * Valide la longueur du pseudo.
      *
      * @param string $pseudo Le pseudo à valider.

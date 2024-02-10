@@ -33,6 +33,10 @@ Assurez-vous que le script ait les permissions d'exécution. Si ce n'est pas le 
 Accéder à MailDev :
 > http://localhost:1080/#/
 
+PS : Si modification SCSS merci de lancer :
+
+> sass --watch assets/scss/index.scss style.css
+
 ## 📸Diagrammes de cas d'utilisation
 
 ![vue diagramme_cas_utilisation1](.github/assets/DiagrammeCasUtilisation1.png) ![vue diagramme_cas_utilisation2](.github/assets/diagrammeCasUtilisation2.png)<br>

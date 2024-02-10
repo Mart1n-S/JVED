@@ -183,4 +183,47 @@ class Database
             return null;
         }
     }
+
+      /**
+     * Crée un nouvel utilisateur dans la base de données.
+     *
+     * @param string $email L'email de l'utilisateur.
+     * @param string $token Date de validité (24h).
+     * @param string $date Date du jour pour check si token invalide
+     * @return bool True si le mail est check, false si l'email existe pas ou si token expiré
+     */
+    public function verificationEmailUser(string $email, string $token, string $date): bool
+    {
+        try {
+            $query = "
+            UPDATE user SET emailCheck = 1 WHERE email = :email AND token = :token AND dateToken > :date AND emailCheck = 0
+            ";
+
+            $stmt = $this->connect()->prepare($query);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->bindParam(':token', $token, PDO::PARAM_STR);
+            $stmt->bindParam(':date', $date, PDO::PARAM_STR);
+            $stmt->execute();
+
+            // Vérifie si la mise à jour a affecté une ligne dans la base de données
+        if ($stmt->rowCount() > 0) {
+            // Mise à jour pour supprimer le token et la dateToken
+            $deleteQuery = "
+            UPDATE user SET token = NULL, dateToken = NULL WHERE email = :email
+            ";
+
+            $deleteStmt = $this->connect()->prepare($deleteQuery);
+            $deleteStmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $deleteStmt->execute();
+
+            return true;
+        } else {
+            return false;
+        }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
+
 }

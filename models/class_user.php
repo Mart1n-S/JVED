@@ -62,4 +62,17 @@ class User
     {
         return $this->db->getUser($email);
     }
+
+    /**
+     * Permet de valider l'email de l'utilisateur après son inscription
+     *
+     * @param string $email L'email de l'utilisateur à valider.
+     * @param string $token Le token reçu par mail.
+     * @param string $date La date du jour pour vérifier la validité du token.
+     * @return bool True si le mail est check, false si l'email existe pas ou si token expiré.
+     */
+    public function verificationEmailUser(string $email, string $token, string $date): bool
+    {
+        return $this->db->verificationEmailUser($email, $token, $date);
+    }
 }

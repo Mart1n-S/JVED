@@ -17,6 +17,7 @@ class Routes
         $router->map('GET|POST', '/login', 'c_securityController#index', 'login');
         $router->map('GET', '/deconnexion', 'c_securityController#destroySession', 'deconnexion');
         $router->map('GET|POST', '/inscription', 'c_securityController#inscription', 'inscription');
+        $router->map('GET|POST', '/verification[.:format]?', 'c_securityController#verification', 'verification');
         $router->map('GET|POST', '/test', 'c_testController#index', 'test');
         $router->map('GET', '/test/[i:id]', 'c_testController#index', 'test2');
 
