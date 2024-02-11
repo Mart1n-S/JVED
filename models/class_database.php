@@ -354,4 +354,33 @@ class Database
         }
     }
 
+    /**
+     * Met à jour le thème de l'utilisateur dans la base de données.
+     *
+     * @param string $valueTheme Le thème à mettre à jour.
+     * @param int $idUser L'ID de l'utilisateur.
+     * @return bool Retourne true si la mise à jour est réussie, sinon false en cas d'échec.
+     */
+    public function updateThemeUser(string $valueTheme, int $idUser): bool
+    {
+        try {
+            $query = "
+        UPDATE user
+        SET template = :valueTheme
+        WHERE id = :idUser;
+        ";
+
+            $stmt =  $this->connect()->prepare($query);
+            $stmt->bindParam(':valueTheme', $valueTheme, PDO::PARAM_STR);
+            $stmt->bindParam(':idUser', $idUser, PDO::PARAM_INT);
+            $stmt->execute();
+
+            
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
 }

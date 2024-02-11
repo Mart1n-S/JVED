@@ -13,19 +13,25 @@
 			<li>
 				<a href="{{path('accueil')}}">Jeux Vidéos</a>
 			</li>
-			<li>
 
-				{# Vérifiez si l'utilisateur est connecté #}
-				{% if user is not null %}
 
+			{# Vérifiez si l'utilisateur est connecté #}
+			{% if user is not null %}
+				<li>
+					<a class="navigationLienProfil" href="{{path('profil')}}">Profil</a>
+				</li>
+				<li>
 					<a class="navigationLienConnexion" href="{{ path('deconnexion') }}">
 						Se déconnecter</a>
-				{% else %}
+				</li>
 
+			{% else %}
+				<li>
 					<a class="navigationLienConnexion" href="{{ path('login') }}">Connexion</a>
-				{% endif %}
+				</li>
+			{% endif %}
 
-			</li>
+
 		</ul>
 
 	</nav>

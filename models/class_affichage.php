@@ -23,4 +23,14 @@ class Affichage
     {
         return $this->db->getTopTopics();
     }
+
+    /**
+     * Met à jour le template de l'utilisateur.
+     *
+     * @return bool Retourne True si l'update a marché sinon false
+     */
+    public function updateTheme(string $valueTheme, int $idUser): bool
+    {
+        return $this->db->updateThemeUser($valueTheme, $idUser);
+    }
 }

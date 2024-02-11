@@ -11,8 +11,10 @@
     no-repeat;
   --bg-color-white: #fff;
   --bg-color-button-purple: #6d67e4;
+  --bg-color-button-orange: #e4ab67;
   --color-text-white: #fff;
   --color-text-grey: #525252;
+  --color-text-black: #000000;
   --color-text-purple: #6d67e4;
   --color-text-green:green;
   --color-text-red: red;
@@ -30,8 +32,10 @@
     no-repeat;
   --bg-color-white: #fff;
   --bg-color-button-purple: #aae467;
+  --bg-color-button-orange: #b867e4;
   --color-text-white: #fff;
   --color-text-grey: #525252;
+  --color-text-black: #000000;
   --color-text-purple: #6d67e4;
   --color-text-green:green;
   --color-text-red: red;
@@ -64,9 +68,14 @@ body {
   color: var(--color-text-white);
   font-weight: bold;
 }
-.navigationLien .navigationLienConnexion {
+.navigationLienConnexion {
   border-radius: 14px;
   background-color: var(--bg-color-button-purple);
+  padding: 7px 16px;
+}
+.navigationLienProfil {
+  border-radius: 14px;
+  background-color: var(--bg-color-button-orange);
   padding: 7px 16px;
 }
 
@@ -81,26 +90,26 @@ body {
   background: var(--bg-color-2);
 }
 
-.mainAccueil {
+.mainAccueil, .mainProfil {
   display: flex;
   justify-content: center;
   padding: 4px 4px 0 4px;
 }
 
-.accueil {
+.accueil, .profil {
   display: flex;
   flex-direction: column;
   color: var(--color-text-white);
   margin-top: 64px;
 }
-.accueilTitre {
+.accueilTitre, .profilTitre {
   margin: 32px 0;
 }
-.accueilTitrePrincipal {
+.accueilTitrePrincipal, .profilTitrePrincipal {
   font-size: 50px;
   margin-bottom: 32px;
 }
-.accueilTitreTexte {
+.accueilTitreTexte, .profilTitreTexte {
   font-size: 18px;
 }
 .accueilTendance {
@@ -289,6 +298,57 @@ body {
 }
 .inscriptionContentFormButton, .resetContentFormButton {
   margin: 64px 0 16px 0;
+}
+.profilTitrePrincipal {
+  margin-bottom: 0;
+}
+.profilCard, .profilTheme {
+  background-color: var(--bg-color-white);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.profilCardInfo {
+  margin-bottom: 20px;
+}
+.profilCardInfo h2,
+.profilCardInfo p {
+  color: var(--color-text-black);
+  margin: 10px 0;
+}
+.profilCardInfo .user-email {
+  font-weight: 600;
+  font-size: 20px;
+}
+.profilCardBouton, .profilThemeFormBouton {
+  background-color: var(--bg-color-button-purple);
+  color: var(--color-text-white);
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+.profilThemeTitle {
+  color: var(--color-text-black);
+}
+.profilThemeSubtitle {
+  color: var(--color-text-grey);
+}
+.profilThemeForm {
+  margin-top: 8px;
+}
+.profilThemeFormSelect {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--bg-color-button-purple);
+}
+.profilThemeError {
+  color: var(--color-text-red);
 }
 
 /*# sourceMappingURL=style.css.map */
