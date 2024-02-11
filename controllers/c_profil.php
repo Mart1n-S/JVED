@@ -60,8 +60,8 @@ class c_profil
                     $resultat = $affichage->updateTheme($value, $this->userSession['id']);
 
                     if ($resultat) {
-                        $this->userSession['template'] = $value;
-
+                        $_SESSION['user']['template'] = $value;
+                        $this->userSession['template'] = $_SESSION['user']['template'];
                         $template = $this->twig->getTwig()->load('profil/profil.html.twig');
 
                         // Affichage du template avec les données nécessaires
