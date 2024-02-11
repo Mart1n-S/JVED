@@ -42,6 +42,38 @@
 				{% endif %}
 			</div>
 		</section>
+		<section class="profilTopic">
+			<div class="profilTopicTitre">
+				<h1 class="profilTopicTitrePrincipal">Vos topics
+				</h1>
+				<p class="profilTopicTitreTexte">Vous trouverez ici la liste de tous vos topics que vous avez fait.</p>
+			</div>
+			<table class="profilTopicContent">
+				<thead>
+					<tr>
+						<th>SUJET</th>
+						<th>TOPIC</th>
+						<th>LIEN</th>
+						<th>ACTION</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for topic in topics %}
+						<tr class="{{ cycle(['profilTopicContentOdd-row', 'profilTopicContentEven-row'], loop.index) }}">
+							<td>{{ topic.sujetNom|slice(0,10) }}</td>
+							<td>{{ topic.topicNom|slice(0, 15) }}</td>
+							<td>
+								<a href="topic?id={{topic.topicId}}" class="profilTopicContentLien">Voir</a>
+							</td>
+							<td>
+								<form action=""><input type="hidden" value="{{topic.topicId}}"><button type="submit" class="profilTopicContentBouton" onclick="return confirm('⚠️Votre topic sera supprimé définitivement ⚠️')">Supprimer</button>
+								</form>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</section>
 	</main>
 
 	{{ include('./partials/footer.html.twig') }}

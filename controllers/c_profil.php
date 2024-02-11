@@ -30,12 +30,17 @@ class c_profil
             header('Location: /');
             exit;
         }
+        $topic = new Topic($this->connexionDB);
+        $topicsUser = $topic->getTopicsUser($this->userSession['id']);
+
+        
         // Chargement du template spécifique à la page profil
         $template = $this->twig->getTwig()->load('profil/profil.html.twig');
 
         // Affichage du template avec les données nécessaires
         $template->display([
-            'user' =>  $this->userSession
+            'user' =>  $this->userSession,
+            'topics' => $topicsUser
         ]);
     }
 
@@ -61,13 +66,15 @@ class c_profil
 
                     if ($resultat) {
                         $_SESSION['user']['template'] = $value;
-                        $this->userSession['template'] = $_SESSION['user']['template'];
-                        $template = $this->twig->getTwig()->load('profil/profil.html.twig');
+                        header('Location: /profil');
+                        exit;
+                        // $this->userSession['template'] = $_SESSION['user']['template'];
+                        // $template = $this->twig->getTwig()->load('profil/profil.html.twig');
 
-                        // Affichage du template avec les données nécessaires
-                        $template->display([
-                            'user' =>  $this->userSession
-                        ]);
+                        // // Affichage du template avec les données nécessaires
+                        // $template->display([
+                        //     'user' =>  $this->userSession
+                        // ]);
                     }else{
                         $errorMessages[] = "Une erreur s'est produite";
                     }

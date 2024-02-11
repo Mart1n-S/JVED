@@ -383,4 +383,37 @@ class Database
         }
     }
 
+    /**
+     * Méthode pour obtenir les topics de l'utilisateur
+     *
+     * @param int $idUser L'ID de l'utilisateur dont on veut récupérer les topics
+     * @return array|null Retourne un tableau des topics de l'utilisateur ou null en cas d'erreur
+     */
+    public function getTopicsUser(int $idUser): array|null
+    {
+        try {
+            $query = "
+            SELECT 
+            topic.nom AS topicNom, 
+            sujet.nom AS sujetNom, 
+            topic.id AS topicId
+            FROM topic
+            INNER JOIN 
+                sujet ON topic.idSujet = sujet.id
+            WHERE topic.auteur = :id
+            AND sujet.deletedAt IS NULL 
+            AND topic.deletedAt IS NULL;
+            ";
+
+            $stmt = $this->connect()->prepare($query);
+            $stmt->bindParam(':id', $idUser, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
+
 }
