@@ -30,34 +30,45 @@ class c_profil
             header('Location: /');
             exit;
         }
+        $resultatRequete = null;
+        $resultatRequeteTheme = null;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['idTopicUser'])) {
+
+                $resultatRequete = $this->deleteTopicUser($_POST['idTopicUser']);
+            } elseif (isset($_POST['theme'])) {
+                $resultatRequeteTheme = $this->theme($_POST['theme']);
+            }
+        }
+
         $topic = new Topic($this->connexionDB);
         $topicsUser = $topic->getTopicsUser($this->userSession['id']);
 
-        
+
         // Chargement du template spécifique à la page profil
         $template = $this->twig->getTwig()->load('profil/profil.html.twig');
 
         // Affichage du template avec les données nécessaires
         $template->display([
             'user' =>  $this->userSession,
-            'topics' => $topicsUser
+            'topics' => $topicsUser,
+            'messagesTopics' =>  $resultatRequete,
+            'error'=> $resultatRequeteTheme
         ]);
     }
 
     /**
      * Méthode pour changer le thème
      *
-     * @return void 
      */
-    public function theme(): void
+    public function theme($requete)
     {
 
         $errorMessages = [];
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-            if (isset($_POST['theme'])) {
-                $value = trim($_POST['theme']);
+            if (isset($requete)) {
+                $value = trim($requete);
 
                 // Vérifie si la valeur est dans le tableau des valeurs valides
                 if ($this->isValidValue($value)) {
@@ -68,14 +79,7 @@ class c_profil
                         $_SESSION['user']['template'] = $value;
                         header('Location: /profil');
                         exit;
-                        // $this->userSession['template'] = $_SESSION['user']['template'];
-                        // $template = $this->twig->getTwig()->load('profil/profil.html.twig');
-
-                        // // Affichage du template avec les données nécessaires
-                        // $template->display([
-                        //     'user' =>  $this->userSession
-                        // ]);
-                    }else{
+                    } else {
                         $errorMessages[] = "Une erreur s'est produite";
                     }
                 } else {
@@ -85,17 +89,40 @@ class c_profil
                 $errorMessages[] = "Le champ thème est manquant.";
             }
 
-            // Vérifier que toutes les valeurs sont non vides
-            if (!empty($errorMessages)) {
-                $template = $this->twig->getTwig()->load('profil/profil.html.twig');
+        return $errorMessages;
+    }
 
-                // Affichage du template avec les données nécessaires
-                $template->display([
-                    'error' => $errorMessages,
-                    'user' =>  $this->userSession
-                ]);
+    /**
+     * Méthode pour supprimer (de manière logique le topic de l'utilisateur)
+     *
+     * @return array|string
+     */
+    private function deleteTopicUser($requete): array|string
+    {
+
+        $errorMessagesDelete = [];
+        $successMessage = '';
+
+
+        if (isset($requete)) {
+            $value = trim($requete);
+
+            if (!empty($value)) {
+                $topic = new Topic($this->connexionDB);
+                $resultat = $topic->deleteTopicsUser($value, $this->userSession['id']);
+
+                if ($resultat) {
+                    return $successMessage = 'success';
+                } else {
+                    $errorMessagesDelete[] = "Le topic ne vous appartient pas, ou à déjà été supprimé !";
+                }
+            } else {
+                $errorMessagesDelete[] = "La valeur n'est pas valide.";
             }
+        } else {
+            $errorMessagesDelete[] = "Le champ id du topic est manquant.";
         }
+        return $errorMessagesDelete;
     }
 
     /**

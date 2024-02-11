@@ -24,4 +24,16 @@ class Topic
     {
         return $this->db->getTopicsUser($id);
     }
+
+     /**
+     * Permet de supprimer de manière logique un topic
+     *
+     * @param int $idTopic L'ID du topic.
+     * @param int $idUser L'ID de l'utilisateur.
+     * @return bool Retourne true si c'est bon, false sinon
+     */
+    public function deleteTopicsUser(int $idTopic, int $idUser): bool
+    {
+        return $this->db->deleteTopicsUser($idTopic, $idUser);
+    }
 }

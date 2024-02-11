@@ -122,4 +122,17 @@
       background-color: var(--bg-color-red-pastel);
     }
   }
+  &Message{
+    text-align: center;
+    &Error{
+      background-color: var(--bg-color-white);
+      color: var(--color-text-red);
+      margin-bottom: 8px;
+    }
+    &Success{
+      background-color: var(--bg-color-white);
+      color: var(--color-text-green);
+      margin-bottom: 8px;
+    }
+  }
 }

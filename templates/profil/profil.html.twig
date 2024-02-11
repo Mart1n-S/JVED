@@ -19,12 +19,12 @@
 						<span class="email">{{user['email']}}</span>
 					</p>
 				</div>
-				<a href="{{path('demandeReset')}}" class="profilCardBouton">Modifier mot de passe</a>
+				<a href="{{path('profil')}}" class="profilCardBouton">Modifier mot de passe</a>
 			</div>
 			<div class="profilTheme">
 				<h2 class="profilThemeTitle">Thèmes</h2>
 				<p class="profilThemeSubtitle">Choisissez un nouveau thème</p>
-				<form action="{{ path('theme') }}" method="post" class="profilThemeForm">
+				<form action="{{ path('profil') }}" method="post" class="profilThemeForm">
 					<select name="theme" class="profilThemeFormSelect">
 						<option value="">Défaut</option>
 						<option value="template1">Thème 1</option>
@@ -48,6 +48,17 @@
 				</h1>
 				<p class="profilTopicTitreTexte">Vous trouverez ici la liste de tous vos topics que vous avez fait.</p>
 			</div>
+			<div class="profilTopicMessage">
+				{% if messagesTopics is defined %}
+					{% if messagesTopics is iterable %}
+						{% for errorMessage in messagesTopics %}
+							<p class="profilTopicMessageError">{{ errorMessage }}</p>
+						{% endfor %}
+					{% else %}
+						<p class="profilTopicMessageSuccess">{{ messagesTopics }}</p>
+					{% endif %}
+				{% endif %}
+			</div>
 			<table class="profilTopicContent">
 				<thead>
 					<tr>
@@ -66,7 +77,7 @@
 								<a href="topic?id={{topic.topicId}}" class="profilTopicContentLien">Voir</a>
 							</td>
 							<td>
-								<form action=""><input type="hidden" value="{{topic.topicId}}"><button type="submit" class="profilTopicContentBouton" onclick="return confirm('⚠️Votre topic sera supprimé définitivement ⚠️')">Supprimer</button>
+								<form action="{{path('profil')}}" method="post"><input type="hidden" name="idTopicUser" value="{{topic.topicId}}"><button type="submit" class="profilTopicContentBouton" onclick="return confirm('⚠️Votre topic sera supprimé définitivement ⚠️')">Supprimer</button>
 								</form>
 							</td>
 						</tr>

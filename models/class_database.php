@@ -60,6 +60,7 @@ class Database
                 SELECT nom, topic.auteur, topic.updatedAt AS derniere_activite, COUNT(content.id) AS nombre_commentaires
                 FROM topic 
                 LEFT JOIN content ON topic.id = idTopic
+                WHERE topic.deletedAt IS NULL
                 GROUP BY topic.id
                 ORDER BY COUNT(content.id) DESC, topic.updatedAt DESC
                 LIMIT 5;
@@ -415,5 +416,42 @@ class Database
             return null;
         }
     }
+
+    /**
+     * Méthode pour supprimer un topic de manière logique.
+     *
+     * @param int $idTopic L'ID du topic à supprimer.
+     * @param int $idUser L'ID de l'utilisateur qui supprime le topic.
+     * @return bool Retourne true si la suppression est réussie, sinon false.
+     */
+    public function deleteTopicsUser(int $idTopic, int $idUser): bool
+    {
+        try {
+            // Requête SQL pour supprimer logiquement le topic
+            $query = "
+        UPDATE topic
+        SET deletedAt = CONVERT_TZ(NOW(), 'UTC', 'Europe/Paris')
+        WHERE id = :idTopic
+        AND auteur = :idUser
+        AND deletedAt IS NULL;
+        ";
+
+            $stmt = $this->connect()->prepare($query);
+            $stmt->bindParam(':idTopic', $idTopic, PDO::PARAM_INT);
+            $stmt->bindParam(':idUser', $idUser, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Vérification du nombre de lignes affectées
+            if ($stmt->rowCount() > 0) {
+                return true; // Suppression réussie
+            } else {
+                return false; // Aucun topic n'a été supprimé
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
 
 }

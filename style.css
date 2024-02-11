@@ -369,5 +369,18 @@ body {
   padding: 5px 10px;
   background-color: var(--bg-color-red-pastel);
 }
+.profilTopicMessage {
+  text-align: center;
+}
+.profilTopicMessageError {
+  background-color: var(--bg-color-white);
+  color: var(--color-text-red);
+  margin-bottom: 8px;
+}
+.profilTopicMessageSuccess {
+  background-color: var(--bg-color-white);
+  color: var(--color-text-green);
+  margin-bottom: 8px;
+}
 
 /*# sourceMappingURL=style.css.map */
