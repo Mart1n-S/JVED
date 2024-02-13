@@ -1,0 +1,38 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+	{{ include('./partials/header.html.twig') }}
+	<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-md-6">
+				<h1 class="display-1">Modifier le sujet</h1>
+
+				{% if data %}
+					<form method="post" action="{{ path('posts_edit') }}">
+						<input type="hidden" name="id" value="{{ data['id'] }}">
+						<div class="mb-3">
+							<label for="nom" class="form-label">Nom</label>
+							<input type="text" class="form-control" id="nom" name="nom" value="{{ data['nom'] }}">
+						</div>
+
+						<div class="mb-3">
+							<label for="auteur" class="form-label">Auteur</label>
+							<input type="text" class="form-control" id="auteur" name="auteur" value="{{ data['auteur'] }}">
+						</div>
+
+						<div class="mb-3">
+							<label for="updatedAt" class="form-label">Modifié le</label>
+							<input type="text" class="form-control" id="updatedAt" name="updatedAt" value="{{ data['updatedAt'] }}" disabled>
+						</div>
+
+						<button type="submit" class="btn btn-primary" name="submitUpdate">Enregistrer les modifications</button>
+					</form>
+				{% else %}
+					<p>Le sujet que vous essayez de modifier n'existe pas.</p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+	{{ include('./partials/footer.html.twig') }}
+{% endblock %}
