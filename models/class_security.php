@@ -21,9 +21,18 @@ class Security
             exit;
         }
     }
+
     public function checkAutorisation()
     {
-        if (!$_SESSION['user'] && ($_SESSION['user']['role'] != 'superAdmin' || $_SESSION['user']['role'] != 'moderateur')) {
+        if (!isset($_SESSION['user']) || ($_SESSION['user']['role'] != 'superAdmin' && $_SESSION['user']['role'] != 'moderateur')) {
+            header('Location: /');
+            exit;
+        }
+    }
+
+    public function checkAutorisationSuperAdmin()
+    {
+        if ( $_SESSION['user']['role'] != 'superAdmin' ) {
             header('Location: /');
             exit;
         }

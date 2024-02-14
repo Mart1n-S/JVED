@@ -123,7 +123,9 @@ class c_dashboardController
 
     public function categories(): void
     {
+
         $this->security->checkAutorisation();
+        $this->security->checkAutorisationSuperAdmin();
 
         $dashboard = new Dashboard($this->connexionDB);
         $categories = $dashboard->getCategories();
@@ -138,6 +140,7 @@ class c_dashboardController
     public function categories_edit(): void
     {
         $this->security->checkAutorisation();
+        $this->security->checkAutorisationSuperAdmin();
 
         $dashboard = new Dashboard($this->connexionDB);
         $errorMessages = [];
@@ -176,6 +179,7 @@ class c_dashboardController
     public function categories_add(): void
     {
         $this->security->checkAutorisation();
+        $this->security->checkAutorisationSuperAdmin();
 
         $dashboard = new Dashboard($this->connexionDB);
         $categories = $dashboard->getCategories();
@@ -205,6 +209,7 @@ class c_dashboardController
     public function users(): void
     {
         $this->security->checkAutorisation();
+        $this->security->checkAutorisationSuperAdmin();
 
         $dashboard = new Dashboard($this->connexionDB);
         $users = $dashboard->getUsers();
@@ -219,6 +224,7 @@ class c_dashboardController
     public function users_edit(): void
     {
         $this->security->checkAutorisation();
+        $this->security->checkAutorisationSuperAdmin();
         $errorMessages = [];
         $dashboard = new Dashboard($this->connexionDB);
         $roles = $dashboard->getRoles();
@@ -341,6 +347,7 @@ class c_dashboardController
     public function users_add(): void
     {
         $this->security->checkAutorisation();
+        $this->security->checkAutorisationSuperAdmin();
 
         $dashboard = new Dashboard($this->connexionDB);
         $errorMessages = [];

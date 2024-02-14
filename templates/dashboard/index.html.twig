@@ -22,24 +22,28 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr class="dashboardPanelTableauContentEven-row">
-								<td>
-									<a href="{{path('users')}}">Gestion des utilisateurs
-									</a>
-								</td>
-							</tr>
+							{% if  user['role'] == 'superAdmin' %}
+								<tr class="dashboardPanelTableauContentEven-row">
+									<td>
+										<a href="{{path('users')}}">Gestion des utilisateurs
+										</a>
+									</td>
+								</tr>
+							{% endif %}
 							<tr class="dashboardPanelTableauContentOdd-row">
 								<td>
 									<a href="{{path('posts')}}">Gestion des topics
 									</a>
 								</td>
 							</tr>
-							<tr class="dashboardPanelTableauContentEven-row">
-								<td>
-									<a href="{{path('categories')}}">Gestion des catégories
-									</a>
-								</td>
-							</tr>
+							{% if  user['role'] == 'superAdmin' %}
+								<tr class="dashboardPanelTableauContentEven-row">
+									<td>
+										<a href="{{path('categories')}}">Gestion des catégories
+										</a>
+									</td>
+								</tr>
+							{% endif %}
 							<tr class="dashboardPanelTableauContentOdd-row">
 								<td>
 									<a href="{{path('waitingPosts')}}">Gestion des topics en attente de validation
