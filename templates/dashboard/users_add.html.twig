@@ -1,0 +1,35 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    {{ include('./partials/header.html.twig') }}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h1 class="display-1">Ajouter une catégorie</h1>
+
+                <form method="post" action="{{ path('users_add') }}">
+                    <div class="mb-3">
+                        <label for="pseudo" class="form-label">Pseudo</label>
+                        <input type="text" class="form-control" id="pseudo" name="pseudo" value="">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value="">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        <input type="password" class="form-control" id="password" name="password" value="">
+                    </div>
+                    <div class="mb-3">
+                        <label for="idRole" class="form-label">Role</label>
+                        <input type="text" class="form-control" id="idRole" name="idRole" value="">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" name="submitAdd">Ajouter l'utilisateur</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{ include('./partials/footer.html.twig') }}
+{% endblock %}

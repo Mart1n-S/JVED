@@ -60,6 +60,7 @@ class Database
                 SELECT nom, topic.auteur, topic.updatedAt AS derniere_activite, COUNT(content.id) AS nombre_commentaires
                 FROM topic 
                 LEFT JOIN content ON topic.id = idTopic
+                WHERE topic.deletedAt IS NULL
                 GROUP BY topic.id
                 ORDER BY COUNT(content.id) DESC, topic.updatedAt DESC
                 LIMIT 5;
@@ -353,5 +354,104 @@ class Database
             return false;
         }
     }
+
+    /**
+     * Met à jour le thème de l'utilisateur dans la base de données.
+     *
+     * @param string $valueTheme Le thème à mettre à jour.
+     * @param int $idUser L'ID de l'utilisateur.
+     * @return bool Retourne true si la mise à jour est réussie, sinon false en cas d'échec.
+     */
+    public function updateThemeUser(string $valueTheme, int $idUser): bool
+    {
+        try {
+            $query = "
+        UPDATE user
+        SET template = :valueTheme
+        WHERE id = :idUser;
+        ";
+
+            $stmt =  $this->connect()->prepare($query);
+            $stmt->bindParam(':valueTheme', $valueTheme, PDO::PARAM_STR);
+            $stmt->bindParam(':idUser', $idUser, PDO::PARAM_INT);
+            $stmt->execute();
+
+            
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    /**
+     * Méthode pour obtenir les topics de l'utilisateur
+     *
+     * @param int $idUser L'ID de l'utilisateur dont on veut récupérer les topics
+     * @return array|null Retourne un tableau des topics de l'utilisateur ou null en cas d'erreur
+     */
+    public function getTopicsUser(int $idUser): array|null
+    {
+        try {
+            $query = "
+            SELECT 
+            topic.nom AS topicNom, 
+            sujet.nom AS sujetNom, 
+            topic.id AS topicId
+            FROM topic
+            INNER JOIN 
+                sujet ON topic.idSujet = sujet.id
+            WHERE topic.auteur = :id
+            AND sujet.deletedAt IS NULL 
+            AND topic.deletedAt IS NULL;
+            ";
+
+            $stmt = $this->connect()->prepare($query);
+            $stmt->bindParam(':id', $idUser, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
+
+    /**
+     * Méthode pour supprimer un topic de manière logique.
+     *
+     * @param int $idTopic L'ID du topic à supprimer.
+     * @param int $idUser L'ID de l'utilisateur qui supprime le topic.
+     * @return bool Retourne true si la suppression est réussie, sinon false.
+     */
+    public function deleteTopicsUser(int $idTopic, int $idUser): bool
+    {
+        try {
+            // Requête SQL pour supprimer logiquement le topic
+            $query = "
+        UPDATE topic
+        SET deletedAt = CONVERT_TZ(NOW(), 'UTC', 'Europe/Paris')
+        WHERE id = :idTopic
+        AND auteur = :idUser
+        AND deletedAt IS NULL;
+        ";
+
+            $stmt = $this->connect()->prepare($query);
+            $stmt->bindParam(':idTopic', $idTopic, PDO::PARAM_INT);
+            $stmt->bindParam(':idUser', $idUser, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Vérification du nombre de lignes affectées
+            if ($stmt->rowCount() > 0) {
+                return true; // Suppression réussie
+            } else {
+                return false; // Aucun topic n'a été supprimé
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
 
 }

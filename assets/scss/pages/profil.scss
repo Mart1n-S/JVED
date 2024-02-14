@@ -1,0 +1,138 @@
+.mainProfil {
+  @extend .mainAccueil;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profil {
+  @extend .accueil;
+
+  &Titre {
+    @extend .accueilTitre;
+
+
+    &Principal {
+      @extend .accueilTitrePrincipal;
+      margin-bottom: 0;
+    }
+
+    &Texte {
+      @extend .accueilTitreTexte;
+    }
+  }
+
+  &Card {
+    background-color: var(--bg-color-white);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    &Info {
+      margin-bottom: 20px;
+
+      h2,
+      p {
+        color: var(--color-text-black);
+        margin: 10px 0;
+      }
+
+      .user-email {
+        font-weight: 600;
+        font-size: 20px;
+      }
+    }
+
+    &Bouton {
+      background-color: var(--bg-color-button-purple);
+      color: var(--color-text-white);
+      border: none;
+      border-radius: 4px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+  }
+
+  &Theme {
+    @extend .profilCard;
+
+    &Title {
+      color: var(--color-text-black);
+    }
+
+    &Subtitle {
+      color: var(--color-text-grey);
+    }
+
+    &Form {
+      margin-top: 8px;
+
+      &Select {
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid var(--bg-color-button-purple);
+      }
+
+      &Bouton {
+        @extend .profilCardBouton;
+      }
+    }
+
+    &Error{
+      color: var(--color-text-red);
+    }
+
+  }
+}
+
+.profilTopic{
+  @extend .accueil;
+  &Titre {
+    @extend .accueilTitre;
+
+
+    &Principal {
+      @extend .accueilTitrePrincipal;
+      margin-bottom: 0;
+    }
+
+    &Texte {
+      @extend .accueilTitreTexte;
+    }
+  }
+  &Content{
+    @extend .accueilTendanceTableauContent;
+    &Odd-row {
+      @extend .accueilTendanceTableauContentOdd-row;
+    }
+    &Even-row {
+      @extend .accueilTendanceTableauContentEven-row;
+    }
+    &Lien{
+      @extend .profilThemeFormBouton;
+      padding: 2px 10px;
+    }
+    &Bouton{
+      @extend .profilThemeFormBouton;
+      padding: 5px 10px;
+      background-color: var(--bg-color-red-pastel);
+    }
+  }
+  &Message{
+    text-align: center;
+    &Error{
+      background-color: var(--bg-color-white);
+      color: var(--color-text-red);
+      margin-bottom: 8px;
+    }
+    &Success{
+      background-color: var(--bg-color-white);
+      color: var(--color-text-green);
+      margin-bottom: 8px;
+    }
+  }
+}

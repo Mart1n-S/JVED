@@ -1,0 +1,91 @@
+{% extends "base.html.twig" %}
+{% block title %}Profil
+{% endblock %}
+{% block body %}
+	{{ include('./partials/header.html.twig') }}
+	<main class="mainProfil">
+		<section class="profil">
+			<div class="profilTitre">
+				<h1 class="profilTitrePrincipal">Profil
+				</h1>
+				<p class="profilTitreTexte">Vous trouverez ici toutes les informations qui vous concernent.</p>
+			</div>
+			<div class="profilCard">
+				<div class="profilCardInfo">
+					<h2 class="user-pseudo">Pseudo:
+						<span class="pseudo">{{user['pseudo']}}</span>
+					</h2>
+					<p class="user-email">Email:
+						<span class="email">{{user['email']}}</span>
+					</p>
+				</div>
+				<a href="{{path('profil')}}" class="profilCardBouton">Modifier mot de passe</a>
+			</div>
+			<div class="profilTheme">
+				<h2 class="profilThemeTitle">Thèmes</h2>
+				<p class="profilThemeSubtitle">Choisissez un nouveau thème</p>
+				<form action="{{ path('profil') }}" method="post" class="profilThemeForm">
+					<select name="theme" class="profilThemeFormSelect">
+						<option value="">Défaut</option>
+						<option value="template1">Thème 1</option>
+						<option value="template2">Thème 2</option>
+						<option value="template3">Thème 3</option>
+					</select>
+					<button type="submit" class="profilThemeFormBouton">Valider</button>
+				</form>
+				{% if error is defined %}
+
+					{% for errorMessage in error %}
+						<p class="profilThemeError">{{ errorMessage }}</p>
+					{% endfor %}
+
+				{% endif %}
+			</div>
+		</section>
+		<section class="profilTopic">
+			<div class="profilTopicTitre">
+				<h1 class="profilTopicTitrePrincipal">Vos topics
+				</h1>
+				<p class="profilTopicTitreTexte">Vous trouverez ici la liste de tous vos topics que vous avez fait.</p>
+			</div>
+			<div class="profilTopicMessage">
+				{% if messagesTopics is defined %}
+					{% if messagesTopics is iterable %}
+						{% for errorMessage in messagesTopics %}
+							<p class="profilTopicMessageError">{{ errorMessage }}</p>
+						{% endfor %}
+					{% else %}
+						<p class="profilTopicMessageSuccess">{{ messagesTopics }}</p>
+					{% endif %}
+				{% endif %}
+			</div>
+			<table class="profilTopicContent">
+				<thead>
+					<tr>
+						<th>SUJET</th>
+						<th>TOPIC</th>
+						<th>LIEN</th>
+						<th>ACTION</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for topic in topics %}
+						<tr class="{{ cycle(['profilTopicContentOdd-row', 'profilTopicContentEven-row'], loop.index) }}">
+							<td>{{ topic.sujetNom|slice(0,10) }}</td>
+							<td>{{ topic.topicNom|slice(0, 15) }}</td>
+							<td>
+								<a href="topic?id={{topic.topicId}}" class="profilTopicContentLien">Voir</a>
+							</td>
+							<td>
+								<form action="{{path('profil')}}" method="post"><input type="hidden" name="idTopicUser" value="{{topic.topicId}}"><button type="submit" class="profilTopicContentBouton" onclick="return confirm('⚠️Votre topic sera supprimé définitivement ⚠️')">Supprimer</button>
+								</form>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</section>
+	</main>
+
+	{{ include('./partials/footer.html.twig') }}
+{% endblock %}
