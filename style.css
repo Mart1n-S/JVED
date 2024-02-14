@@ -92,35 +92,35 @@ body {
   background: var(--bg-color-2);
 }
 
-.mainAccueil, .mainProfil {
+.mainAccueil, .mainDashboard, .regles, .mainProfil {
   display: flex;
   justify-content: center;
   padding: 4px 4px 0 4px;
 }
 
-.accueil, .profilTopic, .profil {
+.accueil, .dashboard, .profilTopic, .profil {
   display: flex;
   flex-direction: column;
   color: var(--color-text-white);
   margin-top: 64px;
 }
-.accueilTitre, .profilTopicTitre, .profilTitre {
+.accueilTitre, .dashboardTitre, .profilTopicTitre, .profilTitre {
   margin: 32px 0;
 }
-.accueilTitrePrincipal, .profilTopicTitrePrincipal, .profilTitrePrincipal {
+.accueilTitrePrincipal, .dashboardTitrePrincipal, .profilTopicTitrePrincipal, .profilTitrePrincipal {
   font-size: 50px;
   margin-bottom: 32px;
 }
-.accueilTitreTexte, .profilTopicTitreTexte, .profilTitreTexte {
+.accueilTitreTexte, .dashboardTitreTexte, .profilTopicTitreTexte, .profilTitreTexte {
   font-size: 18px;
 }
-.accueilTendance {
+.accueilTendance, .dashboardPanel {
   margin: 32px 0;
 }
 .accueilTendanceTitre {
   font-size: 18px;
 }
-.accueilTendanceTableau {
+.accueilTendanceTableau, .dashboardPanelTableau {
   display: flex;
   flex-direction: column;
   padding: 4px;
@@ -133,39 +133,40 @@ body {
 .accueilTendanceTableauLien a {
   color: var(--color-text-white);
 }
-.accueilTendanceTableauContent, .profilTopicContent {
+.accueilTendanceTableauContent, .dashboardPanelTableauContent, .profilTopicContent {
   border-collapse: collapse;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
   border-radius: 12px;
 }
-.accueilTendanceTableauContent thead, .profilTopicContent thead {
+.accueilTendanceTableauContent thead, .dashboardPanelTableauContent thead, .profilTopicContent thead {
   background-color: var(--bg-color-dark-1);
 }
-.accueilTendanceTableauContent th, .profilTopicContent th,
+.accueilTendanceTableauContent th, .dashboardPanelTableauContent th, .profilTopicContent th,
 .accueilTendanceTableauContent td,
+.dashboardPanelTableauContent td,
 .profilTopicContent td {
   padding: 16px;
   text-align: center;
 }
-.accueilTendanceTableauContent th:first-child, .profilTopicContent th:first-child {
+.accueilTendanceTableauContent th:first-child, .dashboardPanelTableauContent th:first-child, .profilTopicContent th:first-child {
   border-radius: 12px 0 0 0;
 }
-.accueilTendanceTableauContent th:last-child, .profilTopicContent th:last-child {
+.accueilTendanceTableauContent th:last-child, .dashboardPanelTableauContent th:last-child, .profilTopicContent th:last-child {
   border-radius: 0 12px 0 0;
 }
-.accueilTendanceTableauContent tr:last-child, .profilTopicContent tr:last-child {
+.accueilTendanceTableauContent tr:last-child, .dashboardPanelTableauContent tr:last-child, .profilTopicContent tr:last-child {
   border-radius: 0 0 12px 12px;
 }
-.accueilTendanceTableauContent tr:last-child td:first-child, .profilTopicContent tr:last-child td:first-child {
+.accueilTendanceTableauContent tr:last-child td:first-child, .dashboardPanelTableauContent tr:last-child td:first-child, .profilTopicContent tr:last-child td:first-child {
   border-radius: 0 0 0 12px;
 }
-.accueilTendanceTableauContent tr:last-child td:last-child, .profilTopicContent tr:last-child td:last-child {
+.accueilTendanceTableauContent tr:last-child td:last-child, .dashboardPanelTableauContent tr:last-child td:last-child, .profilTopicContent tr:last-child td:last-child {
   border-radius: 0 0 12px 0;
 }
-.accueilTendanceTableauContentOdd-row, .profilTopicContentOdd-row {
+.accueilTendanceTableauContentOdd-row, .dashboardPanelTableauContentOdd-row, .profilTopicContentOdd-row {
   background-color: var(--bg-color-dark-1);
 }
-.accueilTendanceTableauContentEven-row, .profilTopicContentEven-row {
+.accueilTendanceTableauContentEven-row, .dashboardPanelTableauContentEven-row, .profilTopicContentEven-row {
   background-color: var(--bg-color-dark-light);
 }
 
@@ -302,7 +303,6 @@ body {
 .inscriptionContentFormButton, .resetContentFormButton {
   margin: 64px 0 16px 0;
 }
-
 .mainProfil {
   flex-direction: column;
   align-items: center;
@@ -311,7 +311,7 @@ body {
 .profilTitrePrincipal {
   margin-bottom: 0;
 }
-.profilCard, .profilTheme {
+.profilCard, .reglesCard, .profilTheme {
   background-color: var(--bg-color-white);
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -382,6 +382,119 @@ body {
   background-color: var(--bg-color-white);
   color: var(--color-text-green);
   margin-bottom: 8px;
+}
 
+.mainDashboard, .regles {
+  flex-direction: column;
+  align-items: center;
+}
+
+.dashboardPanelTableauContent th:last-child {
+  border-radius: 12px 12px 0 0;
+}
+.dashboardPanelTableauContent tr:last-child td:last-child {
+  border-radius: 0 0 12px 12px;
+}
+.dashboardPanelTableauContentOdd-row a {
+  color: var(--color-text-white);
+}
+.dashboardPanelTableauContentEven-row a {
+  color: var(--color-text-white);
+}
+
+.reglesTitre {
+  margin-top: 64px;
+  color: var(--color-text-white);
+  font-weight: bolder;
+}
+.reglesCard {
+  width: 50%;
+  padding: 32px;
+}
+.reglesCardContainer p {
+  margin-bottom: 32px;
+  font-weight: 600;
+  line-height: 24px;
+  font-size: 1.1em;
+}
+.reglesCardContainerList h3 {
+  text-align: center;
+  color: var(--color-text-red);
+  font-weight: bolder;
+}
+.reglesCardContainerList li {
+  margin: 12px 0;
+  font-size: 1.1em;
+  line-height: 24px;
+  list-style: none;
+}
+.reglesCardContainerList li span {
+  color: var(--color-text-red);
+}
+
+.container {
+  margin-top: 20px;
+}
+
+/* Additional Styles for User Management */
+.container mt-5 {
+  margin-top: 20px;
+}
+
+.col-md-6 {
+  width: 100%;
+}
+
+.table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table th,
+.table td {
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #dee2e6;
+}
+
+.table th {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.btn {
+  margin-right: 5px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+}
+
+.btn-primary.mb-3 {
+  margin-bottom: 20px;
+}
+
+.footer {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
 
 /*# sourceMappingURL=style.css.map */

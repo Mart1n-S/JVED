@@ -1,26 +1,87 @@
 {% extends "base.html.twig" %}
-
+{% block title %}Dashboard
+{% endblock %}
 {% block body %}
 	{{ include('./partials/header.html.twig') }}
 
-
-	<div class="container mt-5">
-		<div class="row justify-content-center">
-			<div class="col-md-6">
-				<h1 class="display-1">
-					Dashboard
+	<main class="mainDashboard">
+		<section class="dashboard">
+			<div class="dashboardTitre">
+				<h1 class="dashboardTitrePrincipal">Bienvenue
+					{{user['pseudo']}}
 				</h1>
-				<a href="users">Gestion des utilisateurs
-				</a>
-				<a href="posts">Gestion des postes
-				</a>
-				<a href="categories">Gestion des catégories
-				</a>
-				<a href="contents">Gestion des commentaires
-				</a>
+				<p class="dashboardTitreTexte">Vous trouverez ici les différentes fonctionnalités pour administrer JV&D</p>
 			</div>
-		</div>
-	</div>
+			<div class="dashboardPanel">
+
+				<div class="dashboardPanelTableau">
+					<table class="dashboardPanelTableauContent">
+						<thead>
+							<tr>
+								<th>OUTILS</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="dashboardPanelTableauContentEven-row">
+								<td>
+									<a href="{{path('users')}}">Gestion des utilisateurs
+									</a>
+								</td>
+							</tr>
+							<tr class="dashboardPanelTableauContentOdd-row">
+								<td>
+									<a href="{{path('posts')}}">Gestion des postes
+									</a>
+								</td>
+							</tr>
+							<tr class="dashboardPanelTableauContentEven-row">
+								<td>
+									<a href="{{path('categories')}}">Gestion des catégories
+									</a>
+								</td>
+							</tr>
+							<tr class="dashboardPanelTableauContentOdd-row">
+								<td>
+									<a href="{{path('contents')}}">Gestion des commentaires
+									</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</section>
+		<section class="regles">
+			<h2 class="reglesTitre">{{ 'règles' | upper }}</h2>
+			<div class="reglesCard">
+				<div class="reglesCardContainer">
+					<p>En tant que modérateur ou administrateur, vous avez la responsabilité essentielle de maintenir un environnement sûr et respectueux au sein de notre communauté. Votre rôle implique la gestion des interactions entre les membres, la modération du contenu et la résolution des conflits.</p>
+					<p>Si vous rencontrez une situation où vous n'êtes pas sûr de la meilleure action à prendre, nous vous encourageons à demander conseil auprès du super administrateur. Le super administrateur est là pour vous soutenir et vous aider à prendre des décisions éclairées qui bénéficieront à l'ensemble de la communauté.</p>
+					<p>Votre engagement envers ces responsabilités contribue grandement à créer une expérience positive pour tous les membres de notre communauté. Merci pour votre dévouement et votre travail acharné !</p>
+					<div class="reglesCardContainerList">
+						<h3>{{ 'Strictement interdit' | upper }}</h3>
+						<ul>
+							<li>
+								<span>Comportement haineux :
+								</span>Tout discours ou acte visant à nuire, discriminer ou marginaliser un individu ou un groupe en raison de son origine, son identité, sa religion, son orientation sexuelle, etc.</li>
+							<li>
+								<span>Injure :</span>
+								Utilisation de langage vulgaire, dégradant ou offensant envers d'autres membres de la communauté.</li>
+							<li>
+								<span>Racisme :</span>
+								Promotion ou propagation de l'idéologie raciste, stigmatisation ou discrimination fondée sur la race ou l'ethnicité.</li>
+							<li>
+								<span>Violence :</span>
+								Incitation à la violence physique ou verbale, menaces, intimidation ou toute autre forme de comportement agressif.</li>
+							<li>
+								<span>Spam :</span>
+								Publication répétitive de messages non sollicités, de publicités ou de liens promotionnels.</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
 
 	{{ include('./partials/footer.html.twig') }}
 {% endblock %}

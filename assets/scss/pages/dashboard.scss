@@ -1,101 +1,113 @@
+.mainDashboard {
+    @extend .mainAccueil;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dashboard {
+    @extend .accueil;
+
+    &Titre {
+        @extend .accueilTitre;
+
+        &Principal {
+            @extend .accueilTitrePrincipal;
+        }
+
+        &Texte {
+            @extend .accueilTitreTexte;
+        }
+    }
+
+    &Panel {
+        @extend .accueilTendance;
+
+
+        &Tableau {
+            @extend .accueilTendanceTableau;
+
+            &Content {
+                @extend .accueilTendanceTableauContent;
+
+                th:last-child {
+                    border-radius: 12px 12px 0 0;
+                }
+
+                tr:last-child td:last-child {
+                    border-radius: 0 0 12px 12px;
+                }
+
+                &Odd-row {
+                    @extend .accueilTendanceTableauContentOdd-row;
+
+                    a {
+                        color: var(--color-text-white);
+                    }
+                }
+
+                &Even-row {
+                    @extend .accueilTendanceTableauContentEven-row;
+
+                    a {
+                        color: var(--color-text-white);
+                    }
+                }
+            }
+        }
+    }
+}
+
+.regles {
+    @extend .mainDashboard;
+
+    &Titre {
+        margin-top: 64px;
+        color: var(--color-text-white);
+        font-weight: bolder;
+        
+    }
+
+    &Card {
+        @extend .profilCard;
+
+        width: 50%;
+        padding: 32px;
+
+        &Container {
+            p {
+                margin-bottom: 32px;
+                font-weight: 600;
+                line-height: 24px;
+                font-size: 1.1em;
+            }
+
+            &List {
+                h3 {
+                    text-align: center;
+                    color: var(--color-text-red);
+                    font-weight: bolder;
+                }
+
+                li {
+                    margin: 12px 0;
+                    font-size: 1.1em;
+                    line-height: 24px;
+                    list-style: none;
+
+                    span {
+                        color: var(--color-text-red);
+                    }
+                }
+            }
+        }
+    }
+}
 
 
 .container {
     margin-top: 20px;
 }
 
-.mainAccueil {
-    display: flex;
-    justify-content: center;
-    padding: 4px 4px 0 4px;
-}
-
-.accueil {
-    display: flex;
-    flex-direction: column;
-    color: var(--color-text-white);
-    margin-top: 64px;
-
-    &Titre {
-        margin: 32px 0;
-
-        &Principal {
-            font-size: 50px;
-            margin-bottom: 32px;
-        }
-
-        &Texte {
-            font-size: 18px;
-        }
-    }
-
-    &Tendance {
-        margin: 32px 0;
-
-        &Titre {
-            font-size: 18px;
-        }
-
-        &Tableau {
-            display: flex;
-            flex-direction: column;
-            padding: 4px;
-
-            &Lien {
-                a {
-                    color: var(--color-text-white);
-                }
-                text-align: end;
-                margin: 32px 0 16px 0;
-                font-size: 14px;
-            }
-
-            &Content {
-                border-collapse: collapse;
-                box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
-                border-radius: 12px;
-
-                thead {
-                    background-color: var(--bg-color-dark-1);
-                }
-
-                th,
-                td {
-                    padding: 16px;
-                    text-align: center;
-                }
-
-                th:first-child {
-                    border-radius: 12px 0 0 0;
-                }
-
-                th:last-child {
-                    border-radius: 0 12px 0 0;
-                }
-
-                tr:last-child {
-                    border-radius: 0 0 12px 12px;
-                }
-
-                tr:last-child td:first-child {
-                    border-radius: 0 0 0 12px;
-                }
-
-                tr:last-child td:last-child {
-                    border-radius: 0 0 12px 0;
-                }
-
-                &Odd-row {
-                    background-color: var(--bg-color-dark-1);
-                }
-
-                &Even-row {
-                    background-color: var(--bg-color-dark-light);
-                }
-            }
-        }
-    }
-}
 
 /* Additional Styles for User Management */
 .container mt-5 {

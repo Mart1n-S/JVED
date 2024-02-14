@@ -3,6 +3,7 @@ class c_dashboardController
 {
     private $twig;
     private $connexionDB;
+    private $security;
     private $userSession;
 
     /**
@@ -15,6 +16,7 @@ class c_dashboardController
     {
         $this->twig = $twig;
         $this->connexionDB = $connexionDB;
+        $this->security = new Security($this->connexionDB);
         $this->userSession = $userSession;
     }
 
@@ -25,6 +27,8 @@ class c_dashboardController
      */
     public function index(): void
     {
+        $this->security->checkAutorisation();
+
         $affichage = new Affichage($this->connexionDB);
         // Chargement du template spécifique à la page d'accueil
         $template = $this->twig->getTwig()->load('dashboard/index.html.twig');
@@ -38,6 +42,8 @@ class c_dashboardController
 
     public function posts(): void
     {
+        $this->security->checkAutorisation();
+
         $dashboard = new Dashboard($this->connexionDB);
         $topics = $dashboard->getTopics();
 
@@ -51,6 +57,8 @@ class c_dashboardController
 
     public function posts_edit(): void
     {
+        $this->security->checkAutorisation();
+
         $dashboard = new Dashboard($this->connexionDB);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -88,6 +96,8 @@ class c_dashboardController
 
     public function categories(): void
     {
+        $this->security->checkAutorisation();
+
         $dashboard = new Dashboard($this->connexionDB);
         $categories = $dashboard->getCategories();
 
@@ -100,6 +110,8 @@ class c_dashboardController
 
     public function categories_edit(): void
     {
+        $this->security->checkAutorisation();
+
         $dashboard = new Dashboard($this->connexionDB);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -136,6 +148,8 @@ class c_dashboardController
 
     public function categories_add(): void
     {
+        $this->security->checkAutorisation();
+
         $dashboard = new Dashboard($this->connexionDB);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitAdd'])) {
@@ -159,6 +173,8 @@ class c_dashboardController
 
     public function users(): void
     {
+        $this->security->checkAutorisation();
+
         $dashboard = new Dashboard($this->connexionDB);
         $users = $dashboard->getUsers();
 
@@ -171,6 +187,8 @@ class c_dashboardController
 
     public function users_edit(): void
     {
+        $this->security->checkAutorisation();
+
         $dashboard = new Dashboard($this->connexionDB);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -211,6 +229,8 @@ class c_dashboardController
 
     public function users_add(): void
     {
+        $this->security->checkAutorisation();
+
         $dashboard = new Dashboard($this->connexionDB);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitAdd'])) {
@@ -237,6 +257,8 @@ class c_dashboardController
 
     public function contents(): void
     {
+        $this->security->checkAutorisation();
+
         $dashboard = new Dashboard($this->connexionDB);
         $contents = $dashboard->getContents();
 
@@ -248,25 +270,29 @@ class c_dashboardController
     }
 
     public function contents_delete(): void
-{
-    $dashboard = new Dashboard($this->connexionDB);
+    {
+        $this->security->checkAutorisation();
+        
+        $dashboard = new Dashboard($this->connexionDB);
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitDelete'])) {
-        $userId = $_POST['id'] ?? '';
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitDelete'])) {
+            $userId = $_POST['id'] ?? '';
 
-        if ($dashboard->deleteContent($userId)) {
-            echo 'WOUPLI';
-            header("Location: contents");
-            exit;
-        } else {
-            echo 'et oe';
+            if ($dashboard->deleteContent($userId)) {
+                echo 'WOUPLI';
+                header("Location: contents");
+                exit;
+            } else {
+                echo 'et oe';
+            }
         }
+
+        // You may want to handle the case where the request method is not POST or submitDelete is not set
+
+        // Move the template rendering outside of the condition
+        $template = $this->twig->getTwig()->load('dashboard/contents.html.twig');
+        $template->display();
     }
 
-    // You may want to handle the case where the request method is not POST or submitDelete is not set
-
-    // Move the template rendering outside of the condition
-    $template = $this->twig->getTwig()->load('dashboard/contents.html.twig');
-    $template->display();
-}
+    
 }
