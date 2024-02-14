@@ -11,7 +11,12 @@
 
 			</div>
 			<div class="gestionNavigation">
-				<a href="{{path('posts')}}">Retour Topics</a>
+				{% if contents[0]['valide'] == 0 %}
+					<a href="{{path('waitingPosts')}}">Retour validation topics</a>
+				{% else %}
+					<a href="{{path('posts')}}">Retour Topics</a>
+				{% endif %}
+
 			</div>
 			<div class="gestionCrud">
 				<h2 class="gestionCrudTitre">{{ 'Liste de tous les commentaires du topic ' ~ contents[0]['topic']|upper }}</h2>

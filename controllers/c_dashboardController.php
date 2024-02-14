@@ -29,13 +29,12 @@ class c_dashboardController
     {
         $this->security->checkAutorisation();
 
-        $affichage = new Affichage($this->connexionDB);
+        // $affichage = new Affichage($this->connexionDB);
         // Chargement du template spécifique à la page d'accueil
         $template = $this->twig->getTwig()->load('dashboard/index.html.twig');
 
         // Affichage du template avec les données nécessaires
         $template->display([
-            'topTopics' => $affichage->getTopTopicsAccueil(),
             'user' =>  $this->userSession
         ]);
     }
@@ -329,6 +328,16 @@ class c_dashboardController
         return false;
     }
 
+    private function acceptItem($id, $dashboard, $redirection)
+    {
+        if ($dashboard->acceptItem($id)) {
+            header("Location: $redirection");
+            exit;
+        }
+
+        return false;
+    }
+
     public function users_add(): void
     {
         $this->security->checkAutorisation();
@@ -413,6 +422,46 @@ class c_dashboardController
                 'data' =>  $data,
                 'user' =>  $this->userSession
             ]);
+            };
+        }else{
+            header('Location: dashboard');
+            exit;
+        }
+           
+       
+    }
+
+    public function validationPosts(): void
+    {
+        $this->security->checkAutorisation();
+
+        $dashboard = new Dashboard($this->connexionDB);
+        // Chargement du template spécifique à la page d'accueil
+        $template = $this->twig->getTwig()->load('dashboard/validationPosts.html.twig');
+
+        // Affichage du template avec les données nécessaires
+        $template->display([
+            'postsWaitingValidation' => $dashboard->getTopicsWaitingValidation(),
+            'user' =>  $this->userSession
+        ]);
+       
+    }
+
+    public function editValidationPosts(): void
+    {
+        $this->security->checkAutorisation();
+
+        $dashboard = new Dashboard($this->connexionDB);
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'id' => $_POST['id'] ?? ''
+            ];
+
+            if (isset($_POST['submitDelete'])) {
+                $this->deleteItem($data['id'], $dashboard, 'topic', "validation-posts");
+            }elseif(isset($_POST['submitAccept'])){
+                $this->acceptItem($data['id'], $dashboard, "validation-posts");
             };
         }
             header('Location: dashboard');

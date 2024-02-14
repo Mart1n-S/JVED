@@ -13,16 +13,59 @@ class Dashboard
     {
         try {
             $query = "
-                SELECT t.id, t.nom, u.pseudo as auteur, t.createdAt, t.updatedAt, t.deletedAt, s.nom as nomSujet
+                SELECT t.id, t.nom, u.pseudo as auteur, t.createdAt, t.updatedAt, t.deletedAt, s.nom as nomSujet, t.valide
                 FROM topic t
                 JOIN user u ON t.auteur = u.id
-                JOIN sujet s ON t.idSujet = s.id;
+                JOIN sujet s ON t.idSujet = s.id
+                WHERE t.valide = 1 ;
             ";
-    
+
             $stmt = $this->db->connect()->query($query);
             $topics = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
             return $topics;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public function getTopicsWaitingValidation(): array|false
+    {
+        try {
+            $query = "
+                SELECT t.id, t.nom, u.pseudo as auteur, t.createdAt, t.updatedAt, t.deletedAt, s.nom as nomSujet, t.valide
+                FROM topic t
+                JOIN user u ON t.auteur = u.id
+                JOIN sujet s ON t.idSujet = s.id
+                WHERE t.valide = 0 
+                AND t.deletedAt IS NULL;
+            ";
+
+            $stmt = $this->db->connect()->query($query);
+            $topics = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $topics;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public function acceptItem(int $id): bool
+    {
+        try {
+            $query = "
+            UPDATE topic 
+            SET valide = 1 
+            WHERE id = :id;
+        ";
+
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->bindParam(':id', $id, PDO::PARAM_STR);
+            $stmt->execute();
+
+            return true;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return false;
@@ -43,7 +86,7 @@ class Dashboard
     //         $stmt->bindParam(':auteur', $data['auteur'], PDO::PARAM_STR);
     //         $stmt->bindValue(':updatedAt', date('Y-m-d H:i:s'), PDO::PARAM_STR);
     //         $stmt->execute();
-    
+
     //         return true;
     //     } catch (PDOException $e) {
     //         echo "Error: " . $e->getMessage();
@@ -58,14 +101,14 @@ class Dashboard
     //         $stmt = $this->db->connect()->prepare($query);
     //         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     //         $stmt->execute();
-    
+
     //         return true;
     //     } catch (PDOException $e) {
     //         echo "Error: " . $e->getMessage();
     //         return false;
     //     }
     // }
-    
+
     public function getCategories(): array|false
     {
         try {
@@ -73,10 +116,10 @@ class Dashboard
                 SELECT id, nom, createdAt, updatedAt, deletedAt
                 FROM categorie;
             ";
-    
+
             $stmt = $this->db->connect()->query($query);
             $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
             return $categories;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
@@ -95,7 +138,7 @@ class Dashboard
     //         $stmt->bindParam(':id',$data['id'], PDO::PARAM_INT);
     //         $stmt->bindValue(':nom', $data['nom'], PDO::PARAM_STR);
     //         $stmt->execute();
-    
+
     //         return true;
     //     } catch (PDOException $e) {
     //         echo "Error: " . $e->getMessage();
@@ -110,7 +153,7 @@ class Dashboard
     //         $stmt = $this->db->connect()->prepare($query);
     //         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     //         $stmt->execute();
-    
+
     //         return true;
     //     } catch (PDOException $e) {
     //         echo "Error: " . $e->getMessage();
@@ -124,13 +167,13 @@ class Dashboard
                 INSERT INTO categorie (nom, createdAt, updatedAt)
                 VALUES (:nom, :createdAt, :updatedAt);
             ";
-            
+
             $stmt = $this->db->connect()->prepare($query);
             $stmt->bindParam(':nom', $data['nom'], PDO::PARAM_STR);
             $stmt->bindValue(':createdAt', date('Y-m-d H:i:s'), PDO::PARAM_STR);
             $stmt->bindValue(':updatedAt', date('Y-m-d H:i:s'), PDO::PARAM_STR);
             $stmt->execute();
-    
+
             return true;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
@@ -146,10 +189,10 @@ class Dashboard
                 FROM user u
                 LEFT JOIN role r ON u.idRole = r.id;
             ";
-    
+
             $stmt = $this->db->connect()->query($query);
             $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
             return $users;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
@@ -157,65 +200,65 @@ class Dashboard
         }
     }
 
-   
+
 
     public function editItem(array $data, string $var): bool
-{
-    try {
-        // Début de la requête
-        $query = "UPDATE $var SET ";
-        
-        // Initialisation d'un tableau pour stocker les paramètres à lier
-        $params = array();
+    {
+        try {
+            // Début de la requête
+            $query = "UPDATE $var SET ";
 
-        // Vérifie si chaque champ est défini dans $data et ajoute à la requête
-        if(isset($data['pseudo']) && !empty($data['pseudo'])) {
-            $query .= "pseudo = :pseudo, ";
-            $params[':pseudo'] = $data['pseudo'];
-        }
-        if(isset($data['email']) && !empty($data['email'])) {
-            $query .= "email = :email, ";
-            $params[':email'] = $data['email'];
-        }
-        if(isset($data['password']) && !empty($data['password'])) {
-            $query .= "password = :password, ";
-            $params[':password'] = $data['password'];
-        }
-        if(isset($data['idRole'])  && !empty($data['idRole'])) {
-            $query .= "idRole = :idRole, ";
-            $params[':idRole'] = $data['idRole'];
-        }
-        if(isset($data['nom'])  && !empty($data['nom'])) {
-            $query .= "nom = :nom, ";
-            $params[':nom'] = $data['nom'];
-        }
-        
-        // Suppression de la virgule en trop à la fin de la requête
-        $query = rtrim($query, ', ');
+            // Initialisation d'un tableau pour stocker les paramètres à lier
+            $params = array();
 
-        // Ajout de la condition WHERE
-        $query .= " WHERE id = :id;";
+            // Vérifie si chaque champ est défini dans $data et ajoute à la requête
+            if (isset($data['pseudo']) && !empty($data['pseudo'])) {
+                $query .= "pseudo = :pseudo, ";
+                $params[':pseudo'] = $data['pseudo'];
+            }
+            if (isset($data['email']) && !empty($data['email'])) {
+                $query .= "email = :email, ";
+                $params[':email'] = $data['email'];
+            }
+            if (isset($data['password']) && !empty($data['password'])) {
+                $query .= "password = :password, ";
+                $params[':password'] = $data['password'];
+            }
+            if (isset($data['idRole'])  && !empty($data['idRole'])) {
+                $query .= "idRole = :idRole, ";
+                $params[':idRole'] = $data['idRole'];
+            }
+            if (isset($data['nom'])  && !empty($data['nom'])) {
+                $query .= "nom = :nom, ";
+                $params[':nom'] = $data['nom'];
+            }
 
-        // Préparation de la requête
-        $stmt = $this->db->connect()->prepare($query);
-        
-        // Lier les paramètres à la requête
-        foreach($params as $param => &$value) {
-            $stmt->bindParam($param, $value, PDO::PARAM_STR);
+            // Suppression de la virgule en trop à la fin de la requête
+            $query = rtrim($query, ', ');
+
+            // Ajout de la condition WHERE
+            $query .= " WHERE id = :id;";
+
+            // Préparation de la requête
+            $stmt = $this->db->connect()->prepare($query);
+
+            // Lier les paramètres à la requête
+            foreach ($params as $param => &$value) {
+                $stmt->bindParam($param, $value, PDO::PARAM_STR);
+            }
+
+            // Lier l'ID (toujours lié)
+            $stmt->bindParam(':id', $data['id'], PDO::PARAM_STR);
+
+            // Exécution de la requête
+            $stmt->execute();
+
+            return true;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
         }
-
-        // Lier l'ID (toujours lié)
-        $stmt->bindParam(':id', $data['id'], PDO::PARAM_STR);
-        
-        // Exécution de la requête
-        $stmt->execute();
-
-        return true;
-    } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
-        return false;
     }
-}
 
 
     public function deleteItem(int $id, string $var): bool
@@ -225,7 +268,7 @@ class Dashboard
             $stmt = $this->db->connect()->prepare($query);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
-    
+
             return true;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
@@ -240,7 +283,7 @@ class Dashboard
             $stmt = $this->db->connect()->prepare($query);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
-    
+
             return true;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
@@ -255,7 +298,7 @@ class Dashboard
             $stmt = $this->db->connect()->prepare($query);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
-    
+
             return true;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
@@ -270,14 +313,14 @@ class Dashboard
             $stmt = $this->db->connect()->prepare($query);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
-    
+
             return true;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return false;
         }
     }
-    
+
     public function addUsers(array $data): bool
     {
         try {
@@ -285,14 +328,14 @@ class Dashboard
             INSERT INTO user (pseudo, email, idRole, password, emailCheck)
             VALUES (:pseudo, :email, :idRole, :password, 1);
         ";
-            
+
             $stmt = $this->db->connect()->prepare($query);
             $stmt->bindParam(':pseudo', $data['pseudo'], PDO::PARAM_STR);
             $stmt->bindParam(':email', $data['email'], PDO::PARAM_STR);
             $stmt->bindParam(':password', $data['password'], PDO::PARAM_STR);
             $stmt->bindParam(':idRole', $data['idRole'], PDO::PARAM_STR);
             $stmt->execute();
-    
+
             return true;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
@@ -304,25 +347,25 @@ class Dashboard
     {
         try {
             $query = "
-                SELECT c.id, c.commentaire, u.pseudo as auteur, t.nom as topic, c.deletedAt
+                SELECT c.id, c.commentaire, u.pseudo as auteur, t.nom as topic, c.deletedAt, t.valide
                 FROM content c
                 JOIN user u ON c.auteur = u.id
                 JOIN topic t ON c.idTopic = t.id
                 WHERE idTopic = :idTopic; 
             ";
-    
+
             $stmt = $this->db->connect()->prepare($query);
             $stmt->bindParam(':idTopic', $idTopics, PDO::PARAM_INT);
             $stmt->execute();
             $contents = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
             return $contents;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return false;
         }
     }
-    
+
 
     // public function deleteContent(int $id): bool
     // {
@@ -331,7 +374,7 @@ class Dashboard
     //         $stmt = $this->db->connect()->prepare($query);
     //         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     //         $stmt->execute();
-    
+
     //         return true;
     //     } catch (PDOException $e) {
     //         echo "Error: " . $e->getMessage();
@@ -339,7 +382,8 @@ class Dashboard
     //     }
     // }
 
-    public function getRoles(){
+    public function getRoles()
+    {
         return $this->db->getRoles();
     }
 }
