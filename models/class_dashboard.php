@@ -142,7 +142,7 @@ class Dashboard
     {
         try {
             $query = "
-                SELECT u.id, u.pseudo, u.email, r.roleName, u.bloque, u.updatedAt, u.deletedAt
+                SELECT u.id, u.pseudo, u.email, r.roleName, u.bloque, u.createdAt, u.updatedAt, u.deletedAt
                 FROM user u
                 LEFT JOIN role r ON u.idRole = r.id;
             ";

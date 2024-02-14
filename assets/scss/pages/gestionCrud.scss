@@ -1,0 +1,88 @@
+.mainGestion {
+    @extend .mainAccueil;
+    flex-direction: column;
+    align-items: center;
+}
+
+.gestion {
+    @extend .accueil;
+
+    &Titre {
+        @extend .accueilTitre;
+
+        &Principal {
+            @extend .accueilTitrePrincipal;
+        }
+
+        &Texte {
+            @extend .accueilTitreTexte;
+        }
+    }
+
+    &Navigation {
+
+
+        a {
+            @extend .navigationLienProfil;
+            color: var(--color-text-white);
+            font-weight: 600;
+            font-size: 1.1em;
+            background-color: var(--bg-color-bleu);
+
+        }
+    }
+
+    &Crud {
+        @extend .accueilTendance;
+
+        &Titre {
+            @extend .accueilTitre;
+            text-align: center;
+        }
+
+        &Tableau {
+            @extend .accueilTendanceTableau;
+
+            &Content {
+                @extend .accueilTendanceTableauContent;
+
+                &Odd-row {
+                    @extend .accueilTendanceTableauContentOdd-row;
+
+                }
+
+                &Even-row {
+                    @extend .accueilTendanceTableauContentEven-row;
+
+                }
+
+                .boutonUpdate {
+                    @extend .navigationLienProfil;
+                    color: var(--color-text-white);
+                    background-color: var(--bg-color-bleu);
+                    font-weight: 600;
+                }
+
+                .boutonDelete {
+                    @extend .boutonUpdate;
+                    background-color: var(--bg-color-red-pastel);
+                }
+            }
+
+            &Add {
+                text-align: center;
+                margin-top: 32px;
+
+                a {
+                    @extend .navigationLienProfil;
+                    color: var(--color-text-white);
+                    background-color: var(--bg-color-green);
+                    font-weight: 600;
+                    font-size: 1.1em;
+
+
+                }
+            }
+        }
+    }
+}
