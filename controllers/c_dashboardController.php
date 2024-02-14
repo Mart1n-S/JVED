@@ -373,41 +373,53 @@ class c_dashboardController
         ]);
     }
 
-    public function contents(): void
+    public function contents($match): void
     {
         $this->security->checkAutorisation();
 
         $dashboard = new Dashboard($this->connexionDB);
-        $contents = $dashboard->getContents();
+        $contents = $dashboard->getContents($match['params']['id']);
 
         // Chargement du template spécifique à la page des sujets
         echo $this->twig->getTwig()->render('dashboard/contents.html.twig', [
             'contents' => $contents,
-            'user' =>  $this->userSession
+            'user' =>  $this->userSession,
+            'idTopic' => $match['params']['id']
         ]);
     }
 
-    public function contents_delete(): void
+    public function contents_edit(): void
     {
         $this->security->checkAutorisation();
 
         $dashboard = new Dashboard($this->connexionDB);
+        // $errorMessages = [];
+        // if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitDelete'])) {
+        //     $userId = $_POST['id'] ?? '';
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitDelete'])) {
-            $userId = $_POST['id'] ?? '';
+        //     if ($dashboard->deleteContent($userId)) {
+        //         echo 'WOUPLI';
+        //         header("Location: contents");
+        //         exit;
+        //     } else {
+        //         echo 'et oe';
+        //     }
+        // }
 
-            if ($dashboard->deleteContent($userId)) {
-                echo 'WOUPLI';
-                header("Location: contents");
-                exit;
-            } else {
-                echo 'et oe';
-            }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'id' => $_POST['id'] ?? '',
+                'idTopic' => $_POST['idTopic'] ?? '',
+            ];
+            
+            if (isset($_POST['submitDelete'])) {
+                $this->deleteItem($data['id'], $dashboard, 'content', "contents/{$data['idTopic']}");
+            } elseif (isset($_POST['submitRestore'])) {
+                $this->restoreItem($data['id'], $dashboard, 'content', "contents/{$data['idTopic']}");
+            };
         }
 
-        // You may want to handle the case where the request method is not POST or submitDelete is not set
-
-        // Move the template rendering outside of the condition
         $template = $this->twig->getTwig()->load('dashboard/contents.html.twig');
         $template->display();
     }

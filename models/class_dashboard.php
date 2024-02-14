@@ -300,40 +300,44 @@ class Dashboard
         }
     }
 
-public function getContents(): array|false
-{
-    try {
-        $query = "
-            SELECT c.id, c.commentaire, u.pseudo as auteur, t.nom as topic, c.deletedAt
-            FROM content c
-            JOIN user u ON c.auteur = u.id
-            JOIN topic t ON c.idTopic = t.id;
-        ";
-
-        $stmt = $this->db->connect()->query($query);
-        $contents = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return $contents;
-    } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
-        return false;
-    }
-}
-
-    public function deleteContent(int $id): bool
+    public function getContents(int $idTopics): array|false
     {
         try {
-            $query = "UPDATE content SET deletedAt = CURRENT_TIMESTAMP WHERE id = :id";
-            $stmt = $this->db->connect()->prepare($query);
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->execute();
+            $query = "
+                SELECT c.id, c.commentaire, u.pseudo as auteur, t.nom as topic, c.deletedAt
+                FROM content c
+                JOIN user u ON c.auteur = u.id
+                JOIN topic t ON c.idTopic = t.id
+                WHERE idTopic = :idTopic; 
+            ";
     
-            return true;
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->bindParam(':idTopic', $idTopics, PDO::PARAM_INT);
+            $stmt->execute();
+            $contents = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            return $contents;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return false;
         }
     }
+    
+
+    // public function deleteContent(int $id): bool
+    // {
+    //     try {
+    //         $query = "UPDATE content SET deletedAt = CURRENT_TIMESTAMP WHERE id = :id";
+    //         $stmt = $this->db->connect()->prepare($query);
+    //         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    //         $stmt->execute();
+    
+    //         return true;
+    //     } catch (PDOException $e) {
+    //         echo "Error: " . $e->getMessage();
+    //         return false;
+    //     }
+    // }
 
     public function getRoles(){
         return $this->db->getRoles();

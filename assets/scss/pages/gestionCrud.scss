@@ -62,6 +62,10 @@
 
             &Content {
                 @extend .accueilTendanceTableauContent;
+                a{
+                    color: var(--color-text-white);
+                    text-decoration: underline;
+                }
 
                 &Odd-row {
                     @extend .accueilTendanceTableauContentOdd-row;

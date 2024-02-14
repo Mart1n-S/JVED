@@ -465,6 +465,10 @@ body {
 .gestionCrudTitre {
   text-align: center;
 }
+.gestionCrudTableauContent a {
+  color: var(--color-text-white);
+  text-decoration: underline;
+}
 .gestionCrudTableauContent .boutonUpdate, .gestionCrudTableauContent .boutonDebloque, .gestionCrudTableauContent .boutonBloque, .gestionCrudTableauContent .boutonRestore, .gestionCrudTableauContent .boutonDelete {
   color: var(--color-text-white);
   background-color: var(--bg-color-bleu);

@@ -33,7 +33,8 @@ class Routes
         $router->map('GET|POST', '/users', 'c_dashboardController#users', 'users');
         $router->map('GET|POST', '/users_edit[.:format]?', 'c_dashboardController#users_edit', 'users_edit');
         $router->map('GET|POST', '/users_add', 'c_dashboardController#users_add', 'users_add');
-        $router->map('GET|POST', '/contents', 'c_dashboardController#contents', 'contents');
+        $router->map('GET|POST', '/contents/[i:id]', 'c_dashboardController#contents', 'contents');
+        $router->map('GET|POST', '/contents_edit[.:format]?', 'c_dashboardController#contents_edit', 'contents_edit');
         // Retourne l'instance du routeur avec les routes définies
         return $router;
     }
