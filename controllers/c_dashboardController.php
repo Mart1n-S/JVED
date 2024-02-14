@@ -113,36 +113,36 @@ class c_dashboardController
         $this->security->checkAutorisation();
 
         $dashboard = new Dashboard($this->connexionDB);
+        $errorMessages=[];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'id' => $_POST['id'],
                 'nom' => $_POST['nom'],
             ];
-            if (isset($_POST['submitUpdate'])) {
 
-                if ($dashboard->editCategories($data)) {
-                    echo 'success';
-                    header("Location: categories");
-                    exit;
-                } else {
-                    echo 'error';
+            if (isset($_POST['submitUpdate'])) {
+               if(empty($data['nom'])){
+                $errorMessages = ['Merci de remplire les champs.'];
+               }
+
+                if (empty($errorMessages)) {
+                    
+                    $this->updateItem($data, $dashboard, 'categorie', 'categories');
                 }
             } elseif (isset($_POST['submitDelete'])) {
-                if ($dashboard->deleteCategories($_POST['id'])) {
-                    echo 'WOUPLI';
-                    header("Location: categories");
-                    exit;
-                } else {
-                    echo 'et oe';
-                }
-            }
+                $this->deleteItem($data['id'], $dashboard, 'categorie', 'categories');
+            } elseif (isset($_POST['submitRestore'])) {
+                $this->restoreItem($data['id'], $dashboard, 'categorie', 'categories');
+            } 
         }
 
         // Déplacer le rendu du template en dehors de la condition
         $template = $this->twig->getTwig()->load('dashboard/categories_edit.html.twig');
         $template->display([
             'data' =>  $data,
+            'error' =>  $errorMessages,
+            'user' =>  $this->userSession
         ]);
     }
 
@@ -170,7 +170,8 @@ class c_dashboardController
         // Déplacer le rendu du template en dehors de la condition
         $template = $this->twig->getTwig()->load('dashboard/categories_add.html.twig');
         $template->display([
-            'categories' =>  $categories 
+            'categories' =>  $categories,
+            'user' =>  $this->userSession
         ]);
     }
 
@@ -191,7 +192,7 @@ class c_dashboardController
     public function users_edit(): void
     {
         $this->security->checkAutorisation();
-        $errorMessages=[];
+        $errorMessages = [];
         $dashboard = new Dashboard($this->connexionDB);
         $roles = $dashboard->getRoles();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -203,14 +204,14 @@ class c_dashboardController
                 'idRole' => $_POST['idRole'] ?? '',
                 'bloque' => $_POST['bloque'] ?? '',
             ];
-            
+
 
             if (isset($_POST['submitUpdate'])) {
                 $errorMessages = array_merge(
                     $errorMessages,
                     $this->security->validatePseudo($data['pseudo'])
                 );
-                
+
                 if (!empty($data['email'])) {
                     $errorMessages = array_merge(
                         $errorMessages,
@@ -218,23 +219,23 @@ class c_dashboardController
                         $this->security->checkDoublonEmail($data['email'])
                     );
                 }
-    
-    
+
+
                 if (empty($errorMessages)) {
-                   
-                     $this->updateUser($data, $dashboard);
+                    if (!empty($data['password'])) {
+                        $data["password"] =  password_hash($data['password'], PASSWORD_BCRYPT);
+                    }
+                    $this->updateItem($data, $dashboard, 'user', 'users');
                 }
-               
             } elseif (isset($_POST['submitDelete'])) {
-                $this->deleteUser($_POST['id'], $dashboard);
+                $this->deleteItem($_POST['id'], $dashboard, 'user', 'users');
             } elseif (isset($_POST['submitRestore'])) {
-                $this->restoreUser($_POST['id'], $dashboard);
+                $this->restoreItem($_POST['id'], $dashboard, 'user', 'users');
             } elseif (isset($_POST['submitBloque'])) {
-                $this->blockUser($_POST['id'], $dashboard);
+                $this->blockItem($_POST['id'], $dashboard, 'user', 'users');
             } elseif (isset($_POST['submitDebloque'])) {
-                $this->unblockUser($_POST['id'], $dashboard);
+                $this->unblockItem($_POST['id'], $dashboard, 'user', 'users');
             }
-            
         }
 
         // Déplacer le rendu du template en dehors de la condition
@@ -242,60 +243,58 @@ class c_dashboardController
         $template->display([
             'data' =>  $data,
             'roles' => $roles,
-            'error' =>  $errorMessages
+            'error' =>  $errorMessages,
+            'user' =>  $this->userSession
         ]);
     }
 
 
     // Fonctions d'action
-    private function updateUser($data, $dashboard)
+    private function updateItem($data, $dashboard, $var, $redirection)
     {
-        if(!empty($data['password'])){
-            $data["password"] =  password_hash($data['password'], PASSWORD_BCRYPT);
-        }
-        $resultat = $dashboard->editUsers($data) ? true : false;
+      
+        $resultat = $dashboard->editItem($data, $var) ? true : false;
         if ($resultat) {
-            header("Location: users");
+            header("Location: $redirection");
             exit;
         }
 
         return $resultat;
     }
 
-    private function deleteUser($id, $dashboard)
+    private function deleteItem($id, $dashboard, $var, $redirection)
     {
-        $resultat = $dashboard->deleteUsers($id) ? true : false;
+        $resultat = $dashboard->deleteItem($id, $var) ? true : false;
         if ($resultat) {
-            header("Location: users");
+            header("Location: $redirection");
             exit;
         }
 
         return $resultat;
     }
 
-    private function restoreUser($id, $dashboard)
+    private function restoreItem($id, $dashboard, $var, $redirection)
     {
-        if ($dashboard->restoreUsers($id)) {
-            header("Location: users");
+        if ($dashboard->restoreItem($id, $var)) {
+            header("Location: $redirection");
             exit;
         }
         return false;
     }
 
-    private function blockUser($id, $dashboard)
+    private function blockItem($id, $dashboard, $var, $redirection)
     {
-        if ($dashboard->bloqueUsers($id)) {
-            header("Location: users");
+        if ($dashboard->blockItem($id, $var)) {
+            header("Location: $redirection");
             exit;
         }
-
         return false;
     }
 
-    private function unblockUser($id, $dashboard)
+    private function unblockItem($id, $dashboard, $var, $redirection)
     {
-        if ($dashboard->deBloqueUsers($id)) {
-            header("Location: users");
+        if ($dashboard->unblockItem($id, $var)) {
+            header("Location: $redirection");
             exit;
         }
 
@@ -341,7 +340,8 @@ class c_dashboardController
         $template = $this->twig->getTwig()->load('dashboard/users_add.html.twig');
         $template->display([
             'error' => $errorMessages,
-            'roles' => $roles
+            'roles' => $roles,
+            'user' =>  $this->userSession
         ]);
     }
 

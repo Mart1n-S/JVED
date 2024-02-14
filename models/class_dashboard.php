@@ -82,41 +82,40 @@ class Dashboard
             return false;
         }
     }
-    public function editCategories( array $data): bool
-    {
-        try {
-            $query = "
-                UPDATE categorie
-                SET nom = :nom, updatedAt = :updatedAt
-                WHERE id = :id;
-            ";
-            $stmt = $this->db->connect()->prepare($query);
-            $stmt->bindParam(':id',$data['id'], PDO::PARAM_INT);
-            $stmt->bindValue(':nom', $data['nom'], PDO::PARAM_STR);
-            $stmt->bindValue(':updatedAt', date('Y-m-d H:i:s'), PDO::PARAM_STR);
-            $stmt->execute();
+    // public function editCategories( array $data): bool
+    // {
+    //     try {
+    //         $query = "
+    //             UPDATE categorie
+    //             SET nom = :nom
+    //             WHERE id = :id;
+    //         ";
+    //         $stmt = $this->db->connect()->prepare($query);
+    //         $stmt->bindParam(':id',$data['id'], PDO::PARAM_INT);
+    //         $stmt->bindValue(':nom', $data['nom'], PDO::PARAM_STR);
+    //         $stmt->execute();
     
-            return true;
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return false;
-        }
-    }
+    //         return true;
+    //     } catch (PDOException $e) {
+    //         echo "Error: " . $e->getMessage();
+    //         return false;
+    //     }
+    // }
 
-    public function deleteCategories(int $id): bool
-    {
-        try {
-            $query = "UPDATE categorie SET deletedAt = CURRENT_TIMESTAMP WHERE id = :id";
-            $stmt = $this->db->connect()->prepare($query);
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->execute();
+    // public function deleteCategories(int $id): bool
+    // {
+    //     try {
+    //         $query = "UPDATE categorie SET deletedAt = CURRENT_TIMESTAMP WHERE id = :id";
+    //         $stmt = $this->db->connect()->prepare($query);
+    //         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    //         $stmt->execute();
     
-            return true;
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return false;
-        }
-    }
+    //         return true;
+    //     } catch (PDOException $e) {
+    //         echo "Error: " . $e->getMessage();
+    //         return false;
+    //     }
+    // }
     public function addCategories(array $data): bool
     {
         try {
@@ -159,11 +158,11 @@ class Dashboard
 
    
 
-    public function editUsers(array $data): bool
+    public function editItem(array $data, string $var): bool
 {
     try {
         // Début de la requête
-        $query = "UPDATE user SET ";
+        $query = "UPDATE $var SET ";
         
         // Initialisation d'un tableau pour stocker les paramètres à lier
         $params = array();
@@ -184,6 +183,10 @@ class Dashboard
         if(isset($data['idRole'])  && !empty($data['idRole'])) {
             $query .= "idRole = :idRole, ";
             $params[':idRole'] = $data['idRole'];
+        }
+        if(isset($data['nom'])  && !empty($data['nom'])) {
+            $query .= "nom = :nom, ";
+            $params[':nom'] = $data['nom'];
         }
         
         // Suppression de la virgule en trop à la fin de la requête
@@ -214,10 +217,10 @@ class Dashboard
 }
 
 
-    public function deleteUsers(int $id): bool
+    public function deleteItem(int $id, string $var): bool
     {
         try {
-            $query = "UPDATE user SET deletedAt = CURRENT_TIMESTAMP WHERE id = :id";
+            $query = "UPDATE $var SET deletedAt = CURRENT_TIMESTAMP WHERE id = :id";
             $stmt = $this->db->connect()->prepare($query);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
@@ -229,10 +232,10 @@ class Dashboard
         }
     }
 
-    public function restoreUsers(int $id): bool
+    public function restoreItem(int $id, string $var): bool
     {
         try {
-            $query = "UPDATE user SET deletedAt = NULL WHERE id = :id";
+            $query = "UPDATE $var SET deletedAt = NULL WHERE id = :id";
             $stmt = $this->db->connect()->prepare($query);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
@@ -244,10 +247,10 @@ class Dashboard
         }
     }
 
-    public function bloqueUsers(int $id): bool
+    public function blockItem(int $id, string $var): bool
     {
         try {
-            $query = "UPDATE user SET bloque = 1 WHERE id = :id";
+            $query = "UPDATE $var SET bloque = 1 WHERE id = :id";
             $stmt = $this->db->connect()->prepare($query);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
@@ -259,10 +262,10 @@ class Dashboard
         }
     }
 
-    public function deBloqueUsers(int $id): bool
+    public function unblockItem(int $id, string $var): bool
     {
         try {
-            $query = "UPDATE user SET bloque = NULL WHERE id = :id";
+            $query = "UPDATE $var SET bloque = NULL WHERE id = :id";
             $stmt = $this->db->connect()->prepare($query);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();

@@ -14,7 +14,7 @@
 				<a href="{{path('dashboard')}}">Retour Dashboard</a>
 			</div>
 			<div class="gestionCrud">
-				<h2 class="gestionCrudTitre">{{'Liste de tous les utilisateurs'|upper}}</h2>
+				<h2 class="gestionCrudTitre">{{'Liste de toutes les catégories'|upper}}</h2>
 				<div class="gestionCrudTableau">
 
 					<table class="gestionCrudTableauContent">
@@ -48,7 +48,7 @@
 												<button type="submit" name="submitRestore" class="boutonRestore" onclick="return confirm('Êtes vous sur de vouloirs le restaurer ?')">Restaurer</button>
 											{% endif %}
 											<input type="hidden" name="id" value="{{ categorie['id'] }}">
-											<input type="hidden" name="nom" value="{{ categorie['pseudo'] }}">
+											<input type="hidden" name="nom" value="{{ categorie['nom'] }}">
 											<input type="hidden" name="createdAt" value="{{ categorie['createdAt'] }}">
 											<input type="hidden" name="updatedAt" value="{{ categorie['updatedAt'] }}">
 											<input type="hidden" name="deletedAt" value="{{ categorie['deletedAt'] }}">
