@@ -196,12 +196,27 @@ class Dashboard
             return false;
         }
     }
+
+    public function restoreUsers(int $id): bool
+    {
+        try {
+            $query = "UPDATE user SET deletedAt = NULL WHERE id = :id";
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            return true;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
     public function addUsers(array $data): bool
     {
         try {
             $query = "
-            INSERT INTO user (pseudo, email, idRole, password, createdAt, updatedAt)
-            VALUES (:pseudo, :email, :idRole, :password, :createdAt, :updatedAt);
+            INSERT INTO user (pseudo, email, idRole, password, emailCheck)
+            VALUES (:pseudo, :email, :idRole, :password, 1);
         ";
             
             $stmt = $this->db->connect()->prepare($query);
@@ -209,8 +224,6 @@ class Dashboard
             $stmt->bindParam(':email', $data['email'], PDO::PARAM_STR);
             $stmt->bindParam(':password', $data['password'], PDO::PARAM_STR);
             $stmt->bindParam(':idRole', $data['idRole'], PDO::PARAM_STR);
-            $stmt->bindValue(':createdAt', date('Y-m-d H:i:s'), PDO::PARAM_STR);
-            $stmt->bindValue(':updatedAt', date('Y-m-d H:i:s'), PDO::PARAM_STR);
             $stmt->execute();
     
             return true;
@@ -253,5 +266,9 @@ public function getContents(): array|false
             echo "Error: " . $e->getMessage();
             return false;
         }
+    }
+
+    public function getRoles(){
+        return $this->db->getRoles();
     }
 }

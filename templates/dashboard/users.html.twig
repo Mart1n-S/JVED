@@ -3,8 +3,6 @@
 {% endblock %}
 {% block body %}
 	{{ include('./partials/header.html.twig') }}
-
-
 	<main class="mainGestion">
 		<section class="gestion">
 			<div class="gestionTitre">
@@ -51,8 +49,11 @@
 										<td>
 											<button type="submit" class="boutonUpdate">Modifier</button>
 											/
-											<button type="submit" name="submitDelete" class="boutonDelete" onclick="return confirm('Êtes vous sur de vouloirs le supprimer')">Supprimer</button>
-
+											{% if user['deletedAt'] is null %}
+												<button type="submit" name="submitDelete" class="boutonDelete" onclick="return confirm('Êtes vous sur de vouloirs le supprimer ?')">Supprimer</button>
+											{% else %}
+												<button type="submit" name="submitRestore" class="boutonRestore" onclick="return confirm('Êtes vous sur de vouloirs le restaurer ?')">Restaurer</button>
+											{% endif %}
 											<input type="hidden" name="id" value="{{ user['id'] }}">
 											<input type="hidden" name="pseudo" value="{{ user['pseudo'] }}">
 											<input type="hidden" name="email" value="{{ user['email'] }}">

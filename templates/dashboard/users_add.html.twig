@@ -1,35 +1,67 @@
 {% extends "base.html.twig" %}
-
+{% block title %}Dashboard | Ajout users
+{% endblock %}
 {% block body %}
-    {{ include('./partials/header.html.twig') }}
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <h1 class="display-1">Ajouter une catégorie</h1>
+	{{ include('./partials/header.html.twig') }}
+	<main class="mainGestion">
+		<section class="gestion">
+			<div class="gestionCard">
+				<div class="gestionNavigation">
+					<a href="{{path('users')}}">Retour Gestion Users</a>
+				</div>
+				<div class="gestionTitre">
+					<h1 class="gestionTitrePrincipal">Ajouter un utilisateur</h1>
 
-                <form method="post" action="{{ path('users_add') }}">
-                    <div class="mb-3">
-                        <label for="pseudo" class="form-label">Pseudo</label>
-                        <input type="text" class="form-control" id="pseudo" name="pseudo" value="">
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" value="">
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Mot de passe</label>
-                        <input type="password" class="form-control" id="password" name="password" value="">
-                    </div>
-                    <div class="mb-3">
-                        <label for="idRole" class="form-label">Role</label>
-                        <input type="text" class="form-control" id="idRole" name="idRole" value="">
-                    </div>
+				</div>
 
-                    <button type="submit" class="btn btn-primary" name="submitAdd">Ajouter l'utilisateur</button>
-                </form>
-            </div>
-        </div>
-    </div>
+				<div class="gestionCrud">
+					<div class="gestionCrudTableau">
 
-    {{ include('./partials/footer.html.twig') }}
+						<form class="inscriptionContentForm" method="POST" action="{{ path('users_add') }}" onsubmit="return validateFormAddUser()">
+							<div class="inscriptionContentFormInput">
+								<input type="text" name="pseudo" placeholder="Pseudo" minlength="3" maxlength="15" required>
+								<input type="mail" name="email" placeholder="Adresse email" required>
+								<div class="inscriptionContentFormInputPassword">
+									<input type="password" name="password" id="password" oninput="updatePasswordCriteria()" class="password" placeholder="Mot de passe" autocomplete="on" title="Taille 8-24 caractères avec au moins : 1 minuscule / 1 majuscule / 1 chiffre / 1 caractère spécial" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,24}$" required>
+									<span onclick="changeVisibility()" class="material-symbols-outlined">
+										visibility
+									</span>
+								</div>
+								<div id="passwordRequirements" class="inscriptionContentFormInputCritere">
+									<span id="lowercase">Au moins une minuscule</span>
+									<span id="uppercase">Au moins une majuscule</span>
+									<span id="digit">Au moins un chiffre</span>
+									<span id="specialChar">Au moins un caractère spécial</span>
+									<span id="length">Longueur minimale de 8 caractères</span>
+								</div>
+								<select name="idRole" class="selectRole">
+									{% for role in roles|sort((a, b) => b.id <=> a.id) %}
+										<option value="{{ role.id }}">{{ role.roleName|capitalize }}</option>
+									{% endfor %}
+								</select>
+								<div class="inscriptionContentFormInputError">
+									{% if error is defined and error is not empty %}
+										<div>
+											<ul>
+												{% for errorMessage in error %}
+													<li id="error_c">{{ errorMessage }}</li>
+												{% endfor %}
+											</ul>
+										</div>
+									{% endif %}
+									<span id="error">Merci de remplir tous les champs</span>
+								</div>
+							</div>
+							<button class="inscriptionContentFormButton" name="submitAdd" type="submit">Ajouter l'utilisateur</button>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+	{{ include('./partials/footer.html.twig') }}
+{% endblock %}
+{% block javascripts %}
+	<script src="{{ asset('js/security.js') }}" defer></script>
 {% endblock %}

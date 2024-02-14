@@ -89,3 +89,21 @@ function validateForm() {
 
     return true; // Autoriser la soumission du formulaire
 }
+
+function validateFormAddUser() {
+    var errorMessage = document.getElementById('error');
+
+    // Vérifier si tous les champs sont remplis
+    var allFieldsFilled = Array.from(document.querySelectorAll('.inscriptionContentFormInput input, .inscriptionContentFormInput .selectRole')).every(function(input) {
+        return input.value.trim() !== '';
+    });
+
+    if (!allFieldsFilled) {
+       errorMessage.style.display = 'block'
+        return false; // Empêcher la soumission du formulaire
+    }else{
+        errorMessage.style.display = 'none'
+    }
+
+    return true; // Autoriser la soumission du formulaire
+}

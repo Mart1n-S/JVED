@@ -78,7 +78,7 @@ body {
   background-color: var(--bg-color-button-purple);
   padding: 7px 16px;
 }
-.navigationLienProfil, .gestionCrudTableauAdd a, .gestionCrudTableauContent .boutonUpdate, .gestionCrudTableauContent .boutonDelete, .gestionNavigation a {
+.navigationLienProfil, .gestionCrudTableauAdd a, .gestionCrudTableauContent .boutonUpdate, .gestionCrudTableauContent .boutonRestore, .gestionCrudTableauContent .boutonDelete, .gestionNavigation a {
   border-radius: 14px;
   background-color: var(--bg-color-button-orange);
   padding: 7px 16px;
@@ -441,6 +441,20 @@ body {
   align-items: center;
 }
 
+.gestionCard {
+  background-color: var(--bg-color-white);
+  padding: 32px;
+  border-radius: 8px;
+}
+.gestionCard h1 {
+  color: var(--color-text-black);
+}
+.gestionCard .selectRole {
+  border: 1px #c2c2c2 solid;
+  border-radius: 16px;
+  padding: 12px;
+  width: 100%;
+}
 .gestionNavigation a {
   color: var(--color-text-white);
   font-weight: 600;
@@ -450,13 +464,16 @@ body {
 .gestionCrudTitre {
   text-align: center;
 }
-.gestionCrudTableauContent .boutonUpdate, .gestionCrudTableauContent .boutonDelete {
+.gestionCrudTableauContent .boutonUpdate, .gestionCrudTableauContent .boutonRestore, .gestionCrudTableauContent .boutonDelete {
   color: var(--color-text-white);
   background-color: var(--bg-color-bleu);
   font-weight: 600;
 }
 .gestionCrudTableauContent .boutonDelete {
   background-color: var(--bg-color-red-pastel);
+}
+.gestionCrudTableauContent .boutonRestore {
+  background-color: var(--bg-color-button-orange);
 }
 .gestionCrudTableauAdd {
   text-align: center;

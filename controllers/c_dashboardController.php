@@ -217,6 +217,11 @@ class c_dashboardController
                 } else {
                     echo 'et oe';
                 }
+            }elseif (isset($_POST['submitRestore'])) {
+                if ($dashboard->restoreUsers($_POST['id'])) {
+                    header("Location: users");
+                    exit;
+                } 
             }
         }
 
@@ -232,27 +237,42 @@ class c_dashboardController
         $this->security->checkAutorisation();
 
         $dashboard = new Dashboard($this->connexionDB);
-
+        $errorMessages = [];
+        $roles = $dashboard->getRoles();
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitAdd'])) {
+
             $data = [
                 'pseudo' => $_POST['pseudo'],
                 'email' => $_POST['email'],
                 'password' => $_POST['password'],
                 'idRole' => $_POST['idRole'],
             ];
-            $data["password"] =  password_hash($data['password'], PASSWORD_BCRYPT);
-            if ($dashboard->addUsers($data)) {
-                echo 'success';
-                header("Location: users");
-                exit;
-            } else {
-                echo 'error';
+
+            $errorMessages = array_merge(
+                $errorMessages,
+                $this->security->validatePseudo($data['pseudo']),
+                $this->security->validateEmail($data['email']),
+                $this->security->checkDoublonEmail($data['email'])
+            );
+
+
+            if (empty($errorMessages)) {
+                $data["password"] =  password_hash($data['password'], PASSWORD_BCRYPT);
+                if ($dashboard->addUsers($data)) {
+
+                    header("Location: /users");
+                    exit;
+                } else {
+                    $errorMessages[] = "Une erreur s'est produite. Veuillez réessayer.";
+                }
             }
         }
-
         // Déplacer le rendu du template en dehors de la condition
         $template = $this->twig->getTwig()->load('dashboard/users_add.html.twig');
-        $template->display([]);
+        $template->display([
+            'error' => $errorMessages,
+            'roles' => $roles
+        ]);
     }
 
     public function contents(): void
@@ -272,7 +292,7 @@ class c_dashboardController
     public function contents_delete(): void
     {
         $this->security->checkAutorisation();
-        
+
         $dashboard = new Dashboard($this->connexionDB);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitDelete'])) {
@@ -293,6 +313,4 @@ class c_dashboardController
         $template = $this->twig->getTwig()->load('dashboard/contents.html.twig');
         $template->display();
     }
-
-    
 }
