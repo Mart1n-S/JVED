@@ -151,6 +151,7 @@ class c_dashboardController
         $this->security->checkAutorisation();
 
         $dashboard = new Dashboard($this->connexionDB);
+        $categories = $dashboard->getCategories();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitAdd'])) {
             $data = [
@@ -168,7 +169,9 @@ class c_dashboardController
 
         // Déplacer le rendu du template en dehors de la condition
         $template = $this->twig->getTwig()->load('dashboard/categories_add.html.twig');
-        $template->display([]);
+        $template->display([
+            'categories' =>  $categories 
+        ]);
     }
 
     public function users(): void
@@ -188,9 +191,9 @@ class c_dashboardController
     public function users_edit(): void
     {
         $this->security->checkAutorisation();
-
+        $errorMessages=[];
         $dashboard = new Dashboard($this->connexionDB);
-
+        $roles = $dashboard->getRoles();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'id' => $_POST['id'] ?? '',
@@ -200,36 +203,103 @@ class c_dashboardController
                 'idRole' => $_POST['idRole'] ?? '',
                 'bloque' => $_POST['bloque'] ?? '',
             ];
+            
+
             if (isset($_POST['submitUpdate'])) {
-                $data["password"] =  password_hash($data['password'], PASSWORD_BCRYPT);
-                if ($dashboard->editUsers($data)) {
-                    echo 'success';
-                    header("Location: users");
-                    exit;
-                } else {
-                    echo 'error';
+                $errorMessages = array_merge(
+                    $errorMessages,
+                    $this->security->validatePseudo($data['pseudo'])
+                );
+                
+                if (!empty($data['email'])) {
+                    $errorMessages = array_merge(
+                        $errorMessages,
+                        $this->security->validateEmail($data['email']),
+                        $this->security->checkDoublonEmail($data['email'])
+                    );
                 }
+    
+    
+                if (empty($errorMessages)) {
+                   
+                     $this->updateUser($data, $dashboard);
+                }
+               
             } elseif (isset($_POST['submitDelete'])) {
-                if ($dashboard->deleteUsers($_POST['id'])) {
-                    echo 'WOUPLI';
-                    header("Location: users");
-                    exit;
-                } else {
-                    echo 'et oe';
-                }
-            }elseif (isset($_POST['submitRestore'])) {
-                if ($dashboard->restoreUsers($_POST['id'])) {
-                    header("Location: users");
-                    exit;
-                } 
+                $this->deleteUser($_POST['id'], $dashboard);
+            } elseif (isset($_POST['submitRestore'])) {
+                $this->restoreUser($_POST['id'], $dashboard);
+            } elseif (isset($_POST['submitBloque'])) {
+                $this->blockUser($_POST['id'], $dashboard);
+            } elseif (isset($_POST['submitDebloque'])) {
+                $this->unblockUser($_POST['id'], $dashboard);
             }
+            
         }
 
         // Déplacer le rendu du template en dehors de la condition
         $template = $this->twig->getTwig()->load('dashboard/users_edit.html.twig');
         $template->display([
             'data' =>  $data,
+            'roles' => $roles,
+            'error' =>  $errorMessages
         ]);
+    }
+
+
+    // Fonctions d'action
+    private function updateUser($data, $dashboard)
+    {
+        if(!empty($data['password'])){
+            $data["password"] =  password_hash($data['password'], PASSWORD_BCRYPT);
+        }
+        $resultat = $dashboard->editUsers($data) ? true : false;
+        if ($resultat) {
+            header("Location: users");
+            exit;
+        }
+
+        return $resultat;
+    }
+
+    private function deleteUser($id, $dashboard)
+    {
+        $resultat = $dashboard->deleteUsers($id) ? true : false;
+        if ($resultat) {
+            header("Location: users");
+            exit;
+        }
+
+        return $resultat;
+    }
+
+    private function restoreUser($id, $dashboard)
+    {
+        if ($dashboard->restoreUsers($id)) {
+            header("Location: users");
+            exit;
+        }
+        return false;
+    }
+
+    private function blockUser($id, $dashboard)
+    {
+        if ($dashboard->bloqueUsers($id)) {
+            header("Location: users");
+            exit;
+        }
+
+        return false;
+    }
+
+    private function unblockUser($id, $dashboard)
+    {
+        if ($dashboard->deBloqueUsers($id)) {
+            header("Location: users");
+            exit;
+        }
+
+        return false;
     }
 
     public function users_add(): void

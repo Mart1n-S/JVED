@@ -1,23 +1,42 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-    {{ include('./partials/header.html.twig') }}
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <h1 class="display-1">Ajouter une catégorie</h1>
+	{{ include('./partials/header.html.twig') }}
 
-                <form method="post" action="{{ path('categories_add') }}">
-                    <div class="mb-3">
-                        <label for="nom" class="form-label">Nom</label>
-                        <input type="text" class="form-control" id="nom" name="nom" value="">
-                    </div>
 
-                    <button type="submit" class="btn btn-primary" name="submitAdd">Ajouter la catégorie</button>
-                </form>
-            </div>
-        </div>
-    </div>
+	<main class="mainGestion">
+		<section class="gestion">
+			<div class="gestionCard">
+				<div class="gestionNavigation">
+					<a href="{{path('categories')}}">Retour Gestion Catégories</a>
+				</div>
+				<div class="gestionTitre">
+					<h1 class="gestionTitrePrincipal">Ajouter une catégorie</h1>
 
-    {{ include('./partials/footer.html.twig') }}
+				</div>
+
+				<div class="gestionCrud">
+					<div class="gestionCrudTableau">
+
+						<form class="inscriptionContentForm" method="POST" action="{{ path('categories_add') }}" onsubmit="return validateFormAddUser()">
+							<div class="inscriptionContentFormInput">
+								<input type="text" name="nom" placeholder="Catégorie" minlength="3" maxlength="15" required>
+							</div>
+							<button class="inscriptionContentFormButton" name="submitAdd" type="submit">Ajouter la catégorie</button>
+						</form>
+						<div class="gestionCrudTableauListe">
+							<h2 class="gestionCrudTableauListeTitre">Liste des catégories existantes</h2>
+							<ul class="gestionCrudTableauListeCategorie">
+								{% for categorie in categories %}
+									<li>{{categorie['nom']}}</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	{{ include('./partials/footer.html.twig') }}
 {% endblock %}

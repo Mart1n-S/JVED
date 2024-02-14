@@ -12,6 +12,7 @@
   --bg-color-white: #fff;
   --bg-color-button-purple: #6d67e4;
   --bg-color-button-orange: #e4ab67;
+  --bg-color-button-yellow:#d7d769;
   --bg-color-red-pastel: #e46767;
   --bg-color-bleu: #00b0ff;
   --bg-color-green: #14d733;
@@ -78,7 +79,7 @@ body {
   background-color: var(--bg-color-button-purple);
   padding: 7px 16px;
 }
-.navigationLienProfil, .gestionCrudTableauAdd a, .gestionCrudTableauContent .boutonUpdate, .gestionCrudTableauContent .boutonRestore, .gestionCrudTableauContent .boutonDelete, .gestionNavigation a {
+.navigationLienProfil, .gestionCrudTableauAdd a, .gestionCrudTableauContent .boutonUpdate, .gestionCrudTableauContent .boutonDebloque, .gestionCrudTableauContent .boutonBloque, .gestionCrudTableauContent .boutonRestore, .gestionCrudTableauContent .boutonDelete, .gestionNavigation a {
   border-radius: 14px;
   background-color: var(--bg-color-button-orange);
   padding: 7px 16px;
@@ -464,15 +465,24 @@ body {
 .gestionCrudTitre {
   text-align: center;
 }
-.gestionCrudTableauContent .boutonUpdate, .gestionCrudTableauContent .boutonRestore, .gestionCrudTableauContent .boutonDelete {
+.gestionCrudTableauContent .boutonUpdate, .gestionCrudTableauContent .boutonDebloque, .gestionCrudTableauContent .boutonBloque, .gestionCrudTableauContent .boutonRestore, .gestionCrudTableauContent .boutonDelete {
   color: var(--color-text-white);
   background-color: var(--bg-color-bleu);
   font-weight: 600;
+}
+.gestionCrudTableauContent .boutonUpdate:hover, .gestionCrudTableauContent .boutonDebloque:hover, .gestionCrudTableauContent .boutonBloque:hover, .gestionCrudTableauContent .boutonRestore:hover, .gestionCrudTableauContent .boutonDelete:hover {
+  cursor: pointer;
 }
 .gestionCrudTableauContent .boutonDelete {
   background-color: var(--bg-color-red-pastel);
 }
 .gestionCrudTableauContent .boutonRestore {
+  background-color: var(--bg-color-button-orange);
+}
+.gestionCrudTableauContent .boutonBloque {
+  background-color: var(--bg-color-button-yellow);
+}
+.gestionCrudTableauContent .boutonDebloque {
   background-color: var(--bg-color-button-orange);
 }
 .gestionCrudTableauAdd {
@@ -484,6 +494,23 @@ body {
   background-color: var(--bg-color-green);
   font-weight: 600;
   font-size: 1.1em;
+}
+.gestionCrudTableauListe {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin-top: 32px;
+  color: var(--color-text-black);
+}
+.gestionCrudTableauListeCategorie {
+  list-style: none;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+.gestionCrudTableauListeCategorie li {
+  margin-bottom: 18px;
 }
 
 /*# sourceMappingURL=style.css.map */

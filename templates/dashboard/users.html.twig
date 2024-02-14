@@ -54,6 +54,12 @@
 											{% else %}
 												<button type="submit" name="submitRestore" class="boutonRestore" onclick="return confirm('Êtes vous sur de vouloirs le restaurer ?')">Restaurer</button>
 											{% endif %}
+											/
+											{% if user['bloque'] is null %}
+												<button type="submit" name="submitBloque" class="boutonBloque" onclick="return confirm('Êtes vous sur de vouloirs le bloquer ?')">Bloquer</button>
+											{% else %}
+												<button type="submit" name="submitDebloque" class="boutonDebloque" onclick="return confirm('Êtes vous sur de vouloirs le débloquer ?')">Débloquer</button>
+											{% endif %}
 											<input type="hidden" name="id" value="{{ user['id'] }}">
 											<input type="hidden" name="pseudo" value="{{ user['pseudo'] }}">
 											<input type="hidden" name="email" value="{{ user['email'] }}">

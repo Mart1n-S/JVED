@@ -157,30 +157,62 @@ class Dashboard
         }
     }
 
-    public function editUsers( array $data): bool
-    {
-        try {
-            $query = "
-                UPDATE user
-                SET pseudo = :pseudo, email = :email, password = :password, idRole = :idRole, bloque = :bloque, updatedAt = :updatedAt
-                WHERE id = :id;
-            ";
-            $stmt = $this->db->connect()->prepare($query);
-            $stmt->bindParam(':pseudo', $data['pseudo'], PDO::PARAM_STR);
-            $stmt->bindParam(':email', $data['email'], PDO::PARAM_STR);
-            $stmt->bindParam(':password', $data['password'], PDO::PARAM_STR);
-            $stmt->bindParam(':bloque', $data['bloque'], PDO::PARAM_STR);
-            $stmt->bindParam(':idRole', $data['idRole'], PDO::PARAM_STR);
-            $stmt->bindValue(':createdAt', date('Y-m-d H:i:s'), PDO::PARAM_STR);
-            $stmt->bindValue(':updatedAt', date('Y-m-d H:i:s'), PDO::PARAM_STR);
-            $stmt->execute();
-    
-            return true;
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return false;
+   
+
+    public function editUsers(array $data): bool
+{
+    try {
+        // Début de la requête
+        $query = "UPDATE user SET ";
+        
+        // Initialisation d'un tableau pour stocker les paramètres à lier
+        $params = array();
+
+        // Vérifie si chaque champ est défini dans $data et ajoute à la requête
+        if(isset($data['pseudo']) && !empty($data['pseudo'])) {
+            $query .= "pseudo = :pseudo, ";
+            $params[':pseudo'] = $data['pseudo'];
         }
+        if(isset($data['email']) && !empty($data['email'])) {
+            $query .= "email = :email, ";
+            $params[':email'] = $data['email'];
+        }
+        if(isset($data['password']) && !empty($data['password'])) {
+            $query .= "password = :password, ";
+            $params[':password'] = $data['password'];
+        }
+        if(isset($data['idRole'])  && !empty($data['idRole'])) {
+            $query .= "idRole = :idRole, ";
+            $params[':idRole'] = $data['idRole'];
+        }
+        
+        // Suppression de la virgule en trop à la fin de la requête
+        $query = rtrim($query, ', ');
+
+        // Ajout de la condition WHERE
+        $query .= " WHERE id = :id;";
+
+        // Préparation de la requête
+        $stmt = $this->db->connect()->prepare($query);
+        
+        // Lier les paramètres à la requête
+        foreach($params as $param => &$value) {
+            $stmt->bindParam($param, $value, PDO::PARAM_STR);
+        }
+
+        // Lier l'ID (toujours lié)
+        $stmt->bindParam(':id', $data['id'], PDO::PARAM_STR);
+        
+        // Exécution de la requête
+        $stmt->execute();
+
+        return true;
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+        return false;
     }
+}
+
 
     public function deleteUsers(int $id): bool
     {
@@ -211,6 +243,37 @@ class Dashboard
             return false;
         }
     }
+
+    public function bloqueUsers(int $id): bool
+    {
+        try {
+            $query = "UPDATE user SET bloque = 1 WHERE id = :id";
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            return true;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public function deBloqueUsers(int $id): bool
+    {
+        try {
+            $query = "UPDATE user SET bloque = NULL WHERE id = :id";
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            return true;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+    
     public function addUsers(array $data): bool
     {
         try {
