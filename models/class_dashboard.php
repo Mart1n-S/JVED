@@ -13,9 +13,10 @@ class Dashboard
     {
         try {
             $query = "
-                SELECT t.id, t.nom, u.pseudo as auteur, t.createdAt, t.updatedAt, t.deletedAt
+                SELECT t.id, t.nom, u.pseudo as auteur, t.createdAt, t.updatedAt, t.deletedAt, s.nom as nomSujet
                 FROM topic t
-                JOIN user u ON t.auteur = u.id;
+                JOIN user u ON t.auteur = u.id
+                JOIN sujet s ON t.idSujet = s.id;
             ";
     
             $stmt = $this->db->connect()->query($query);
@@ -28,42 +29,42 @@ class Dashboard
         }
     }
 
-    public function editTopic( array $data): bool
-    {
-        try {
-            $query = "
-                UPDATE topic
-                SET nom = :nom, auteur = :auteur, updatedAt = :updatedAt
-                WHERE id = :id;
-            ";
-            $stmt = $this->db->connect()->prepare($query);
-            $stmt->bindParam(':id',$data['id'], PDO::PARAM_INT);
-            $stmt->bindParam(':nom', $data['nom'], PDO::PARAM_STR);
-            $stmt->bindParam(':auteur', $data['auteur'], PDO::PARAM_STR);
-            $stmt->bindValue(':updatedAt', date('Y-m-d H:i:s'), PDO::PARAM_STR);
-            $stmt->execute();
+    // public function editTopic( array $data): bool
+    // {
+    //     try {
+    //         $query = "
+    //             UPDATE topic
+    //             SET nom = :nom, auteur = :auteur, updatedAt = :updatedAt
+    //             WHERE id = :id;
+    //         ";
+    //         $stmt = $this->db->connect()->prepare($query);
+    //         $stmt->bindParam(':id',$data['id'], PDO::PARAM_INT);
+    //         $stmt->bindParam(':nom', $data['nom'], PDO::PARAM_STR);
+    //         $stmt->bindParam(':auteur', $data['auteur'], PDO::PARAM_STR);
+    //         $stmt->bindValue(':updatedAt', date('Y-m-d H:i:s'), PDO::PARAM_STR);
+    //         $stmt->execute();
     
-            return true;
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return false;
-        }
-    }
+    //         return true;
+    //     } catch (PDOException $e) {
+    //         echo "Error: " . $e->getMessage();
+    //         return false;
+    //     }
+    // }
 
-    public function deleteTopic(int $id): bool
-    {
-        try {
-            $query = "UPDATE topic SET deletedAt = CURRENT_TIMESTAMP WHERE id = :id";
-            $stmt = $this->db->connect()->prepare($query);
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->execute();
+    // public function deleteTopic(int $id): bool
+    // {
+    //     try {
+    //         $query = "UPDATE topic SET deletedAt = CURRENT_TIMESTAMP WHERE id = :id";
+    //         $stmt = $this->db->connect()->prepare($query);
+    //         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    //         $stmt->execute();
     
-            return true;
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return false;
-        }
-    }
+    //         return true;
+    //     } catch (PDOException $e) {
+    //         echo "Error: " . $e->getMessage();
+    //         return false;
+    //     }
+    // }
     
     public function getCategories(): array|false
     {

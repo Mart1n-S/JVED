@@ -61,29 +61,55 @@ class c_dashboardController
 
         $dashboard = new Dashboard($this->connexionDB);
 
+        // if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        //     $data = [
+        //         'id' => $_POST['id'],
+        //         'nom' => $_POST['nom'],
+        //         'auteur' => $_POST['auteur'],
+        //     ];
+        //     if (isset($_POST['submitUpdate'])) {
+
+        //         if ($dashboard->editTopic($data)) {
+        //             echo 'success';
+        //             header("Location: posts");
+        //             exit;
+        //         } else {
+        //             echo 'error';
+        //         }
+        //     } elseif (isset($_POST['submitDelete'])) {
+        //         if ($dashboard->deleteTopic($_POST['id'])) {
+        //             echo 'WOUPLI';
+        //             header("Location: posts");
+        //             exit;
+        //         } else {
+        //             echo 'et oe';
+        //         }
+        //     }
+        // }
+
+        $errorMessages = [];
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'id' => $_POST['id'],
                 'nom' => $_POST['nom'],
+                'nomSujet' => $_POST['nomSujet'],
                 'auteur' => $_POST['auteur'],
             ];
-            if (isset($_POST['submitUpdate'])) {
 
-                if ($dashboard->editTopic($data)) {
-                    echo 'success';
-                    header("Location: posts");
-                    exit;
-                } else {
-                    echo 'error';
+            if (isset($_POST['submitUpdate'])) {
+                if (empty($data['nom']) && empty($_POST['nomSujet'])) {
+                    $errorMessages = ['Merci de remplire les champs.'];
+                }
+
+                if (empty($errorMessages)) {
+
+                    $this->updateItem($data, $dashboard, 'categorie', 'categories');
                 }
             } elseif (isset($_POST['submitDelete'])) {
-                if ($dashboard->deleteTopic($_POST['id'])) {
-                    echo 'WOUPLI';
-                    header("Location: posts");
-                    exit;
-                } else {
-                    echo 'et oe';
-                }
+                $this->deleteItem($data['id'], $dashboard, 'topic', 'posts');
+            } elseif (isset($_POST['submitRestore'])) {
+                $this->restoreItem($data['id'], $dashboard, 'topic', 'posts');
             }
         }
 
@@ -91,6 +117,8 @@ class c_dashboardController
         $template = $this->twig->getTwig()->load('dashboard/posts_edit.html.twig');
         $template->display([
             'data' =>  $data,
+            'error' =>  $errorMessages,
+            'user' =>  $this->userSession
         ]);
     }
 
@@ -113,7 +141,7 @@ class c_dashboardController
         $this->security->checkAutorisation();
 
         $dashboard = new Dashboard($this->connexionDB);
-        $errorMessages=[];
+        $errorMessages = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
@@ -122,19 +150,19 @@ class c_dashboardController
             ];
 
             if (isset($_POST['submitUpdate'])) {
-               if(empty($data['nom'])){
-                $errorMessages = ['Merci de remplire les champs.'];
-               }
+                if (empty($data['nom'])) {
+                    $errorMessages = ['Merci de remplire les champs.'];
+                }
 
                 if (empty($errorMessages)) {
-                    
+
                     $this->updateItem($data, $dashboard, 'categorie', 'categories');
                 }
             } elseif (isset($_POST['submitDelete'])) {
                 $this->deleteItem($data['id'], $dashboard, 'categorie', 'categories');
             } elseif (isset($_POST['submitRestore'])) {
                 $this->restoreItem($data['id'], $dashboard, 'categorie', 'categories');
-            } 
+            }
         }
 
         // Déplacer le rendu du template en dehors de la condition
@@ -252,7 +280,7 @@ class c_dashboardController
     // Fonctions d'action
     private function updateItem($data, $dashboard, $var, $redirection)
     {
-      
+
         $resultat = $dashboard->editItem($data, $var) ? true : false;
         if ($resultat) {
             header("Location: $redirection");
