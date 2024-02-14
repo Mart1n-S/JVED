@@ -9,6 +9,8 @@ require_once './models/class_affichage.php';
 require_once './models/class_user.php';
 require_once './models/class_security.php';
 require_once './models/class_topics.php';
+require_once './models/class_dashboard.php';
+
 // Connexion à la base de données
 $db = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
 

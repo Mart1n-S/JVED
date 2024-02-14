@@ -1,0 +1,23 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    {{ include('./partials/header.html.twig') }}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h1 class="display-1">Ajouter une catégorie</h1>
+
+                <form method="post" action="{{ path('categories_add') }}">
+                    <div class="mb-3">
+                        <label for="nom" class="form-label">Nom</label>
+                        <input type="text" class="form-control" id="nom" name="nom" value="">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" name="submitAdd">Ajouter la catégorie</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{ include('./partials/footer.html.twig') }}
+{% endblock %}

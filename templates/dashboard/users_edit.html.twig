@@ -1,0 +1,48 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+	{{ include('./partials/header.html.twig') }}
+	<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-md-6">
+				<h1 class="display-1">Modifier l'utilisateur</h1>
+
+				{% if data %}
+					<form method="post" action="{{ path('users_edit') }}">
+						<input type="hidden" name="id" value="{{ data['id'] }}">
+						<div class="mb-3">
+							<label for="pseudo" class="form-label">Pseudo</label>
+							<input type="text" class="form-control" id="pseudo" name="pseudo" value="{{ data['pseudo'] }}">
+						</div>
+						<div class="mb-3">
+							<label for="email" class="form-label">Email</label>
+							<input type="email" class="form-control" id="email" name="email" value="{{ data['email'] }}">
+						</div>
+						<div class="mb-3">
+							<label for="password" class="form-label">password</label>
+							<input type="password" class="form-control" id="password" name="password" value="{{ data['password'] }}">
+						</div>
+						<div class="mb-3">
+							<label for="idRole" class="form-label">Rôle</label>
+							<input type="text" class="form-control" id="idRole" name="idRole" value="{{ data['idRole'] }}">
+						</div>
+						<div class="mb-3">
+							<label for="bloque" class="form-label">Bloqué</label>
+							<input type="text" class="form-control" id="bloque" name="bloque" value="{{ data['bloque'] }}">
+						</div>
+						<div class="mb-3">
+							<label for="updatedAt" class="form-label">Modifié le</label>
+							<input type="text" class="form-control" id="updatedAt" name="updatedAt" value="{{ data['updatedAt'] }}" disabled>
+						</div>
+
+						<button type="submit" class="btn btn-primary" name="submitUpdate">Enregistrer les modifications</button>
+					</form>
+				{% else %}
+					<p>L'utilisateur que vous essayez de modifier n'existe pas.</p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+	{{ include('./partials/footer.html.twig') }}
+{% endblock %}

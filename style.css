@@ -302,6 +302,7 @@ body {
 .inscriptionContentFormButton, .resetContentFormButton {
   margin: 64px 0 16px 0;
 }
+
 .mainProfil {
   flex-direction: column;
   align-items: center;
@@ -381,6 +382,6 @@ body {
   background-color: var(--bg-color-white);
   color: var(--color-text-green);
   margin-bottom: 8px;
-}
+
 
 /*# sourceMappingURL=style.css.map */

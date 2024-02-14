@@ -1,0 +1,50 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+	{{ include('./partials/header.html.twig') }}
+	<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-md-6">
+				<h1 class="display-1">Gestion des sujets</h1>
+				<table class="table table-striped table-hover">
+					<tr>
+						<th>Id</th>
+						<th>Nom</th>
+						<th>Auteur</th>
+						<th>Créé le</th>
+						<th>Modifié le</th>
+												<th>Supprimé</th>
+						<th>Actions</th>
+					</tr>
+
+					{% for topic in topics %}
+						<form action="{{ path('posts_edit') }}" method="post">
+							<tr>
+								<td>{{ topic['id'] }}</td>
+								<td>{{ topic['nom'] }}</td>
+								<td>{{ topic['auteur'] }}</td>
+								<td>{{ topic['createdAt'] }}</td>
+								<td>{{ topic['updatedAt'] }}</td>
+								<td>{{ topic['deletedAt'] }}</td>
+								<td>
+									<button type="submit">Modifier</button>
+									/
+                <button type="submit" name="submitDelete" onclick="return confirm('Are you sure you want to delete this item?')">Supprimer</button>
+
+									<input type="hidden" name="id" value="{{ topic['id'] }}">
+									<input type="hidden" name="nom" value="{{ topic['nom'] }}">
+									<input type="hidden" name="auteur" value="{{ topic['auteur'] }}">
+									<input type="hidden" name="createdAt" value="{{ topic['createdAt'] }}">
+									<input type="hidden" name="updatedAt" value="{{ topic['updatedAt'] }}">
+									<input type="hidden" name="deletedAt" value="{{ topic['deletedAt'] }}">
+								</td>
+							</tr>
+						</form>
+					{% endfor %}
+				</table>
+			</div>
+		</div>
+	</div>
+
+	{{ include('./partials/footer.html.twig') }}
+{% endblock %}
