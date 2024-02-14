@@ -15,17 +15,26 @@ body {
   justify-content: space-around;
   align-items: center;
   padding: 4px 4px 0 4px;
+
   &Lien {
     display: flex;
     gap: 36px;
     list-style: none;
+
     a {
       color: var(--color-text-white);
       font-weight: bold;
     }
-    .navigationLienConnexion {
+
+    &Connexion {
       border-radius: 14px;
       background-color: var(--bg-color-button-purple);
+      padding: 7px 16px;
+    }
+
+    &Profil {
+      border-radius: 14px;
+      background-color: var(--bg-color-button-orange);
       padding: 7px 16px;
     }
   }
