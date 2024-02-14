@@ -393,34 +393,30 @@ class c_dashboardController
         $this->security->checkAutorisation();
 
         $dashboard = new Dashboard($this->connexionDB);
-        // $errorMessages = [];
-        // if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitDelete'])) {
-        //     $userId = $_POST['id'] ?? '';
-
-        //     if ($dashboard->deleteContent($userId)) {
-        //         echo 'WOUPLI';
-        //         header("Location: contents");
-        //         exit;
-        //     } else {
-        //         echo 'et oe';
-        //     }
-        // }
-
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'id' => $_POST['id'] ?? '',
                 'idTopic' => $_POST['idTopic'] ?? '',
+                'commentaire' => $_POST['commentaire'] ?? '',
+                'deletedAt' => $_POST['deletedAt'] ?? ''
             ];
-            
+
             if (isset($_POST['submitDelete'])) {
                 $this->deleteItem($data['id'], $dashboard, 'content', "contents/{$data['idTopic']}");
             } elseif (isset($_POST['submitRestore'])) {
                 $this->restoreItem($data['id'], $dashboard, 'content', "contents/{$data['idTopic']}");
+            }elseif (isset($_POST['submitShow'])) {
+                // Déplacer le rendu du template en dehors de la condition
+            $template = $this->twig->getTwig()->load('dashboard/contents_show.html.twig');
+            $template->display([
+                'data' =>  $data,
+                'user' =>  $this->userSession
+            ]);
             };
         }
-
-        $template = $this->twig->getTwig()->load('dashboard/contents.html.twig');
-        $template->display();
+            header('Location: dashboard');
+            exit;
+       
     }
 }

@@ -516,5 +516,9 @@ body {
 .gestionCrudTableauListeCategorie li {
   margin-bottom: 18px;
 }
+.gestionCrudTableau textarea {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
 
 /*# sourceMappingURL=style.css.map */

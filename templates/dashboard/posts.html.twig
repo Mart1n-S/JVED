@@ -39,7 +39,7 @@
 									<tr class="{{ cycle(['gestionCrudTableauContentOdd-row', 'gestionCrudTableauContentEven-row'], loop.index) }}">
 										<td>{{ topic['id'] }}</td>
 										<td>
-											<a href={{ path('contents', {'id': topic['id']} ) }}>{{ topic['nom'] }}</a>
+											<a href="{{ path('contents', {'id': topic['id']} ) }}">{{ topic['nom'] }}</a>
 										</td>
 										<td>{{ topic['nomSujet'] }}</td>
 										<td>{{ topic['auteur'] }}</td>
@@ -49,7 +49,7 @@
 										<td>{{ topic['deletedAt'] is not null ? topic['deletedAt']|date("d-m-Y")  : ''}}</td>
 										<td>
 											{# <button type="submit" class="boutonUpdate">Modifier</button>
-																																	/ #}
+																																												/ #}
 											{% if topic['deletedAt'] is null %}
 												<button type="submit" name="submitDelete" class="boutonDelete" onclick="return confirm('Êtes vous sur de vouloirs le supprimer ?')">Supprimer</button>
 											{% else %}

@@ -1,0 +1,44 @@
+{% extends "base.html.twig" %}
+{% block title %}Dashboard | Gestion des commentaires
+{% endblock %}
+{% block body %}
+	{{ include('./partials/header.html.twig') }}
+	<main class="mainGestion">
+		<section class="gestion">
+			<div class="gestionCard">
+				<div class="gestionNavigation">
+					<a href="{{ path('contents', {'id': data['idTopic']} ) }}">Retour aux commentaires</a>
+				</div>
+				<div class="gestionTitre">
+					<h1 class="gestionTitrePrincipal">Commentaires du topic
+						{{data['nomTopic']}}</h1>
+
+				</div>
+
+				<div class="gestionCrud">
+					<div class="gestionCrudTableau">
+
+						<form class="inscriptionContentForm" method="POST" action="{{ path('contents_edit') }}">
+							<div class="inscriptionContentFormInput">
+								<textarea name="commentaire" cols="30" rows="10" readonly>{{ data['commentaire'] }}</textarea>
+								<input type="hidden" name="id" value="{{ data['id'] }}">
+								<input type="hidden" name="idTopic" value="{{ data['idTopic'] }}">
+							</div>
+							{# <button class="inscriptionContentFormButton" name="submitDelete" type="submit">Supprimer</button> #}
+
+
+							{% if data['deletedAt'] is empty %}
+								<button type="submit" name="submitDelete" class="inscriptionContentFormButton" onclick="return confirm('Êtes vous sur de vouloirs le supprimer ?')">Supprimer</button>
+							{% else %}
+								<button type="submit" name="submitRestore" class="inscriptionContentFormButton" onclick="return confirm('Êtes vous sur de vouloirs le restaurer ?')">Restaurer</button>
+							{% endif %}/
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	{{ include('./partials/footer.html.twig') }}
+{% endblock %}
