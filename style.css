@@ -79,9 +79,14 @@ body {
   background-color: var(--bg-color-button-purple);
   padding: 7px 16px;
 }
-.navigationLienProfil, .gestionCrudTableauAdd a, .gestionCrudTableauContent .boutonUpdate, .gestionCrudTableauContent .boutonDebloque, .gestionCrudTableauContent .boutonBloque, .gestionCrudTableauContent .boutonRestore, .gestionCrudTableauContent .boutonDelete, .gestionNavigation a {
+.navigationLienProfil, .gestionCrudTableauAdd a, .gestionCrudTableauContent .boutonUpdate, .contentCardTableauContent .boutonUpdate, .gestionCrudTableauContent .boutonDebloque, .contentCardTableauContent .boutonDebloque, .gestionCrudTableauContent .boutonBloque, .contentCardTableauContent .boutonBloque, .gestionCrudTableauContent .boutonRestore, .contentCardTableauContent .boutonRestore, .gestionCrudTableauContent .boutonDelete, .contentCardTableauContent .boutonDelete, .gestionNavigation a, .contentNavigation a {
   border-radius: 14px;
   background-color: var(--bg-color-button-orange);
+  padding: 7px 16px;
+}
+.navigationLienTopic {
+  border-radius: 14px;
+  background-color: var(--bg-color-bleu);
   padding: 7px 16px;
 }
 
@@ -96,35 +101,35 @@ body {
   background: var(--bg-color-2);
 }
 
-.mainAccueil, .mainGestion, .mainDashboard, .regles, .mainProfil {
+.mainAccueil, .mainGestion, .mainContent, .mainDashboard, .regles, .mainProfil {
   display: flex;
   justify-content: center;
   padding: 4px 4px 0 4px;
 }
 
-.accueil, .gestion, .dashboard, .profilTopic, .profil {
+.accueil, .gestion, .content, .dashboard, .profilTopic, .profil {
   display: flex;
   flex-direction: column;
   color: var(--color-text-white);
   margin-top: 64px;
 }
-.accueilTitre, .gestionCrudTitre, .gestionTitre, .dashboardTitre, .profilTopicTitre, .profilTitre {
+.accueilTitre, .contentTitre, .gestionCrudTitre, .contentCardTitre, .gestionTitre, .dashboardTitre, .profilTopicTitre, .profilTitre {
   margin: 32px 0;
 }
-.accueilTitrePrincipal, .gestionTitrePrincipal, .dashboardTitrePrincipal, .profilTopicTitrePrincipal, .profilTitrePrincipal {
+.accueilTitrePrincipal, .contentTitrePrincipal, .gestionTitrePrincipal, .dashboardTitrePrincipal, .profilTopicTitrePrincipal, .profilTitrePrincipal {
   font-size: 50px;
   margin-bottom: 32px;
 }
-.accueilTitreTexte, .gestionTitreTexte, .dashboardTitreTexte, .profilTopicTitreTexte, .profilTitreTexte {
+.accueilTitreTexte, .contentTitreTexte, .gestionTitreTexte, .dashboardTitreTexte, .profilTopicTitreTexte, .profilTitreTexte {
   font-size: 18px;
 }
-.accueilTendance, .gestionCrud, .dashboardPanel {
+.accueilTendance, .contentCard, .gestionCrud, .dashboardPanel {
   margin: 32px 0;
 }
 .accueilTendanceTitre {
   font-size: 18px;
 }
-.accueilTendanceTableau, .gestionCrudTableau, .dashboardPanelTableau {
+.accueilTendanceTableau, .gestionCrudTableau, .contentCardTableau, .dashboardPanelTableau {
   display: flex;
   flex-direction: column;
   padding: 4px;
@@ -137,41 +142,46 @@ body {
 .accueilTendanceTableauLien a {
   color: var(--color-text-white);
 }
-.accueilTendanceTableauContent, .gestionCrudTableauContent, .dashboardPanelTableauContent, .profilTopicContent {
+.accueilTendanceTableauContent, .gestionCrudTableauContent, .contentCardTableauContent, .dashboardPanelTableauContent, .profilTopicContent {
   border-collapse: collapse;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
   border-radius: 12px;
 }
-.accueilTendanceTableauContent thead, .gestionCrudTableauContent thead, .dashboardPanelTableauContent thead, .profilTopicContent thead {
+.accueilTendanceTableauContent a, .gestionCrudTableauContent a, .contentCardTableauContent a, .dashboardPanelTableauContent a, .profilTopicContent a {
+  color: var(--color-text-white);
+  text-decoration: underline;
+}
+.accueilTendanceTableauContent thead, .gestionCrudTableauContent thead, .contentCardTableauContent thead, .dashboardPanelTableauContent thead, .profilTopicContent thead {
   background-color: var(--bg-color-dark-1);
 }
-.accueilTendanceTableauContent th, .gestionCrudTableauContent th, .dashboardPanelTableauContent th, .profilTopicContent th,
+.accueilTendanceTableauContent th, .gestionCrudTableauContent th, .contentCardTableauContent th, .dashboardPanelTableauContent th, .profilTopicContent th,
 .accueilTendanceTableauContent td,
 .gestionCrudTableauContent td,
+.contentCardTableauContent td,
 .dashboardPanelTableauContent td,
 .profilTopicContent td {
   padding: 16px;
   text-align: center;
 }
-.accueilTendanceTableauContent th:first-child, .gestionCrudTableauContent th:first-child, .dashboardPanelTableauContent th:first-child, .profilTopicContent th:first-child {
+.accueilTendanceTableauContent th:first-child, .gestionCrudTableauContent th:first-child, .contentCardTableauContent th:first-child, .dashboardPanelTableauContent th:first-child, .profilTopicContent th:first-child {
   border-radius: 12px 0 0 0;
 }
-.accueilTendanceTableauContent th:last-child, .gestionCrudTableauContent th:last-child, .dashboardPanelTableauContent th:last-child, .profilTopicContent th:last-child {
+.accueilTendanceTableauContent th:last-child, .gestionCrudTableauContent th:last-child, .contentCardTableauContent th:last-child, .dashboardPanelTableauContent th:last-child, .profilTopicContent th:last-child {
   border-radius: 0 12px 0 0;
 }
-.accueilTendanceTableauContent tr:last-child, .gestionCrudTableauContent tr:last-child, .dashboardPanelTableauContent tr:last-child, .profilTopicContent tr:last-child {
+.accueilTendanceTableauContent tr:last-child, .gestionCrudTableauContent tr:last-child, .contentCardTableauContent tr:last-child, .dashboardPanelTableauContent tr:last-child, .profilTopicContent tr:last-child {
   border-radius: 0 0 12px 12px;
 }
-.accueilTendanceTableauContent tr:last-child td:first-child, .gestionCrudTableauContent tr:last-child td:first-child, .dashboardPanelTableauContent tr:last-child td:first-child, .profilTopicContent tr:last-child td:first-child {
+.accueilTendanceTableauContent tr:last-child td:first-child, .gestionCrudTableauContent tr:last-child td:first-child, .contentCardTableauContent tr:last-child td:first-child, .dashboardPanelTableauContent tr:last-child td:first-child, .profilTopicContent tr:last-child td:first-child {
   border-radius: 0 0 0 12px;
 }
-.accueilTendanceTableauContent tr:last-child td:last-child, .gestionCrudTableauContent tr:last-child td:last-child, .dashboardPanelTableauContent tr:last-child td:last-child, .profilTopicContent tr:last-child td:last-child {
+.accueilTendanceTableauContent tr:last-child td:last-child, .gestionCrudTableauContent tr:last-child td:last-child, .contentCardTableauContent tr:last-child td:last-child, .dashboardPanelTableauContent tr:last-child td:last-child, .profilTopicContent tr:last-child td:last-child {
   border-radius: 0 0 12px 0;
 }
-.accueilTendanceTableauContentOdd-row, .gestionCrudTableauContentOdd-row, .dashboardPanelTableauContentOdd-row, .profilTopicContentOdd-row {
+.accueilTendanceTableauContentOdd-row, .contentCardTableau .commentaireCardOdd-row, .contentCardTableauContentOdd-row, .gestionCrudTableauContentOdd-row, .dashboardPanelTableauContentOdd-row, .profilTopicContentOdd-row {
   background-color: var(--bg-color-dark-1);
 }
-.accueilTendanceTableauContentEven-row, .gestionCrudTableauContentEven-row, .dashboardPanelTableauContentEven-row, .profilTopicContentEven-row {
+.accueilTendanceTableauContentEven-row, .contentCardTableau .commentaireCardEven-row, .contentCardTableauContentEven-row, .gestionCrudTableauContentEven-row, .dashboardPanelTableauContentEven-row, .profilTopicContentEven-row {
   background-color: var(--bg-color-dark-light);
 }
 
@@ -247,7 +257,7 @@ body {
   color: var(--color-text-grey);
   text-decoration: underline;
 }
-.loginContentFormButton, .demandeResetContentFormButton, .reverificationContentFormButton, .verificationContentFormButton, .inscriptionContentFormButton, .resetContentFormButton {
+.loginContentFormButton, .contentCardTableau .commentaireCardBodyBouton, .demandeResetContentFormButton, .reverificationContentFormButton, .verificationContentFormButton, .inscriptionContentFormButton, .resetContentFormButton {
   align-self: center;
   background-color: var(--bg-color-button-purple);
   color: var(--bg-color-white);
@@ -257,7 +267,7 @@ body {
   height: 42px;
   font-size: 18px;
 }
-.loginContentFormButton:hover, .demandeResetContentFormButton:hover, .reverificationContentFormButton:hover, .verificationContentFormButton:hover, .inscriptionContentFormButton:hover, .resetContentFormButton:hover {
+.loginContentFormButton:hover, .contentCardTableau .commentaireCardBodyBouton:hover, .demandeResetContentFormButton:hover, .reverificationContentFormButton:hover, .verificationContentFormButton:hover, .inscriptionContentFormButton:hover, .resetContentFormButton:hover {
   cursor: pointer;
 }
 .loginContentFormNouveauUser, .inscriptionContentFormLogin, .loginContentFormRecheck, .resetContentFormRecheck, .verificationContentFormRecheck {
@@ -437,7 +447,7 @@ body {
   color: var(--color-text-red);
 }
 
-.mainGestion {
+.mainGestion, .mainContent {
   flex-direction: column;
   align-items: center;
 }
@@ -456,37 +466,41 @@ body {
   padding: 12px;
   width: 100%;
 }
-.gestionNavigation a {
+.gestionTitre .successNewTopic {
+  font-size: 1.2em;
+  font-weight: 600;
+}
+.gestionNavigation a, .contentNavigation a {
   color: var(--color-text-white);
   font-weight: 600;
   font-size: 1.1em;
   background-color: var(--bg-color-bleu);
 }
-.gestionCrudTitre {
+.gestionCrudTitre, .contentCardTitre {
   text-align: center;
 }
-.gestionCrudTableauContent a {
+.gestionCrudTableauContent a, .contentCardTableauContent a {
   color: var(--color-text-white);
   text-decoration: underline;
 }
-.gestionCrudTableauContent .boutonUpdate, .gestionCrudTableauContent .boutonDebloque, .gestionCrudTableauContent .boutonBloque, .gestionCrudTableauContent .boutonRestore, .gestionCrudTableauContent .boutonDelete {
+.gestionCrudTableauContent .boutonUpdate, .contentCardTableauContent .boutonUpdate, .gestionCrudTableauContent .boutonDebloque, .contentCardTableauContent .boutonDebloque, .gestionCrudTableauContent .boutonBloque, .contentCardTableauContent .boutonBloque, .gestionCrudTableauContent .boutonRestore, .contentCardTableauContent .boutonRestore, .gestionCrudTableauContent .boutonDelete, .contentCardTableauContent .boutonDelete {
   color: var(--color-text-white);
   background-color: var(--bg-color-bleu);
   font-weight: 600;
 }
-.gestionCrudTableauContent .boutonUpdate:hover, .gestionCrudTableauContent .boutonDebloque:hover, .gestionCrudTableauContent .boutonBloque:hover, .gestionCrudTableauContent .boutonRestore:hover, .gestionCrudTableauContent .boutonDelete:hover {
+.gestionCrudTableauContent .boutonUpdate:hover, .contentCardTableauContent .boutonUpdate:hover, .gestionCrudTableauContent .boutonDebloque:hover, .contentCardTableauContent .boutonDebloque:hover, .gestionCrudTableauContent .boutonBloque:hover, .contentCardTableauContent .boutonBloque:hover, .gestionCrudTableauContent .boutonRestore:hover, .contentCardTableauContent .boutonRestore:hover, .gestionCrudTableauContent .boutonDelete:hover, .contentCardTableauContent .boutonDelete:hover {
   cursor: pointer;
 }
-.gestionCrudTableauContent .boutonDelete {
+.gestionCrudTableauContent .boutonDelete, .contentCardTableauContent .boutonDelete {
   background-color: var(--bg-color-red-pastel);
 }
-.gestionCrudTableauContent .boutonRestore {
+.gestionCrudTableauContent .boutonRestore, .contentCardTableauContent .boutonRestore {
   background-color: var(--bg-color-button-orange);
 }
-.gestionCrudTableauContent .boutonBloque {
+.gestionCrudTableauContent .boutonBloque, .contentCardTableauContent .boutonBloque {
   background-color: var(--bg-color-button-yellow);
 }
-.gestionCrudTableauContent .boutonDebloque {
+.gestionCrudTableauContent .boutonDebloque, .contentCardTableauContent .boutonDebloque {
   background-color: var(--bg-color-button-orange);
 }
 .gestionCrudTableauAdd {
@@ -516,9 +530,60 @@ body {
 .gestionCrudTableauListeCategorie li {
   margin-bottom: 18px;
 }
-.gestionCrudTableau textarea {
+.gestionCrudTableau label, .contentCardTableau label {
+  color: var(--color-text-black);
+  font-size: 1.2em;
+  font-weight: 600;
+}
+.gestionCrudTableau textarea, .contentCardTableau textarea {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  padding: 12px;
+}
+
+.contentCardTableau .commentaireCardOdd-row {
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 32px;
+}
+.contentCardTableau .commentaireCardEven-row {
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 32px;
+}
+.contentCardTableau .commentaireCardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.contentCardTableau .commentaireCardBodyTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid white;
+}
+.contentCardTableau .commentaireCardBodyTitlePrincipale {
+  font-weight: 600;
+  font-size: 1.3em;
+}
+.contentCardTableau .commentaireCardBodyCommentaire {
+  font-size: 1.2em;
+  max-width: 800px;
+}
+.contentCardTableau .commentaireCardBody textarea {
+  padding: 12px;
+}
+.contentCardTableauInfoNotLoged {
+  text-align: center;
+  color: var(--color-text-red);
+  font-size: 1.3em;
+  font-weight: 600;
+  background-color: white;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
 }
 
 /*# sourceMappingURL=style.css.map */

@@ -26,6 +26,10 @@
 
     &Titre {
         @extend .accueilTitre;
+        .successNewTopic{
+            font-size: 1.2em;
+            font-weight: 600;
+        }
 
         &Principal {
             @extend .accueilTitrePrincipal;
@@ -141,11 +145,18 @@
                     }
                 }
             }
+            label{
+                color: var(--color-text-black);
+                font-size: 1.2em;
+                font-weight: 600;
+            }
 
             textarea{
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                border-radius: 8px;;
+                border-radius: 8px;
+                padding: 12px;
             }
+
         }
     }
 }

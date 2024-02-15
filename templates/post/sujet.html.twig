@@ -1,0 +1,52 @@
+{% block stylesheets %}<link rel="stylesheet" href="../../style.css">
+{% endblock %}
+
+{% block title %}Topics
+{% endblock %}
+{% extends "base.html.twig" %}
+
+{% block body %}
+	{{ include('./partials/header.html.twig') }}
+	<main class="mainContent">
+		<section class="content">
+			<div class="contentTitre">
+				<h1 class="contentTitrePrincipal">{{nomCategorie}}</h1>
+				<p class="contentTitreTexte">Choisissez un topic à visiter</p>
+
+			</div>
+			<div class="contentNavigation">
+				<a href="{{path('categorie')}}">Retour Catégorie</a>
+			</div>
+			<div class="contentCard">
+				<h2 class="contentCardTitre">{{'Liste de tous les topics de '|upper}}{{nomCategorie}}</h2>
+				<div class="contentCardTableau">
+
+					<table class="contentCardTableauContent">
+						<thead>
+							<tr>
+								<th>SUJET</th>
+								<th>AUTEUR</th>
+								<th>NB MESSAGES</th>
+								<th>DERNIERE ACTIVITE</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for topic in topics %}
+								<tr class="{{ cycle(['contentCardTableauContentOdd-row', 'contentCardTableauContentEven-row'], loop.index) }}">
+									<td>
+										<a href="{{ path('topics', {'categorie': nomCategorie, 'idCategorie': idCategorie,'nom': topic.nom,'id': topic.id }) }}">{{ topic.nom }}</a>
+									</td>
+									<td>{{ topic.auteur }}</td>
+									<td>{{ topic.nb_messages is not null ? topic.nb_messages : 0 }}</td>
+									<td>{{ topic.derniere_activite|date("d-m-Y") }}</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+		</section>
+	</main>
+	{{ include('./partials/footer.html.twig') }}
+{% endblock %}

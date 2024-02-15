@@ -8,10 +8,7 @@
 
 		<ul class="navigationLien">
 			<li>
-				<a href="{{path('accueil')}}">Actus</a>
-			</li>
-			<li>
-				<a href="{{path('accueil')}}">Jeux Vidéos</a>
+				<a href="{{path('accueil')}}">Accueil</a>
 			</li>
 
 			{% if user['role'] == 'moderateur' or user['role'] == 'superAdmin' %}
@@ -23,6 +20,9 @@
 
 			{# Vérifiez si l'utilisateur est connecté #}
 			{% if user is not null %}
+				<li>
+					<a class="navigationLienTopic" href="{{path('newTopic')}}">Créer un topic</a>
+				</li>
 				<li>
 					<a class="navigationLienProfil" href="{{path('profil')}}">Profil</a>
 				</li>

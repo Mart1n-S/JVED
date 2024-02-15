@@ -1,0 +1,62 @@
+{% extends "base.html.twig" %}
+{% block title %}Nouveau Topic
+{% endblock %}
+{% block body %}
+	{{ include('./partials/header.html.twig') }}
+	<main class="mainGestion">
+		<section class="gestion">
+			<div class="gestionCard">
+
+				<div class="gestionTitre">
+					<h1 class="gestionTitrePrincipal">Créer un nouveau topic</h1>
+					<div class="inscriptionContentFormInputSuccess">
+						{% if success is defined and success is not empty  %}
+							<div>
+								<p id="success" class="successNewTopic">{{ success }}</p>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="gestionCrud">
+					<div class="gestionCrudTableau">
+
+
+						<form class="inscriptionContentForm" method="POST" action="{{ path('newTopic') }}">
+							<div class="inscriptionContentFormInput">
+								<label for="categorie">Choisissez une catégorie :</label>
+								<select name="categorie" id="categorie" class="selectRole" required>
+									{% for categorie in categories %}
+										<option value="{{ categorie.id }}">{{ categorie.nom }}</option>
+									{% endfor %}
+								</select>
+								<label for="sujet">Choisissez un sujet :</label>
+								<input type="text" name="sujet" id="sujet" placeholder="Sujet" minlength="3" maxlength="40" required>
+								<label for="nomTopic">Choisissez Le nom de votre Topic :</label>
+								<input type="text" name="nomTopic" id="nomTopic" placeholder="Nom du topic" minlength="3" maxlength="40" required>
+								<label for="commentaire">Votre message :</label>
+								<textarea name="commentaire" id="commentaire" cols="30" rows="10" minlength="3" maxlength="400" placeholder="Ecrire..." required></textarea>
+
+							</div>
+							<button class="inscriptionContentFormButton" name="submitAdd" type="submit">Créer</button>
+						</form>
+						<div class="inscriptionContentFormInputError">
+							{% if error is defined and error is not empty %}
+								<div>
+									<ul>
+										{% for errorMessage in error %}
+											<li id="error_c">{{ errorMessage }}</li>
+										{% endfor %}
+									</ul>
+								</div>
+							{% endif %}
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+	{{ include('./partials/footer.html.twig') }}
+{% endblock %}

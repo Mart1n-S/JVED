@@ -1,0 +1,53 @@
+{% extends "base.html.twig" %}
+{% block title %}Catégories
+{% endblock %}
+{% block body %}
+	{{ include('./partials/header.html.twig') }}
+	<main class="mainContent">
+		<section class="content">
+			<div class="contentTitre">
+				<h1 class="contentTitrePrincipal">Catégories</h1>
+				<p class="contentTitreTexte">Choisissez une catégorie à visiter</p>
+
+			</div>
+			<div class="contentNavigation">
+				<a href="{{path('accueil')}}">Retour Accueil</a>
+			</div>
+			<div class="contentCard">
+				<h2 class="contentCardTitre">{{'Liste de toutes les catégories'|upper}}</h2>
+				<div class="contentCardTableau">
+
+					<table class="contentCardTableauContent">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>NOM</th>
+								<th>NB TOPICS</th>
+								<th>CREER</th>
+								<th>MODIFIER</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for categorie in categories %}
+								<tr class="{{ cycle(['contentCardTableauContentOdd-row', 'contentCardTableauContentEven-row'], loop.index) }}">
+									<td>{{ categorie['id'] }}</td>
+									<td>
+										<a href="{{ path('sujet', {'nom': categorie.nom,'id': categorie.id }) }}">{{ categorie.nom }}</a>
+									</td>
+									<td>{{ categorie['nb_topic'] is not null ? categorie['nb_topic'] : 0 }}</td>
+									<td>{{ categorie['createdAt']|date("d-m-Y") }}</td>
+									<td>{{ categorie['updatedAt']|date("d-m-Y") }}</td>
+
+
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+		</section>
+	</main>
+
+	{{ include('./partials/footer.html.twig') }}
+{% endblock %}
