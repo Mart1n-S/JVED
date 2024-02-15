@@ -17,11 +17,50 @@ class Affichage
     /**
      * Récupère les sujets les plus commentés pour les afficher sur la page d'accueil.
      *
-     * @return array Retourne un tableau associatif des sujets les plus commentés.
+     * @return array|null Retourne un tableau des sujets les plus commentés ou null en cas d'erreur
      */
-    public function getTopTopicsAccueil(): array
+    public function getTopTopicsAccueil(): array|null
     {
-        return $this->db->getTopTopics();
+        try {
+            $query = "
+                SELECT 
+                topic.id,
+                topic.nom, 
+                user.pseudo AS auteur, 
+                topic.updatedAt AS derniere_activite, 
+                COUNT(content.id) AS nb_messages,
+                cat.nom as categorieNom,
+                cat.id as categorieId
+            FROM 
+                topic 
+            LEFT JOIN 
+                content ON topic.id = content.idTopic
+            JOIN 
+                user ON topic.auteur = user.id
+            JOIN 
+                sujet ON topic.idSujet = sujet.id
+            JOIN 
+                categorie cat ON sujet.idCategorie = cat.id
+            WHERE 
+                topic.deletedAt IS NULL
+            AND 
+                topic.valide = 1
+            GROUP BY 
+                topic.id
+            ORDER BY 
+                nb_messages DESC, 
+                derniere_activite DESC
+            LIMIT 5;
+            ";
+
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
     }
 
     /**

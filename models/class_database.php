@@ -48,54 +48,6 @@ class Database
         return $this->connexion;
     }
 
-    /**
-     * Méthode pour obtenir les cinq sujets les plus commentés.
-     *
-     * @return array|null Retourne un tableau des sujets les plus commentés ou null en cas d'erreur
-     */
-    public function getTopTopics(): array|null
-    {
-        try {
-            $query = "
-                SELECT 
-                topic.id,
-                topic.nom, 
-                user.pseudo AS auteur, 
-                topic.updatedAt AS derniere_activite, 
-                COUNT(content.id) AS nb_messages,
-                cat.nom as categorieNom,
-                cat.id as categorieId
-            FROM 
-                topic 
-            LEFT JOIN 
-                content ON topic.id = content.idTopic
-            JOIN 
-                user ON topic.auteur = user.id
-            JOIN 
-                sujet ON topic.idSujet = sujet.id
-            JOIN 
-                categorie cat ON sujet.idCategorie = cat.id
-            WHERE 
-                topic.deletedAt IS NULL
-            AND 
-                topic.valide = 1
-            GROUP BY 
-                topic.id
-            ORDER BY 
-                nb_messages DESC, 
-                derniere_activite DESC
-            LIMIT 5;
-            ";
-
-            $stmt = $this->connect()->prepare($query);
-            $stmt->execute();
-
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return null;
-        }
-    }
 
     /**
      * Récupère toutes les catégories non supprimées de la base de données.
@@ -321,7 +273,7 @@ class Database
         }
     }
 
-      /**
+    /**
      * Crée un nouvel utilisateur dans la base de données.
      *
      * @param string $email L'email de l'utilisateur.
@@ -343,20 +295,20 @@ class Database
             $stmt->execute();
 
             // Vérifie si la mise à jour a affecté une ligne dans la base de données
-        if ($stmt->rowCount() > 0) {
-            // Mise à jour pour supprimer le token et la dateToken
-            $deleteQuery = "
+            if ($stmt->rowCount() > 0) {
+                // Mise à jour pour supprimer le token et la dateToken
+                $deleteQuery = "
             UPDATE user SET token = NULL, dateToken = NULL WHERE email = :email
             ";
 
-            $deleteStmt = $this->connect()->prepare($deleteQuery);
-            $deleteStmt->bindParam(':email', $email, PDO::PARAM_STR);
-            $deleteStmt->execute();
+                $deleteStmt = $this->connect()->prepare($deleteQuery);
+                $deleteStmt->bindParam(':email', $email, PDO::PARAM_STR);
+                $deleteStmt->execute();
 
-            return true;
-        } else {
-            return false;
-        }
+                return true;
+            } else {
+                return false;
+            }
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return null;
@@ -512,7 +464,7 @@ class Database
             $stmt->bindParam(':idUser', $idUser, PDO::PARAM_INT);
             $stmt->execute();
 
-            
+
             return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
@@ -592,6 +544,4 @@ class Database
             return false;
         }
     }
-
-
 }

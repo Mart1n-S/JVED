@@ -43,6 +43,7 @@ class c_post
      * Méthode d'affichage de la page des sujets lié à la catégorie
      *
      * @return void 
+     * @param array $match Les paramètres d'URL associés à la route.
      */
     public function sujet($match): void
     {
@@ -59,19 +60,19 @@ class c_post
         ]);
     }
 
-     /**
+    /**
      * Méthode d'affichage de la page du détails du topics
      *
      * @return void 
+     * @param array $match Les paramètres d'URL associés à la route.
      */
     public function topics($match): void
     {
-        $errorMessages=[];
-        if(isset($_GET['errors'])) {
+        $errorMessages = [];
+        if (isset($_GET['errors'])) {
             // Décoder la chaîne JSON
             $errorMessagesJson = urldecode($_GET['errors']);
             $errorMessages = json_decode($errorMessagesJson, true);
-        
         }
         $affichage = new Affichage($this->connexionDB);
         // Chargement du template spécifique à la page d'accueil
@@ -88,23 +89,30 @@ class c_post
         ]);
     }
 
+    /**
+     * Traite le commentaire ajouté par un utilisateur sur un sujet.
+     *
+     * Cette méthode vérifie si les données du formulaire de commentaire sont valides et traite l'ajout du commentaire.
+     * Si des erreurs sont détectées, elles sont renvoyées à la page précédente via l'URL.
+     * Si l'ajout du commentaire réussit, l'utilisateur est redirigé vers la page du sujet concerné.
+     */
     public function comment(): void
     {
         $errorMessages = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $requiredFields = ['idTopic', 'commentaire'];
-                $values = [];
+            $requiredFields = ['idTopic', 'commentaire'];
+            $values = [];
 
-                foreach ($requiredFields as $field) {
-                    if (isset($_POST[$field])) {
-                        $values[$field] = trim($_POST[$field]);
-                    } else {
-                        $errorMessages[] = "Le champ $field est manquant.";
-                    }
+            foreach ($requiredFields as $field) {
+                if (isset($_POST[$field])) {
+                    $values[$field] = trim($_POST[$field]);
+                } else {
+                    $errorMessages[] = "Le champ $field est manquant.";
                 }
+            }
 
-                // Vérifier que toutes les valeurs sont non vides
+            // Vérifier que toutes les valeurs sont non vides
             if (empty($errorMessages)) {
                 $errorMessages = array_merge(
                     $errorMessages,
@@ -116,9 +124,9 @@ class c_post
                     $topic = new Topic($this->connexionDB);
                     $resultat = $topic->addCommentaire($values['idTopic'], $values['commentaire'], $this->userSession['id']);
 
-                    if ( $resultat) {
+                    if ($resultat) {
 
-                        header('Location: /topics/'.$_POST['nomCategorie'].'/'.$_POST['idCategorie'].'/'.$_POST['nomTopic'].'/'.$_POST['idTopic']);
+                        header('Location: /topics/' . $_POST['nomCategorie'] . '/' . $_POST['idCategorie'] . '/' . $_POST['nomTopic'] . '/' . $_POST['idTopic']);
                         exit;
                     } else {
                         $errorMessages[] = "Une erreur s'est produite.";
@@ -133,33 +141,37 @@ class c_post
         $errorMessagesUrlEncoded = urlencode($errorMessagesJson);
 
         // Redirection avec les messages d'erreur dans l'URL
-        header('Location: /topics/'.$_POST['nomCategorie'].'/'.$_POST['idCategorie'].'/'.$_POST['nomTopic'].'/'.$_POST['idTopic'].'?errors='.$errorMessagesUrlEncoded);
+        header('Location: /topics/' . $_POST['nomCategorie'] . '/' . $_POST['idCategorie'] . '/' . $_POST['nomTopic'] . '/' . $_POST['idTopic'] . '?errors=' . $errorMessagesUrlEncoded);
         exit;
-
     }
 
+    /**
+     * Affiche le formulaire pour la création d'un nouveau sujet.
+     * Traite également les données soumises par le formulaire et effectue la validation côté serveur.
+     * En cas d'erreurs, les messages d'erreur sont transmis à la page de formulaire.
+     * En cas de succès, le sujet est ajouté à la base de données et l'utilisateur est redirigé vers une page de confirmation.
+     */
     public function new(): void
     {
         $this->security->checkConnexion();
-        $errorMessages= [];
-        $success=null;
+        $errorMessages = [];
+        $success = null;
         $dashboard = new Dashboard($this->connexionDB);
         $categories = $dashboard->getCategories();
-        if(isset($_GET['errors'])) {
+        if (isset($_GET['errors'])) {
             // Décoder la chaîne JSON
             $errorMessagesJson = urldecode($_GET['errors']);
             $errorMessages = json_decode($errorMessagesJson, true);
-        
-        }elseif(isset($_GET['success'])){
+        } elseif (isset($_GET['success'])) {
             $successMessagesJson = urldecode($_GET['success']);
             $success = json_decode($successMessagesJson, true);
         }
-       
+
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $requiredFields = ['categorie', 'sujet', 'nomTopic', 'commentaire'];
             $values = [];
-            
+
 
             foreach ($requiredFields as $field) {
                 if (isset($_POST[$field])) {
@@ -187,7 +199,7 @@ class c_post
                         $successMessagesJson = json_encode('Votre topic à bien été créer, il est en cours de validation !');
 
                         $successMessagesUrlEncoded = urlencode($successMessagesJson);
-                        header('Location: /new-topic?success='.$successMessagesUrlEncoded);
+                        header('Location: /new-topic?success=' . $successMessagesUrlEncoded);
                         exit;
                     } else {
                         $errorMessages[] = "Une erreur s'est produite";
@@ -213,7 +225,7 @@ class c_post
             'categories' => $categories,
             'user' =>  $this->userSession,
             'error' => $errorMessages,
-            'success'=> $success
+            'success' => $success
         ]);
     }
 }

@@ -112,7 +112,8 @@ class User
      * @return bool True si la mise à jour a réussi et au moins une ligne a été affectée, false sinon.
      */
 
-    public function updatePassword(string $email, string $password, string $token, string $dateToken){
+    public function updatePassword(string $email, string $password, string $token, string $dateToken)
+    {
         return $this->db->updatePassword($email, $password, $token, $dateToken);
     }
 }

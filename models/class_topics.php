@@ -14,7 +14,7 @@ class Topic
         $this->db = $db;
     }
 
-     /**
+    /**
      * Récupère les topics d'un utilisateur à partir de son ID.
      *
      * @param int $id L'ID de l'utilisateur.
@@ -25,7 +25,7 @@ class Topic
         return $this->db->getTopicsUser($id);
     }
 
-     /**
+    /**
      * Permet de supprimer de manière logique un topic
      *
      * @param int $idTopic L'ID du topic.
@@ -81,10 +81,10 @@ class Topic
      */
     public function createTopic(int $idCategorie, string $nomSujet, string $nomTopic, string $commentaire, int $idUser): bool
     {
-        $pdo = $this->db->connect(); 
+        $pdo = $this->db->connect();
 
         try {
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->beginTransaction();
 
             // Étape 1: Création du Sujet
@@ -119,7 +119,7 @@ class Topic
             if ($pdo->inTransaction()) {
                 $pdo->rollBack();
             }
-            error_log("Error: " . $e->getMessage()); 
+            error_log("Error: " . $e->getMessage());
             return false;
         }
     }

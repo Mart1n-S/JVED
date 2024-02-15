@@ -14,6 +14,10 @@ class Security
         $this->db = $db;
     }
 
+    /**
+     * Vérifie si l'utilisateur est connecté.
+     * Redirige vers la page d'accueil si l'utilisateur n'est pas connecté.
+     */
     public function checkConnexion()
     {
         if (!$_SESSION['user']) {
@@ -21,7 +25,23 @@ class Security
             exit;
         }
     }
+    /**
+     * Redirige l'utilisateur vers la page d'accueil s'il est déjà connecté.
+     * Utilisé pour restreindre l'accès aux pages de connexion ou d'inscription
+     * lorsque l'utilisateur est déjà authentifié.
+     */
+    public function estConnecte()
+    {
+        if ($_SESSION['user']) {
+            header('Location: /');
+            exit;
+        }
+    }
 
+    /**
+     * Vérifie si l'utilisateur a les autorisations nécessaires (superAdmin ou modérateur).
+     * Redirige vers la page d'accueil si l'utilisateur n'a pas les autorisations nécessaires.
+     */
     public function checkAutorisation()
     {
         if (!isset($_SESSION['user']) || ($_SESSION['user']['role'] != 'superAdmin' && $_SESSION['user']['role'] != 'moderateur')) {
@@ -30,9 +50,13 @@ class Security
         }
     }
 
+    /**
+     * Vérifie si l'utilisateur est superAdmin.
+     * Redirige vers la page d'accueil si l'utilisateur n'est pas superAdmin.
+     */
     public function checkAutorisationSuperAdmin()
     {
-        if ( $_SESSION['user']['role'] != 'superAdmin' ) {
+        if ($_SESSION['user']['role'] != 'superAdmin') {
             header('Location: /');
             exit;
         }
@@ -133,12 +157,13 @@ class Security
         ];
     }
 
-     /**
+    /**
      * Génère le token et la date d'expiration dans le fuseau horaire Europe/Paris.
      *
      * @return array Un tableau contenant le token et la date d'expiration.
      */
-    public function generateToken(): array {
+    public function generateToken(): array
+    {
         $currentTime = new DateTime();
         $expirationDate = $currentTime->setTimezone(new DateTimeZone('Europe/Paris'));
         $expirationDate->modify('+24 hours');
@@ -249,12 +274,11 @@ class Security
             // Vérifie si le sujet existe en vérifiant le nombre de résultats retournés.
             if ($result['count'] > 0) {
                 // S'il existe, retourne le tableau d'erreurs vide.
-                return  $errors ;
+                return  $errors;
             } else {
                 // Si le sujet n'existe pas, ajoute un message d'erreur au tableau d'erreurs.
                 $errors[] = "Le topic n'existe pas.";
                 return $errors;
-              
             }
         } catch (PDOException $e) {
             // En cas d'erreur, affiche un message d'erreur et retourne le tableau d'erreurs avec le message d'erreur.
@@ -286,12 +310,11 @@ class Security
             // Vérifie si le sujet existe en vérifiant le nombre de résultats retournés.
             if ($result['count'] > 0) {
                 // S'il existe, retourne le tableau d'erreurs vide.
-                return  $errors ;
+                return  $errors;
             } else {
                 // Si le sujet n'existe pas, ajoute un message d'erreur au tableau d'erreurs.
                 $errors[] = "La catégorie n'existe pas.";
                 return $errors;
-              
             }
         } catch (PDOException $e) {
             // En cas d'erreur, affiche un message d'erreur et retourne le tableau d'erreurs avec le message d'erreur.
@@ -335,6 +358,4 @@ class Security
 
         return $errors;
     }
-
-
 }

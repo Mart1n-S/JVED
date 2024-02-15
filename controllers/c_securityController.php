@@ -30,12 +30,9 @@ class c_securityController
     public function index(): void
     {
 
-        
+        $this->security->estConnecte();
 
-        if ( $this->userSession) {
-            header('Location: /');
-            exit;
-        }
+        
         $errorMessages = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -94,10 +91,7 @@ class c_securityController
     {
        
 
-        if ( $this->userSession) {
-            header('Location: /');
-            exit;
-        }
+        $this->security->estConnecte();
         $errorMessages = [];
         $successMessage = null;
 

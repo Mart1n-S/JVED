@@ -22,8 +22,6 @@ class Routes
         $router->map('GET|POST', '/demande-reset-password', 'c_securityController#demandeReset', 'demandeReset');
         $router->map('GET|POST', '/reset-password[.:format]?', 'c_securityController#resetPassword', 'resetPassword');
         $router->map('GET|POST', '/profil', 'c_profil#index', 'profil');
-        $router->map('GET|POST', '/test', 'c_testController#index', 'test');
-        $router->map('GET', '/test/[i:id]', 'c_testController#index', 'test2');
         $router->map('GET|POST', '/dashboard', 'c_dashboardController#index', 'dashboard');
         $router->map('GET|POST', '/posts', 'c_dashboardController#posts', 'posts');
         $router->map('GET|POST', '/posts_edit[.:format]?', 'c_dashboardController#posts_edit', 'posts_edit');

@@ -9,6 +9,11 @@ class Dashboard
         $this->db = $db;
     }
 
+    /**
+     * Récupère tous les sujets valides avec leurs informations associées.
+     *
+     * @return array|false Un tableau contenant les informations des sujets valides, ou false en cas d'erreur.
+     */
     public function getTopics(): array|false
     {
         try {
@@ -30,6 +35,17 @@ class Dashboard
         }
     }
 
+    /**
+     * Récupère les articles en attente de validation.
+     *
+     * Cette méthode récupère les articles en attente de validation à partir de la base de données.
+     * Elle sélectionne les informations pertinentes sur les articles non validés, y compris l'identifiant,
+     * le nom, l'auteur, la date de création, la date de mise à jour, le nom du sujet, et l'état de validation.
+     * Seuls les articles non validés qui ne sont pas supprimés sont récupérés.
+     *
+     * @return array|false Un tableau associatif contenant les articles en attente de validation,
+     * ou false en cas d'erreur.
+     */
     public function getTopicsWaitingValidation(): array|false
     {
         try {
@@ -52,6 +68,14 @@ class Dashboard
         }
     }
 
+    /**
+     * Accepte un sujet en le validant.
+     *
+     * Cette méthode prend en paramètre l'identifiant du sujet à valider et met à jour son état de validation à 1.
+     * 
+     * @param int $id L'identifiant du sujet à valider.
+     * @return bool True si le sujet a été validé avec succès, sinon False.
+     */
     public function acceptItem(int $id): bool
     {
         try {
@@ -72,44 +96,13 @@ class Dashboard
         }
     }
 
-    // public function editTopic( array $data): bool
-    // {
-    //     try {
-    //         $query = "
-    //             UPDATE topic
-    //             SET nom = :nom, auteur = :auteur, updatedAt = :updatedAt
-    //             WHERE id = :id;
-    //         ";
-    //         $stmt = $this->db->connect()->prepare($query);
-    //         $stmt->bindParam(':id',$data['id'], PDO::PARAM_INT);
-    //         $stmt->bindParam(':nom', $data['nom'], PDO::PARAM_STR);
-    //         $stmt->bindParam(':auteur', $data['auteur'], PDO::PARAM_STR);
-    //         $stmt->bindValue(':updatedAt', date('Y-m-d H:i:s'), PDO::PARAM_STR);
-    //         $stmt->execute();
 
-    //         return true;
-    //     } catch (PDOException $e) {
-    //         echo "Error: " . $e->getMessage();
-    //         return false;
-    //     }
-    // }
-
-    // public function deleteTopic(int $id): bool
-    // {
-    //     try {
-    //         $query = "UPDATE topic SET deletedAt = CURRENT_TIMESTAMP WHERE id = :id";
-    //         $stmt = $this->db->connect()->prepare($query);
-    //         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-    //         $stmt->execute();
-
-    //         return true;
-    //     } catch (PDOException $e) {
-    //         echo "Error: " . $e->getMessage();
-    //         return false;
-    //     }
-    // }
-
-    public function getCategories(): array|false
+    /**
+     * Récupère toutes les catégories depuis la base de données.
+     *
+     * @return array|bool Un tableau contenant toutes les catégories ou false en cas d'erreur.
+     */
+    public function getCategories(): array|bool
     {
         try {
             $query = "
@@ -126,40 +119,13 @@ class Dashboard
             return false;
         }
     }
-    // public function editCategories( array $data): bool
-    // {
-    //     try {
-    //         $query = "
-    //             UPDATE categorie
-    //             SET nom = :nom
-    //             WHERE id = :id;
-    //         ";
-    //         $stmt = $this->db->connect()->prepare($query);
-    //         $stmt->bindParam(':id',$data['id'], PDO::PARAM_INT);
-    //         $stmt->bindValue(':nom', $data['nom'], PDO::PARAM_STR);
-    //         $stmt->execute();
 
-    //         return true;
-    //     } catch (PDOException $e) {
-    //         echo "Error: " . $e->getMessage();
-    //         return false;
-    //     }
-    // }
-
-    // public function deleteCategories(int $id): bool
-    // {
-    //     try {
-    //         $query = "UPDATE categorie SET deletedAt = CURRENT_TIMESTAMP WHERE id = :id";
-    //         $stmt = $this->db->connect()->prepare($query);
-    //         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-    //         $stmt->execute();
-
-    //         return true;
-    //     } catch (PDOException $e) {
-    //         echo "Error: " . $e->getMessage();
-    //         return false;
-    //     }
-    // }
+    /**
+     * Ajoute une nouvelle catégorie à la base de données avec les données fournies.
+     * 
+     * @param array $data Les données de la nouvelle catégorie à ajouter.
+     * @return bool True en cas de succès de l'ajout, sinon False.
+     */
     public function addCategories(array $data): bool
     {
         try {
@@ -180,7 +146,15 @@ class Dashboard
             return false;
         }
     }
-
+    /**
+     * Récupère la liste des utilisateurs depuis la base de données.
+     * 
+     * Cette méthode exécute une requête SQL pour récupérer les informations des utilisateurs.
+     * Elle sélectionne l'identifiant, le pseudo, l'email, le rôle, l'état de blocage, les dates de création, de mise à jour et de suppression des utilisateurs.
+     * Elle effectue une jointure gauche avec la table des rôles pour obtenir le nom du rôle de chaque utilisateur.
+     * 
+     * @return array|false Retourne un tableau contenant les informations des utilisateurs s'ils existent, sinon retourne false en cas d'erreur.
+     */
     public function getUsers(): array|false
     {
         try {
@@ -201,7 +175,13 @@ class Dashboard
     }
 
 
-
+    /**
+     * Modifie un élément avec les données spécifiées dans $data pour une table SQL donnée par $var.
+     *
+     * @param array $data Les données à modifier.
+     * @param string $var La table SQL à modifier.
+     * @return bool True si la modification réussit, sinon false.
+     */
     public function editItem(array $data, string $var): bool
     {
         try {
@@ -260,7 +240,16 @@ class Dashboard
         }
     }
 
-
+    /**
+     * Supprime un élément de la base de données en le marquant comme supprimé.
+     *
+     * Cette méthode prend en paramètre l'identifiant de l'élément à supprimer et le nom de la table dans laquelle l'élément est stocké.
+     * L'élément est marqué comme supprimé en définissant la date de suppression (deletedAt) sur l'heure actuelle.
+     * 
+     * @param int $id L'identifiant de l'élément à supprimer.
+     * @param string $var Le nom de la table dans laquelle l'élément est stocké.
+     * @return bool True si l'élément a été supprimé avec succès, sinon False.
+     */
     public function deleteItem(int $id, string $var): bool
     {
         try {
@@ -275,7 +264,16 @@ class Dashboard
             return false;
         }
     }
-
+    /**
+     * Restaure un élément supprimé en réinitialisant la date de suppression.
+     *
+     * Cette méthode prend en paramètre l'identifiant de l'élément à restaurer et le nom de la table dans laquelle l'élément est stocké.
+     * L'élément est restauré en réinitialisant la date de suppression (deletedAt) à NULL.
+     * 
+     * @param int $id L'identifiant de l'élément à restaurer.
+     * @param string $var Le nom de la table dans laquelle l'élément est stocké.
+     * @return bool True si l'élément a été restauré avec succès, sinon False.
+     */
     public function restoreItem(int $id, string $var): bool
     {
         try {
@@ -291,6 +289,16 @@ class Dashboard
         }
     }
 
+    /**
+     * Bloque un élément en définissant son état "bloqué".
+     *
+     * Cette méthode prend en paramètre l'identifiant de l'élément à bloquer et le nom de la table dans laquelle l'élément est stocké.
+     * L'élément est bloqué en définissant la valeur de l'attribut "bloque" sur 1.
+     * 
+     * @param int $id L'identifiant de l'élément à bloquer.
+     * @param string $var Le nom de la table dans laquelle l'élément est stocké.
+     * @return bool True si l'élément a été bloqué avec succès, sinon False.
+     */
     public function blockItem(int $id, string $var): bool
     {
         try {
@@ -306,6 +314,16 @@ class Dashboard
         }
     }
 
+    /**
+     * Débloque un élément en supprimant son état "bloqué".
+     *
+     * Cette méthode prend en paramètre l'identifiant de l'élément à débloquer et le nom de la table dans laquelle l'élément est stocké.
+     * L'élément est débloqué en définissant la valeur de l'attribut "bloque" sur NULL.
+     * 
+     * @param int $id L'identifiant de l'élément à débloquer.
+     * @param string $var Le nom de la table dans laquelle l'élément est stocké.
+     * @return bool True si l'élément a été débloqué avec succès, sinon False.
+     */
     public function unblockItem(int $id, string $var): bool
     {
         try {
@@ -321,6 +339,15 @@ class Dashboard
         }
     }
 
+    /**
+     * Ajoute un nouvel utilisateur à la base de données.
+     *
+     * Cette méthode prend en paramètre un tableau contenant les données de l'utilisateur à ajouter.
+     * Les données comprennent le pseudo, l'email, l'identifiant du rôle, le mot de passe et l'état de vérification de l'email.
+     * 
+     * @param array $data Les données de l'utilisateur à ajouter.
+     * @return bool True si l'utilisateur a été ajouté avec succès, sinon False.
+     */
     public function addUsers(array $data): bool
     {
         try {
@@ -343,7 +370,16 @@ class Dashboard
         }
     }
 
-    public function getContents(int $idTopics): array|false
+    /**
+     * Récupère le contenu associé à un sujet donné.
+     *
+     * Cette méthode prend en paramètre l'identifiant du sujet et retourne un tableau contenant les informations sur le contenu associé.
+     * Les informations comprennent l'identifiant du contenu, le commentaire, le pseudo de l'auteur, le nom du sujet, la date de suppression et l'état de validation du sujet.
+     * 
+     * @param int $idTopics L'identifiant du sujet pour lequel récupérer le contenu.
+     * @return array|bool Un tableau contenant les informations sur le contenu associé, ou False en cas d'erreur.
+     */
+    public function getContents(int $idTopics): array|bool
     {
         try {
             $query = "
@@ -367,21 +403,13 @@ class Dashboard
     }
 
 
-    // public function deleteContent(int $id): bool
-    // {
-    //     try {
-    //         $query = "UPDATE content SET deletedAt = CURRENT_TIMESTAMP WHERE id = :id";
-    //         $stmt = $this->db->connect()->prepare($query);
-    //         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-    //         $stmt->execute();
-
-    //         return true;
-    //     } catch (PDOException $e) {
-    //         echo "Error: " . $e->getMessage();
-    //         return false;
-    //     }
-    // }
-
+    /**
+     * Récupère les rôles depuis la base de données.
+     * 
+     * Cette méthode fait appel à la méthode correspondante de l'instance de base de données pour obtenir les rôles enregistrés dans la base de données.
+     * 
+     * @return array|null Un tableau contenant les données des rôles ou null en cas d'erreur.
+     */
     public function getRoles()
     {
         return $this->db->getRoles();
