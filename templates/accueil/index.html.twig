@@ -17,7 +17,7 @@
 				<h2 class="accueilTendanceTitre">LISTE DES DERNIERS FORUMS TENDANCES</h2>
 				<div class="accueilTendanceTableau">
 					<div class="accueilTendanceTableauLien">
-						<a href="#">Voir tous les forums ></a>
+						<a href="{{path('categorie')}}">Voir tous les forums ></a>
 					</div>
 					<table class="accueilTendanceTableauContent">
 						<thead>
@@ -31,7 +31,10 @@
 						<tbody>
 							{% for topic in topTopics %}
 								<tr class="{{ cycle(['accueilTendanceTableauContentOdd-row', 'accueilTendanceTableauContentEven-row'], loop.index) }}">
-									<td>{{ topic.nom }}</td>
+
+									<td>
+										<a href="{{ path('topics', {'categorie': topic.categorieNom, 'idCategorie': topic.categorieId,'nom': topic.nom,'id': topic.id }) }}">{{ topic.nom }}</a>
+									</td>
 									<td>{{ topic.auteur }}</td>
 									<td>{{ topic.nb_messages is not null ? topic.nb_messages : 0 }}</td>
 									<td>{{ topic.derniere_activite|date("d-m-Y") }}</td>

@@ -57,13 +57,34 @@ class Database
     {
         try {
             $query = "
-                SELECT nom, topic.auteur, topic.updatedAt AS derniere_activite, COUNT(content.id) AS nombre_commentaires
-                FROM topic 
-                LEFT JOIN content ON topic.id = idTopic
-                WHERE topic.deletedAt IS NULL
-                GROUP BY topic.id
-                ORDER BY COUNT(content.id) DESC, topic.updatedAt DESC
-                LIMIT 5;
+                SELECT 
+                topic.id,
+                topic.nom, 
+                user.pseudo AS auteur, 
+                topic.updatedAt AS derniere_activite, 
+                COUNT(content.id) AS nb_messages,
+                cat.nom as categorieNom,
+                cat.id as categorieId
+            FROM 
+                topic 
+            LEFT JOIN 
+                content ON topic.id = content.idTopic
+            JOIN 
+                user ON topic.auteur = user.id
+            JOIN 
+                sujet ON topic.idSujet = sujet.id
+            JOIN 
+                categorie cat ON sujet.idCategorie = cat.id
+            WHERE 
+                topic.deletedAt IS NULL
+            AND 
+                topic.valide = 1
+            GROUP BY 
+                topic.id
+            ORDER BY 
+                nb_messages DESC, 
+                derniere_activite DESC
+            LIMIT 5;
             ";
 
             $stmt = $this->connect()->prepare($query);
@@ -73,6 +94,120 @@ class Database
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return null;
+        }
+    }
+
+    /**
+     * Récupère toutes les catégories non supprimées de la base de données.
+     *
+     * @return array|null Tableau associatif contenant les catégories récupérées ou null en cas d'erreur.
+     */
+    public function getCategories(): ?array
+    {
+        try {
+            $query = "
+            SELECT categorie.*, COUNT(topic.id) AS nb_topic
+            FROM categorie
+            INNER JOIN sujet ON categorie.id = sujet.idCategorie
+            INNER JOIN topic ON sujet.id = topic.idSujet
+            WHERE categorie.deletedAt IS NULL
+            GROUP BY categorie.id;
+        ";
+
+            $stmt = $this->connect()->prepare($query);
+            $stmt->execute();
+
+            // Renvoie un tableau associatif des catégories récupérées depuis la base de données.
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // En cas d'erreur, affiche un message d'erreur et renvoie null.
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
+
+    /**
+     * Récupère tous les sujets associés à une catégorie spécifique à partir de la base de données.
+     *
+     * @param int $id L'identifiant de la catégorie.
+     * @return array|null Tableau associatif contenant les sujets récupérés ou null en cas d'erreur.
+     */
+    public function getTopicsFromCategorie(int $id): ?array
+    {
+        try {
+            $query = "
+            SELECT 
+            topic.id,
+            topic.nom, 
+            user.pseudo AS auteur, 
+            topic.updatedAt AS derniere_activite, 
+            COUNT(content.id) AS nb_messages
+        FROM 
+            topic 
+        LEFT JOIN 
+            content ON topic.id = content.idTopic
+        JOIN 
+            user ON topic.auteur = user.id
+        JOIN 
+            sujet ON topic.idSujet = sujet.id
+        JOIN 
+            categorie ON sujet.idCategorie = categorie.id
+        WHERE 
+            topic.deletedAt IS NULL
+        AND
+            topic.valide = 1
+        AND
+            categorie.id = :id
+        GROUP BY 
+            topic.id
+        ORDER BY 
+            nb_messages DESC, 
+            derniere_activite DESC;
+                ";
+
+            $stmt = $this->connect()->prepare($query);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
+
+    /**
+     * Récupère tous les commentaires associés à un sujet spécifique à partir de la base de données.
+     *
+     * @param int $idTopic L'identifiant du sujet.
+     * @return array|false Tableau associatif contenant les commentaires récupérés ou false en cas d'erreur.
+     */
+    public function getCommentairesFromTopic(int $idTopic): array|bool
+    {
+        try {
+            $query = "
+        SELECT c.id, c.commentaire, u.pseudo as auteur, c.createdAt, cat.nom as nomCategorie, cat.id as idCategorie
+        FROM content c
+        JOIN user u ON c.auteur = u.id
+        JOIN topic t ON t.id = c.idTopic
+        JOIN sujet s ON s.id = t.idSujet
+        JOIN categorie cat ON s.idCategorie= cat.id
+        WHERE idTopic = :idTopic
+        AND c.deletedAt IS NULL
+        ORDER BY c.createdAt ASC;
+        ";
+
+            $stmt = $this->connect()->prepare($query);
+            $stmt->bindParam(':idTopic', $idTopic, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Récupération des résultats
+            $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $comments;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
         }
     }
 
@@ -398,11 +533,15 @@ class Database
             SELECT 
             topic.nom AS topicNom, 
             sujet.nom AS sujetNom, 
-            topic.id AS topicId
+            topic.id AS topicId,
+            categorie.nom AS categorieNom, 
+            categorie.id AS categorieId
             FROM topic
             INNER JOIN 
                 sujet ON topic.idSujet = sujet.id
+            INNER JOIN categorie ON sujet.idCategorie = categorie.id
             WHERE topic.auteur = :id
+            AND topic.valide = 1
             AND sujet.deletedAt IS NULL 
             AND topic.deletedAt IS NULL;
             ";

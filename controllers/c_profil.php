@@ -40,6 +40,8 @@ class c_profil
             } elseif (isset($_POST['theme'])) {
                 $resultatRequeteTheme = $this->theme($_POST['theme']);
             }
+            header('Location: /profil' );
+            exit;
         }
 
         $topic = new Topic($this->connexionDB);
@@ -53,6 +55,7 @@ class c_profil
         $template->display([
             'user' =>  $this->userSession,
             'topics' => $topicsUser,
+            'topicsComment'=> $topic->getParticipationFromTopic($this->userSession['id']),
             'messagesTopics' =>  $resultatRequete,
             'error'=> $resultatRequeteTheme
         ]);

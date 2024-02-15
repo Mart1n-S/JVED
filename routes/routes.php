@@ -37,6 +37,11 @@ class Routes
         $router->map('GET|POST', '/contents_edit[.:format]?', 'c_dashboardController#contents_edit', 'contents_edit');
         $router->map('GET|POST', '/validation-posts', 'c_dashboardController#validationPosts', 'waitingPosts');
         $router->map('POST', '/edit-validation-posts', 'c_dashboardController#editValidationPosts', 'editValidationPosts');
+        $router->map('GET', '/categorie', 'c_post#categorie', 'categorie');
+        $router->map('GET|POST', '/new-topic', 'c_post#new', 'newTopic');
+        $router->map('GET', '/sujet/[*:nom]?/[i:id]', 'c_post#sujet', 'sujet');
+        $router->map('GET', '/topics/[*:categorie]?/[i:idCategorie]/[*:nom]?/[i:id]', 'c_post#topics', 'topics');
+        $router->map('POST', '/topics/[*:categorie]?/[i:idCategorie]/[*:nom]?/[i:id]', 'c_post#comment', 'comment');
         // Retourne l'instance du routeur avec les routes définies
         return $router;
     }

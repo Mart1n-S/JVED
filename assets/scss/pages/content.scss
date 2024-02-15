@@ -1,0 +1,246 @@
+// .commentaireCard {
+//     &Odd-row {
+//         box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+//         padding: 24px;
+//         border-radius: 8px;
+//         margin-bottom: 32px;
+//         background-color: var(--bg-color-dark-1);
+//     }
+
+//     &Even-row {
+//         box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+//         padding: 24px;
+//         border-radius: 8px;
+//         margin-bottom: 32px;
+//         background-color: var(--bg-color-dark-light);
+//     }
+
+//     &Body {
+//         display: flex;
+//         flex-direction: column;
+//         gap: 32px;
+
+//         &Title {
+//             display: flex;
+//             align-items: center;
+//             gap: 12px;
+//             border-bottom: 1px solid white;
+
+//             &Principale {
+//                 font-weight: 600;
+//                 font-size: 1.3em;
+//             }
+//         }
+
+//         &ContainerImage {
+//             text-align: center;
+//             &Content {
+//                 max-width: 350px;
+//             }
+//         }
+
+//         &Commentaire {
+//             font-size: 1.2em;
+//             max-width: 800px;
+//         }
+//         textarea{
+//             padding: 12px;
+//         }
+//         &Bouton{
+//             @extend .loginContentFormButton;
+//         }
+//     }
+
+// }
+
+.mainContent {
+    @extend .mainGestion;
+}
+
+.content {
+    @extend .gestion; 
+    
+
+    &Titre {
+        @extend .accueilTitre;
+
+        &Principal {
+            @extend .accueilTitrePrincipal;
+        }
+
+        &Texte {
+            @extend .accueilTitreTexte;
+        }
+    }
+
+    &Navigation {
+        @extend .gestionNavigation; 
+
+        // a {
+        //     @extend .navigationLienProfil;
+        //     color: var(--color-text-white);
+        //     font-weight: 600;
+        //     font-size: 1.1em;
+        //     background-color: var(--bg-color-bleu);
+
+        // }
+    }
+
+    &Card {
+        @extend .accueilTendance;
+
+        &Titre {
+            @extend .gestionCrudTitre;
+        }
+
+        &Tableau {
+            @extend .gestionCrudTableau;
+
+            &Content {
+                @extend .gestionCrudTableauContent;
+                // a{
+                //     color: var(--color-text-white);
+                //     text-decoration: underline;
+                // }
+
+                &Odd-row {
+                    @extend .accueilTendanceTableauContentOdd-row;
+
+                }
+
+                &Even-row {
+                    @extend .accueilTendanceTableauContentEven-row;
+
+                }
+
+                // .boutonUpdate {
+                //     @extend .navigationLienProfil;
+                //     color: var(--color-text-white);
+                //     background-color: var(--bg-color-bleu);
+                //     font-weight: 600;
+
+                //     &:hover {
+                //         cursor: pointer;
+                //     }
+                // }
+
+                // .boutonDelete {
+                //     @extend .boutonUpdate;
+                //     background-color: var(--bg-color-red-pastel);
+                // }
+
+                // .boutonRestore {
+                //     @extend .boutonUpdate;
+                //     background-color: var(--bg-color-button-orange);
+                // }
+
+                // .boutonBloque {
+                //     @extend .boutonUpdate;
+                //     background-color: var(--bg-color-button-yellow);
+                // }
+
+                // .boutonDebloque {
+                //     @extend .boutonUpdate;
+                //     background-color: var(--bg-color-button-orange);
+                // }
+            }
+
+            // &Add {
+            //     text-align: center;
+            //     margin-top: 32px;
+
+            //     a {
+            //         @extend .navigationLienProfil;
+            //         color: var(--color-text-white);
+            //         background-color: var(--bg-color-green);
+            //         font-weight: 600;
+            //         font-size: 1.1em;
+
+
+            //     }
+            // }
+
+            // &Liste {
+            //     display: flex;
+            //     flex-direction: column;
+            //     justify-content: center;
+            //     align-items: center;
+            //     gap: 18px;
+            //     margin-top: 32px;
+            //     color: var(--color-text-black);
+            //     &Categorie{
+            //         list-style: none;
+            //         font-size: 1.1em;
+            //         font-weight: 600;
+            //         li{
+            //             margin-bottom: 18px;
+            //         }
+            //     }
+            // }
+
+            // textarea{
+            //     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            //     border-radius: 8px;;
+            // }
+
+            .commentaireCard {
+                &Odd-row {
+                    @extend .accueilTendanceTableauContentOdd-row;
+                    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+                    padding: 24px;
+                    border-radius: 8px;
+                    margin-bottom: 32px;
+                }
+
+                &Even-row {
+                    @extend .accueilTendanceTableauContentEven-row;
+                    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+                    padding: 24px;
+                    border-radius: 8px;
+                    margin-bottom: 32px;
+                }
+
+                &Body {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 32px;
+            
+                    &Title {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                        border-bottom: 1px solid white;
+            
+                        &Principale {
+                            font-weight: 600;
+                            font-size: 1.3em;
+                        }
+                    }
+            
+                    &Commentaire {
+                        font-size: 1.2em;
+                        max-width: 800px;
+                    }
+                    textarea{
+                        padding: 12px;
+                    }
+                    
+                    &Bouton{
+                        @extend .loginContentFormButton;
+                    }
+                }
+            }
+            &InfoNotLoged{
+                text-align: center;
+                color: var(--color-text-red);
+                font-size: 1.3em;
+                font-weight: 600;
+                background-color: white;
+                padding: 8px;
+                border-radius: 8px;
+                box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+            }
+            
+        }
+    }
+}

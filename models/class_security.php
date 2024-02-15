@@ -207,4 +207,134 @@ class Security
             return false;
         }
     }
+
+    /**
+     * Vérifie si la longueur du commentaire est comprise entre 3 et 400 caractères.
+     *
+     * @param string $commentaire Le commentaire à valider.
+     * @return array retourne le tableau des erreurs, si pas d'erreurs il reste vide
+     */
+    public function validateCommentaire(string $commentaire): array
+    {
+        $errors = [];
+
+        if (strlen($commentaire) < 3 || strlen($commentaire) > 400) {
+            $errors[] = "La longueur du champ 'commentaire' doit être entre 3 et 400 caractères.";
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Vérifie si un sujet avec l'identifiant donné existe dans la base de données.
+     *
+     * @param int $idTopic L'identifiant du sujet à vérifier.
+     * @param array $errors Tableau d'erreurs pour stocker les messages d'erreur.
+     * @return array  retourne le tableau des erreurs, si pas d'erreurs il reste vide
+     */
+    public function validateTopic(int $idTopic): array
+    {
+        $errors = [];
+
+        try {
+            // Prépare la requête SQL pour vérifier si le sujet existe.
+            $query = "SELECT COUNT(*) AS count FROM topic WHERE id = :idTopic";
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->bindParam(':idTopic', $idTopic, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Récupère le résultat de la requête.
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Vérifie si le sujet existe en vérifiant le nombre de résultats retournés.
+            if ($result['count'] > 0) {
+                // S'il existe, retourne le tableau d'erreurs vide.
+                return  $errors ;
+            } else {
+                // Si le sujet n'existe pas, ajoute un message d'erreur au tableau d'erreurs.
+                $errors[] = "Le topic n'existe pas.";
+                return $errors;
+              
+            }
+        } catch (PDOException $e) {
+            // En cas d'erreur, affiche un message d'erreur et retourne le tableau d'erreurs avec le message d'erreur.
+            $errors[] = "Erreur lors de la validation du topic: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    /**
+     * Valide si la catégorie existe en base de données.
+     *
+     * @param string $categorie Le nom de la catégorie à vérifier.
+     * @return array Un tableau contenant les messages d'erreur, le cas échéant.
+     */
+    public function validateCategorie(string $idcategorie): array
+    {
+        $errors = [];
+
+        try {
+            // Prépare la requête SQL pour vérifier si le sujet existe.
+            $query = "SELECT COUNT(*) AS count FROM categorie WHERE id = :idcategorie";
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->bindParam(':idcategorie', $idcategorie, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Récupère le résultat de la requête.
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Vérifie si le sujet existe en vérifiant le nombre de résultats retournés.
+            if ($result['count'] > 0) {
+                // S'il existe, retourne le tableau d'erreurs vide.
+                return  $errors ;
+            } else {
+                // Si le sujet n'existe pas, ajoute un message d'erreur au tableau d'erreurs.
+                $errors[] = "La catégorie n'existe pas.";
+                return $errors;
+              
+            }
+        } catch (PDOException $e) {
+            // En cas d'erreur, affiche un message d'erreur et retourne le tableau d'erreurs avec le message d'erreur.
+            $errors[] = "Erreur lors de la création d'un nouveau topic: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    /**
+     * Valide la longueur du sujet.
+     *
+     * @param string $sujet Le sujet à vérifier.
+     * @return array Un tableau contenant les messages d'erreur, le cas échéant.
+     */
+    public function validateSujet(string $sujet): array
+    {
+        $errors = [];
+
+        // Vérifie la longueur du sujet
+        if (strlen($sujet) < 3 || strlen($sujet) > 40) {
+            $errors[] = "La longueur du sujet doit être entre 3 et 40 caractères.";
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Valide la longueur du nom du sujet.
+     *
+     * @param string $nomTopic Le nom du sujet à vérifier.
+     * @return array Un tableau contenant les messages d'erreur, le cas échéant.
+     */
+    public function validateNomTopic(string $nomTopic): array
+    {
+        $errors = [];
+
+        // Vérifie la longueur du nom du sujet
+        if (strlen($nomTopic) < 3 || strlen($nomTopic) > 40) {
+            $errors[] = "La longueur du nom du Topic doit être entre 3 et 40 caractères.";
+        }
+
+        return $errors;
+    }
+
+
 }

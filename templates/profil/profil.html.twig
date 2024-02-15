@@ -74,11 +74,40 @@
 							<td>{{ topic.sujetNom|slice(0,10) }}</td>
 							<td>{{ topic.topicNom|slice(0, 15) }}</td>
 							<td>
-								<a href="topic?id={{topic.topicId}}" class="profilTopicContentLien">Voir</a>
+								<a href="{{ path('topics', {'categorie': topic.categorieNom, 'idCategorie': topic.categorieId,'nom': topic.topicNom,'id': topic.topicId }) }}" class="profilTopicContentLien">Voir</a>
 							</td>
 							<td>
 								<form action="{{path('profil')}}" method="post"><input type="hidden" name="idTopicUser" value="{{topic.topicId}}"><button type="submit" class="profilTopicContentBouton" onclick="return confirm('⚠️Votre topic sera supprimé définitivement ⚠️')">Supprimer</button>
 								</form>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</section>
+		<section class="profilTopic">
+			<div class="profilTopicTitre">
+				<h1 class="profilTopicTitrePrincipal">Vos participations
+				</h1>
+				<p class="profilTopicTitreTexte">Vous trouverez ici la liste de tous vos topics auxquels vous avez participé.</p>
+			</div>
+
+			<table class="profilTopicContent">
+				<thead>
+					<tr>
+						<th>SUJET</th>
+						<th>TOPIC</th>
+						<th>LIEN</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for participationTopic in topicsComment %}
+						<tr class="{{ cycle(['profilTopicContentOdd-row', 'profilTopicContentEven-row'], loop.index) }}">
+							<td>{{ participationTopic.sujetNom|slice(0,10) }}</td>
+							<td>{{ participationTopic.topicNom|slice(0, 15) }}</td>
+							<td>
+								<a href="{{ path('topics', {'categorie': participationTopic.categorieNom, 'idCategorie': participationTopic.categorieId,'nom': participationTopic.topicNom,'id': participationTopic.topicId }) }}" class="profilTopicContentLien">Voir</a>
+
 							</td>
 						</tr>
 					{% endfor %}

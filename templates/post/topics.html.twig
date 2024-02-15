@@ -1,0 +1,75 @@
+{% block stylesheets %}<link rel="stylesheet" href="../../../../style.css">
+{% endblock %}
+
+{% block title %}Topics | Détails
+{% endblock %}
+{% extends "base.html.twig" %}
+
+{% block body %}
+	{{ include('./partials/header.html.twig') }}
+	<main class="mainContent">
+		<section class="content">
+			<div class="contentTitre">
+				<h1 class="contentTitrePrincipal">{{nomTopic}}</h1>
+
+			</div>
+			<div class="contentNavigation">
+				<a href="{{ path('sujet', {'nom': nomCategorie,'id': idCategorie }) }}">Retour à la liste</a>
+			</div>
+			<div class="contentCard">
+				<h2 class="contentCardTitre">Liste de tous les commentaires de
+					{{nomTopic}}</h2>
+				<div class="contentCardTableau">
+
+					{% for commentaire in commentaires %}
+						<div class="{{ cycle(['commentaireCardOdd-row', 'commentaireCardEven-row'], loop.index) }}">
+							<div class="commentaireCardBody">
+								<div class="commentaireCardBodyTitle">
+									<h5 class="commentaireCardBodyTitlePrincipale">{{ commentaire['auteur'] }}</h5>
+									<p class="commentaireCardBodyTitleSub">le
+										{{ commentaire['createdAt'] }}</p>
+								</div>
+
+								<p class="commentaireCardBodyCommentaire">{{ commentaire['commentaire'] }}</p>
+							</div>
+						</div>
+					{% endfor %}
+
+
+					{% if user is not null %}
+						<form action="" method="post" enctype="multipart/form-data">
+							<div class="commentaireCardOdd-row">
+								<div class="commentaireCardBody">
+									<div class="commentaireCardBodyTitle">
+										<h5 class="commentaireCardBodyTitlePrincipale">Ajouter un commentaire</h5>
+									</div>
+									<input type="hidden" name="idTopic" value="{{idTopic}}">
+									<input type="hidden" name="nomCategorie" value="{{nomCategorie}}">
+									<input type="hidden" name="idCategorie" value="{{idCategorie}}">
+									<input type="hidden" name="nomTopic" value="{{nomTopic}}">
+									<textarea name="commentaire" cols="30" rows="10" minlength="3" maxlength="400" placeholder="Ecrire un message..." required></textarea>
+
+									<button type="submit" name="submit" class="commentaireCardBodyBouton">Répondre</button>
+								</div>
+								<div class="inscriptionContentFormInputError">
+									{% if error is defined %}
+										<div>
+											<ul>
+												{% for errorMessage in error %}
+													<li id="error_c">{{ errorMessage|raw }}</li>
+												{% endfor %}
+											</ul>
+										</div>
+									{% endif %}
+								</div>
+							</div>
+						</form>
+					{% else %}
+						<p class="contentCardTableauInfoNotLoged">Veuillez vous inscrire ou vous connecter pour participer au forum.</p>
+					{% endif %}
+				</div>
+			</div>
+		</section>
+	</main>
+	{{ include('./partials/footer.html.twig') }}
+{% endblock %}
