@@ -1,0 +1,151 @@
+.mainGestion {
+    @extend .mainAccueil;
+    flex-direction: column;
+    align-items: center;
+}
+
+.gestion {
+    @extend .accueil;
+
+    &Card {
+        background-color: var(--bg-color-white);
+        padding: 32px;
+        border-radius: 8px;
+
+        h1 {
+            color: var(--color-text-black)
+        }
+
+        .selectRole {
+            border: 1px #c2c2c2 solid;
+            border-radius: 16px;
+            padding: 12px;
+            width: 100%;
+        }
+    }
+
+    &Titre {
+        @extend .accueilTitre;
+
+        &Principal {
+            @extend .accueilTitrePrincipal;
+        }
+
+        &Texte {
+            @extend .accueilTitreTexte;
+        }
+    }
+
+    &Navigation {
+
+
+        a {
+            @extend .navigationLienProfil;
+            color: var(--color-text-white);
+            font-weight: 600;
+            font-size: 1.1em;
+            background-color: var(--bg-color-bleu);
+
+        }
+    }
+
+    &Crud {
+        @extend .accueilTendance;
+
+        &Titre {
+            @extend .accueilTitre;
+            text-align: center;
+        }
+
+        &Tableau {
+            @extend .accueilTendanceTableau;
+
+            &Content {
+                @extend .accueilTendanceTableauContent;
+                a{
+                    color: var(--color-text-white);
+                    text-decoration: underline;
+                }
+
+                &Odd-row {
+                    @extend .accueilTendanceTableauContentOdd-row;
+
+                }
+
+                &Even-row {
+                    @extend .accueilTendanceTableauContentEven-row;
+
+                }
+
+                .boutonUpdate {
+                    @extend .navigationLienProfil;
+                    color: var(--color-text-white);
+                    background-color: var(--bg-color-bleu);
+                    font-weight: 600;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+
+                .boutonDelete {
+                    @extend .boutonUpdate;
+                    background-color: var(--bg-color-red-pastel);
+                }
+
+                .boutonRestore {
+                    @extend .boutonUpdate;
+                    background-color: var(--bg-color-button-orange);
+                }
+
+                .boutonBloque {
+                    @extend .boutonUpdate;
+                    background-color: var(--bg-color-button-yellow);
+                }
+
+                .boutonDebloque {
+                    @extend .boutonUpdate;
+                    background-color: var(--bg-color-button-orange);
+                }
+            }
+
+            &Add {
+                text-align: center;
+                margin-top: 32px;
+
+                a {
+                    @extend .navigationLienProfil;
+                    color: var(--color-text-white);
+                    background-color: var(--bg-color-green);
+                    font-weight: 600;
+                    font-size: 1.1em;
+
+
+                }
+            }
+
+            &Liste {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 18px;
+                margin-top: 32px;
+                color: var(--color-text-black);
+                &Categorie{
+                    list-style: none;
+                    font-size: 1.1em;
+                    font-weight: 600;
+                    li{
+                        margin-bottom: 18px;
+                    }
+                }
+            }
+
+            textarea{
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;;
+            }
+        }
+    }
+}

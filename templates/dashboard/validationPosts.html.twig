@@ -1,20 +1,20 @@
 {% extends "base.html.twig" %}
-{% block title %}Dashboard | Gestion des topics
+{% block title %}Dashboard | Topics en attente de validation
 {% endblock %}
 {% block body %}
 	{{ include('./partials/header.html.twig') }}
 	<main class="mainGestion">
 		<section class="gestion">
 			<div class="gestionTitre">
-				<h1 class="gestionTitrePrincipal">Gestion des topics</h1>
-				<p class="gestionTitreTexte">Administrer tous les topics à partir d'ici</p>
+				<h1 class="gestionTitrePrincipal">Gestion des topics en attente de validation</h1>
+				<p class="gestionTitreTexte">Gérer la validation des topics, si vous avez un doute pensez à regarder les règles.</p>
 
 			</div>
 			<div class="gestionNavigation">
 				<a href="{{path('dashboard')}}">Retour Dashboard</a>
 			</div>
 			<div class="gestionCrud">
-				<h2 class="gestionCrudTitre">{{'Liste de tous les topics'|upper}}</h2>
+				<h2 class="gestionCrudTitre">{{'Topics en attente de validation'|upper}}</h2>
 				<div class="gestionCrudTableau">
 
 					<table class="gestionCrudTableauContent">
@@ -26,16 +26,14 @@
 								<th>AUTEUR</th>
 								<th>VALIDE</th>
 								<th>CREER</th>
-								<th>MODIFIER</th>
-								<th>SUPPRIME</th>
 								<th>ACTION</th>
 							</tr>
 						</thead>
 						<tbody>
-							{% for topic in topics %}
+							{% for topic in postsWaitingValidation %}
 
 
-								<form action="{{ path('posts_edit') }}" method="post">
+								<form action="{{ path('editValidationPosts') }}" method="post">
 									<tr class="{{ cycle(['gestionCrudTableauContentOdd-row', 'gestionCrudTableauContentEven-row'], loop.index) }}">
 										<td>{{ topic['id'] }}</td>
 										<td>
@@ -45,24 +43,18 @@
 										<td>{{ topic['auteur'] }}</td>
 										<td>{{ topic['valide'] is null ? 'Oui' : 'Non'}}</td>
 										<td>{{ topic['createdAt']|date("d-m-Y") }}</td>
-										<td>{{ topic['updatedAt']|date("d-m-Y") }}</td>
-										<td>{{ topic['deletedAt'] is not null ? topic['deletedAt']|date("d-m-Y")  : ''}}</td>
+
 										<td>
-											{# <button type="submit" class="boutonUpdate">Modifier</button>
-																																												/ #}
-											{% if topic['deletedAt'] is null %}
-												<button type="submit" name="submitDelete" class="boutonDelete" onclick="return confirm('Êtes vous sur de vouloirs le supprimer ?')">Supprimer</button>
-											{% else %}
-												<button type="submit" name="submitRestore" class="boutonRestore" onclick="return confirm('Êtes vous sur de vouloirs le restaurer ?')">Restaurer</button>
-											{% endif %}
+											<button type="submit" name="submitAccept" class="boutonUpdate">Accepter</button>
+											/
+											<button type="submit" name="submitDelete" class="boutonDelete" onclick="return confirm('Êtes vous sur de vouloirs le refuser, cela le supprimera définitivement ?')">Refuser</button>
+
 
 											<input type="hidden" name="id" value="{{ topic['id'] }}">
 											<input type="hidden" name="nom" value="{{ topic['nom'] }}">
 											<input type="hidden" name="nomSujet" value="{{ topic['nomSujet'] }}">
 											<input type="hidden" name="auteur" value="{{ topic['auteur'] }}">
 											<input type="hidden" name="createdAt" value="{{ topic['createdAt'] }}">
-											<input type="hidden" name="updatedAt" value="{{ topic['updatedAt'] }}">
-											<input type="hidden" name="deletedAt" value="{{ topic['deletedAt'] }}">
 										</td>
 									</tr>
 								</form>

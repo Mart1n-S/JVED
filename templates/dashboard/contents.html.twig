@@ -1,48 +1,79 @@
 {% extends "base.html.twig" %}
-
+{% block title %}Dashboard | Gestion des commentaires
+{% endblock %}
 {% block body %}
 	{{ include('./partials/header.html.twig') }}
-	<div class="container mt-5">
-		<div class="row justify-content-center">
-			<div class="col-md-6">
-				<h1 class="display-1">Gestion des commentaires</h1>
-				<table class="table table-striped table-hover">
-					<tr>
-						<th>Id</th>
-						<th>Commentaire</th>
-						<th>Auteur</th>
-						<th>ID du topic</th>
-						<th>Créé le</th>
-						<th>Supprimé</th>
-						<th>Actions</th>
-					</tr>
+	<main class="mainGestion">
+		<section class="gestion">
+			<div class="gestionTitre">
+				<h1 class="gestionTitrePrincipal">Gestion des commentaires</h1>
+				<p class="gestionTitreTexte">Administrer tous les commentaires à partir d'ici</p>
 
-					{% for content in contents %}
-						<form action="{{ path('contents') }}" method="post">
-							<tr>
-								<td>{{ content['id'] }}</td>
-								<td>{{ content['commentaire'] }}</td>
-								<td>{{ content['auteur'] }}</td>
-								<td>{{ content['topic'] }}</td>
-								<td>{{ content['createdAt'] }}</td>
-								<td>{{ content['deletedAt'] }}</td>
-								<td>
-									<button type="submit" name="submitDelete" onclick="return confirm('Are you sure you want to delete this item?')">Supprimer</button>
-
-									<input type="hidden" name="id" value="{{ content['id'] }}">
-									<input type="hidden" name="nom" value="{{ content['commentaire'] }}">
-									<input type="hidden" name="auteur" value="{{ content['auteur'] }}">
-									<input type="hidden" name="idTopic" value="{{ content['topic'] }}">
-									<input type="hidden" name="createdAt" value="{{ content['createdAt'] }}">
-									<input type="hidden" name="deletedAt" value="{{ content['deletedAt'] }}">
-								</td>
-							</tr>
-						</form>
-					{% endfor %}
-				</table>
 			</div>
-		</div>
-	</div>
+			<div class="gestionNavigation">
+				{% if contents[0]['valide'] == 0 %}
+					<a href="{{path('waitingPosts')}}">Retour validation topics</a>
+				{% else %}
+					<a href="{{path('posts')}}">Retour Topics</a>
+				{% endif %}
 
+			</div>
+			<div class="gestionCrud">
+				<h2 class="gestionCrudTitre">{{ 'Liste de tous les commentaires du topic ' ~ contents[0]['topic']|upper }}</h2>
+
+				<div class="gestionCrudTableau">
+
+					<table class="gestionCrudTableauContent">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>COMMENTAIRE</th>
+								<th>AUTEUR</th>
+								<th>ID TOPICS</th>
+								<th>CREER</th>
+								<th>MODIFIER</th>
+								<th>SUPPRIME</th>
+								<th>ACTION</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for content in contents %}
+
+
+								<form action="{{ path('contents_edit') }}" method="post">
+									<tr class="{{ cycle(['gestionCrudTableauContentOdd-row', 'gestionCrudTableauContentEven-row'], loop.index) }}">
+										<td>{{ content['id'] }}</td>
+										<td>{{ content['commentaire']|slice(0, 15) }}</td>
+										<td>{{ content['auteur'] }}</td>
+										<td>{{ content['topic'] }}</td>
+										<td>{{ content['createdAt']|date("d-m-Y") }}</td>
+										<td>{{ content['updatedAt']|date("d-m-Y") }}</td>
+										<td>{{ content['deletedAt'] is not null ? content['deletedAt']|date("d-m-Y")  : ''}}</td>
+										<td>
+											{% if content['deletedAt'] is null %}
+												<button type="submit" name="submitDelete" class="boutonDelete" onclick="return confirm('Êtes vous sur de vouloirs le supprimer ?')">Supprimer</button>
+											{% else %}
+												<button type="submit" name="submitRestore" class="boutonRestore" onclick="return confirm('Êtes vous sur de vouloirs le restaurer ?')">Restaurer</button>
+											{% endif %}/
+											<button type="submit" name="submitShow" class="boutonBloque">Voir</button>
+
+											<input type="hidden" name="id" value="{{ content['id'] }}">
+											<input type="hidden" name="idTopic" value="{{idTopic }}">
+											<input type="hidden" name="nomTopic" value="{{content['topic']}}">
+											<input type="hidden" name="commentaire" value="{{ content['commentaire'] }}">
+											<input type="hidden" name="auteur" value="{{ content['auteur'] }}">
+											<input type="hidden" name="createdAt" value="{{ content['createdAt'] }}">
+											<input type="hidden" name="updatedAt" value="{{ content['updatedAt'] }}">
+											<input type="hidden" name="deletedAt" value="{{ content['deletedAt'] }}">
+										</td>
+									</tr>
+								</form>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</section>
+	</main>
 	{{ include('./partials/footer.html.twig') }}
 {% endblock %}

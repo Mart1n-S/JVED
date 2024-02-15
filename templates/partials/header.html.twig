@@ -14,11 +14,11 @@
 				<a href="{{path('accueil')}}">Jeux Vidéos</a>
 			</li>
 
-			<li>
-				<a href="{{path('dashboard')}}">Dashboard</a>
-			</li>
-			<li>
-
+			{% if user['role'] == 'moderateur' or user['role'] == 'superAdmin' %}
+				<li>
+					<a href="{{ path('dashboard') }}">Dashboard</a>
+				</li>
+			{% endif %}
 
 
 			{# Vérifiez si l'utilisateur est connecté #}

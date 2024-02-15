@@ -1,159 +1,104 @@
-
-
-.container {
-    margin-top: 20px;
-}
-
-.mainAccueil {
-    display: flex;
-    justify-content: center;
-    padding: 4px 4px 0 4px;
-}
-
-.accueil {
-    display: flex;
+.mainDashboard {
+    @extend .mainAccueil;
     flex-direction: column;
-    color: var(--color-text-white);
-    margin-top: 64px;
+    align-items: center;
+}
+
+.dashboard {
+    @extend .accueil;
 
     &Titre {
-        margin: 32px 0;
+        @extend .accueilTitre;
 
         &Principal {
-            font-size: 50px;
-            margin-bottom: 32px;
+            @extend .accueilTitrePrincipal;
         }
 
         &Texte {
-            font-size: 18px;
+            @extend .accueilTitreTexte;
         }
     }
 
-    &Tendance {
-        margin: 32px 0;
+    &Panel {
+        @extend .accueilTendance;
 
-        &Titre {
-            font-size: 18px;
-        }
 
         &Tableau {
-            display: flex;
-            flex-direction: column;
-            padding: 4px;
-
-            &Lien {
-                a {
-                    color: var(--color-text-white);
-                }
-                text-align: end;
-                margin: 32px 0 16px 0;
-                font-size: 14px;
-            }
+            @extend .accueilTendanceTableau;
 
             &Content {
-                border-collapse: collapse;
-                box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
-                border-radius: 12px;
-
-                thead {
-                    background-color: var(--bg-color-dark-1);
-                }
-
-                th,
-                td {
-                    padding: 16px;
-                    text-align: center;
-                }
-
-                th:first-child {
-                    border-radius: 12px 0 0 0;
-                }
+                @extend .accueilTendanceTableauContent;
 
                 th:last-child {
-                    border-radius: 0 12px 0 0;
-                }
-
-                tr:last-child {
-                    border-radius: 0 0 12px 12px;
-                }
-
-                tr:last-child td:first-child {
-                    border-radius: 0 0 0 12px;
+                    border-radius: 12px 12px 0 0;
                 }
 
                 tr:last-child td:last-child {
-                    border-radius: 0 0 12px 0;
+                    border-radius: 0 0 12px 12px;
                 }
 
                 &Odd-row {
-                    background-color: var(--bg-color-dark-1);
+                    @extend .accueilTendanceTableauContentOdd-row;
+
+                    a {
+                        color: var(--color-text-white);
+                    }
                 }
 
                 &Even-row {
-                    background-color: var(--bg-color-dark-light);
+                    @extend .accueilTendanceTableauContentEven-row;
+
+                    a {
+                        color: var(--color-text-white);
+                    }
                 }
             }
         }
     }
 }
 
-/* Additional Styles for User Management */
-.container mt-5 {
-    margin-top: 20px;
-}
+.regles {
+    @extend .mainDashboard;
 
-.col-md-6 {
-    width: 100%;
-}
+    &Titre {
+        margin-top: 64px;
+        color: var(--color-text-white);
+        font-weight: bolder;
+        
+    }
 
-.table {
-    width: 100%;
-    margin-top: 20px;
-    border-collapse: collapse;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+    &Card {
+        @extend .profilCard;
 
-.table th,
-.table td {
-    text-align: center;
-    padding: 10px;
-    border: 1px solid #dee2e6;
-}
+        width: 50%;
+        padding: 32px;
 
-.table th {
-    background-color: #007bff;
-    color: #fff;
-}
+        &Container {
+            p {
+                margin-bottom: 32px;
+                font-weight: 600;
+                line-height: 24px;
+                font-size: 1.1em;
+            }
 
-.table tr:hover {
-    background-color: #f8f9fa;
-}
+            &List {
+                h3 {
+                    text-align: center;
+                    color: var(--color-text-red);
+                    font-weight: bolder;
+                }
 
-.btn {
-    margin-right: 5px;
-}
+                li {
+                    margin: 12px 0;
+                    font-size: 1.1em;
+                    line-height: 24px;
+                    list-style: none;
 
-.btn-primary {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    color: #fff;
-    border: none;
-}
-
-.btn-primary.mb-3 {
-    margin-bottom: 20px;
-}
-
-.footer {
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+                    span {
+                        color: var(--color-text-red);
+                    }
+                }
+            }
+        }
+    }
 }

@@ -170,6 +170,7 @@ class Database
             FROM user 
             INNER JOIN role ON user.idRole = role.id 
             WHERE (bloque IS NULL OR bloque <> 1) 
+            AND deletedAt IS NULL
             AND emailCheck != 0 
             AND email = :email;
             ";

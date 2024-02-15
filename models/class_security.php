@@ -14,6 +14,30 @@ class Security
         $this->db = $db;
     }
 
+    public function checkConnexion()
+    {
+        if (!$_SESSION['user']) {
+            header('Location: /');
+            exit;
+        }
+    }
+
+    public function checkAutorisation()
+    {
+        if (!isset($_SESSION['user']) || ($_SESSION['user']['role'] != 'superAdmin' && $_SESSION['user']['role'] != 'moderateur')) {
+            header('Location: /');
+            exit;
+        }
+    }
+
+    public function checkAutorisationSuperAdmin()
+    {
+        if ( $_SESSION['user']['role'] != 'superAdmin' ) {
+            header('Location: /');
+            exit;
+        }
+    }
+
 
     /**
      * Valide la longueur du pseudo.
