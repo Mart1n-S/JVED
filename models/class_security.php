@@ -32,7 +32,7 @@ class Security
      */
     public function estConnecte()
     {
-        if ($_SESSION['user']) {
+        if (isset($_SESSION['user'])) {
             header('Location: /');
             exit;
         }
