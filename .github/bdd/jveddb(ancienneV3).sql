@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : mysql
--- Généré le : mer. 14 fév. 2024 à 19:09
+-- Généré le : sam. 10 fév. 2024 à 20:04
 -- Version du serveur : 8.3.0
 -- Version de PHP : 8.2.8
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `jveddb`
 --
+CREATE DATABASE IF NOT EXISTS `jveddb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE `jveddb`;
 
 -- --------------------------------------------------------
 
@@ -100,8 +102,7 @@ CREATE TABLE `topic` (
   `createdAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deletedAt` timestamp NULL DEFAULT NULL,
-  `idSujet` int NOT NULL,
-  `valide` tinyint(1) NOT NULL DEFAULT '0'
+  `idSujet` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -131,7 +132,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `pseudo`, `email`, `password`, `idRole`, `template`, `bloque`, `createdAt`, `updatedAt`, `deletedAt`, `emailCheck`, `token`, `dateToken`) VALUES
-(1, 'Martin', 'martinsimongo@gmail.com', '$2y$10$HU3lT/HbgTGimarFkl/dpO8gBKzUORfqJ99hyDVv8.tDUkP8rNQ4e', 1, '', NULL, '2024-02-07 20:45:53', '2024-02-14 17:17:25', NULL, 1, NULL, NULL);
+(1, 'Martin', 'martinsimongo@gmail.com', '$2y$10$Vgu2ZsFhsV145h11VHzYq.RBcGRsJLbs36ElKh9DmjbRb0qXq4tB6', 3, 'template1', NULL, '2024-02-07 20:45:53', '2024-02-10 19:40:12', NULL, 1, NULL, NULL);
 
 --
 -- Index pour les tables déchargées
@@ -219,7 +220,7 @@ ALTER TABLE `topic`
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- Contraintes pour les tables déchargées
