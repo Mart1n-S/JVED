@@ -100,15 +100,22 @@ class Dashboard
     /**
      * Récupère toutes les catégories depuis la base de données.
      *
+     * @param bool $condition Indique si une condition WHERE doit être ajoutée pour récupérer uniquement les catégories non supprimées.
      * @return array|bool Un tableau contenant toutes les catégories ou false en cas d'erreur.
      */
-    public function getCategories(): array|bool
+    public function getCategories(bool $condition = false): array|bool
     {
         try {
             $query = "
-                SELECT id, nom, createdAt, updatedAt, deletedAt
-                FROM categorie;
-            ";
+            SELECT id, nom, createdAt, updatedAt, deletedAt
+            FROM categorie";
+
+            // Si la condition est true, ajoute la clause WHERE
+            if ($condition) {
+                $query .= " WHERE deletedAt IS NULL";
+            }
+
+            $query .= ";"; // Fermeture de la requête
 
             $stmt = $this->db->connect()->query($query);
             $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -119,6 +126,7 @@ class Dashboard
             return false;
         }
     }
+
 
     /**
      * Ajoute une nouvelle catégorie à la base de données avec les données fournies.

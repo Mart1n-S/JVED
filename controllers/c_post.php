@@ -157,7 +157,7 @@ class c_post
         $errorMessages = [];
         $success = null;
         $dashboard = new Dashboard($this->connexionDB);
-        $categories = $dashboard->getCategories();
+        $categories = $dashboard->getCategories(true);
         if (isset($_GET['errors'])) {
             // Décoder la chaîne JSON
             $errorMessagesJson = urldecode($_GET['errors']);
