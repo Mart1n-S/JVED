@@ -14,7 +14,7 @@ class Topic
         $this->db = $db;
     }
 
-     /**
+    /**
      * Récupère les topics d'un utilisateur à partir de son ID.
      *
      * @param int $id L'ID de l'utilisateur.
@@ -22,10 +22,36 @@ class Topic
      */
     public function getTopicsUser(int $id): array|null
     {
-        return $this->db->getTopicsUser($id);
+        try {
+            $query = "
+            SELECT 
+            topic.nom AS topicNom, 
+            sujet.nom AS sujetNom, 
+            topic.id AS topicId,
+            categorie.nom AS categorieNom, 
+            categorie.id AS categorieId
+            FROM topic
+            INNER JOIN 
+                sujet ON topic.idSujet = sujet.id
+            INNER JOIN categorie ON sujet.idCategorie = categorie.id
+            WHERE topic.auteur = :id
+            AND topic.valide = 1
+            AND sujet.deletedAt IS NULL 
+            AND topic.deletedAt IS NULL;
+            ";
+
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
     }
 
-     /**
+    /**
      * Permet de supprimer de manière logique un topic
      *
      * @param int $idTopic L'ID du topic.
@@ -34,7 +60,31 @@ class Topic
      */
     public function deleteTopicsUser(int $idTopic, int $idUser): bool
     {
-        return $this->db->deleteTopicsUser($idTopic, $idUser);
+        try {
+            // Requête SQL pour supprimer logiquement le topic
+            $query = "
+        UPDATE topic
+        SET deletedAt = CONVERT_TZ(NOW(), 'UTC', 'Europe/Paris')
+        WHERE id = :idTopic
+        AND auteur = :idUser
+        AND deletedAt IS NULL;
+        ";
+
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->bindParam(':idTopic', $idTopic, PDO::PARAM_INT);
+            $stmt->bindParam(':idUser', $idUser, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Vérification du nombre de lignes affectées
+            if ($stmt->rowCount() > 0) {
+                return true; // Suppression réussie
+            } else {
+                return false; // Aucun topic n'a été supprimé
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
     }
 
 
@@ -81,10 +131,10 @@ class Topic
      */
     public function createTopic(int $idCategorie, string $nomSujet, string $nomTopic, string $commentaire, int $idUser): bool
     {
-        $pdo = $this->db->connect(); 
+        $pdo = $this->db->connect();
 
         try {
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->beginTransaction();
 
             // Étape 1: Création du Sujet
@@ -119,7 +169,7 @@ class Topic
             if ($pdo->inTransaction()) {
                 $pdo->rollBack();
             }
-            error_log("Error: " . $e->getMessage()); 
+            error_log("Error: " . $e->getMessage());
             return false;
         }
     }

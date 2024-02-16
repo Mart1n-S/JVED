@@ -60,32 +60,6 @@ class c_dashboardController
 
         $dashboard = new Dashboard($this->connexionDB);
 
-        // if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        //     $data = [
-        //         'id' => $_POST['id'],
-        //         'nom' => $_POST['nom'],
-        //         'auteur' => $_POST['auteur'],
-        //     ];
-        //     if (isset($_POST['submitUpdate'])) {
-
-        //         if ($dashboard->editTopic($data)) {
-        //             echo 'success';
-        //             header("Location: posts");
-        //             exit;
-        //         } else {
-        //             echo 'error';
-        //         }
-        //     } elseif (isset($_POST['submitDelete'])) {
-        //         if ($dashboard->deleteTopic($_POST['id'])) {
-        //             echo 'WOUPLI';
-        //             header("Location: posts");
-        //             exit;
-        //         } else {
-        //             echo 'et oe';
-        //         }
-        //     }
-        // }
-
         $errorMessages = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -121,6 +95,12 @@ class c_dashboardController
         ]);
     }
 
+    /**
+     * Affiche la page des catégories.
+     * Vérifie d'abord les autorisations de l'utilisateur et redirige si nécessaire.
+     * Récupère les catégories depuis le tableau de bord.
+     * Charge ensuite le template spécifique à la page des catégories avec les données récupérées.
+     */
     public function categories(): void
     {
 
@@ -137,6 +117,13 @@ class c_dashboardController
         ]);
     }
 
+    /**
+     * Affiche et gère les actions sur la page de modification des catégories.
+     * Vérifie d'abord les autorisations de l'utilisateur et redirige si nécessaire.
+     * Traite les données du formulaire en cas de soumission POST.
+     * Effectue les opérations de mise à jour, suppression ou restauration des catégories en fonction des actions de l'utilisateur.
+     * Charge le template spécifique à la page de modification des catégories avec les données nécessaires.
+     */
     public function categories_edit(): void
     {
         $this->security->checkAutorisation();
@@ -176,6 +163,12 @@ class c_dashboardController
         ]);
     }
 
+    /**
+     * Affiche et gère les actions sur la page d'ajout de catégories.
+     * Vérifie d'abord les autorisations de l'utilisateur et redirige si nécessaire.
+     * Traite les données du formulaire en cas de soumission POST.
+     * Ajoute une nouvelle catégorie si les données sont valides, sinon affiche un message d'erreur.
+     */
     public function categories_add(): void
     {
         $this->security->checkAutorisation();
@@ -206,6 +199,13 @@ class c_dashboardController
         ]);
     }
 
+    /**
+     * Affiche la liste des utilisateurs dans le tableau de bord.
+     * 
+     * Cette méthode vérifie d'abord les autorisations de l'utilisateur.
+     * Ensuite, elle récupère la liste des utilisateurs depuis la base de données à l'aide du tableau de bord.
+     * Enfin, elle charge le template spécifique à la page des utilisateurs et affiche les utilisateurs.
+     */
     public function users(): void
     {
         $this->security->checkAutorisation();
@@ -221,6 +221,14 @@ class c_dashboardController
         ]);
     }
 
+    /**
+     * Affiche la page d'édition des utilisateurs du tableau de bord.
+     * 
+     * Cette méthode vérifie les autorisations de l'utilisateur connecté et vérifie qu'il s'agit d'un super administrateur.
+     * Elle récupère les données nécessaires depuis la base de données pour afficher la page d'édition des utilisateurs.
+     * Elle traite les actions de modification, de suppression, de restauration, de blocage et de déblocage des utilisateurs en fonction des soumissions de formulaire.
+     * Elle affiche les erreurs éventuelles et les données des utilisateurs à éditer dans le template HTML.
+     */
     public function users_edit(): void
     {
         $this->security->checkAutorisation();
@@ -282,8 +290,16 @@ class c_dashboardController
     }
 
 
-    // Fonctions d'action
-    private function updateItem($data, $dashboard, $var, $redirection)
+    /**
+     * Met à jour un élément via le tableau de données, le tableau de bord spécifié, la variable et la redirection.
+     *
+     * @param array $data Les données à utiliser pour la mise à jour.
+     * @param Dashboard $dashboard Le tableau de bord à utiliser pour la mise à jour.
+     * @param string $var La table pour la mise à jour.
+     * @param string $redirection La redirection après la mise à jour.
+     * @return bool Le résultat de la mise à jour (true si réussie, sinon false).
+     */
+    private function updateItem(array $data, Dashboard $dashboard, string $var, string $redirection): bool
     {
 
         $resultat = $dashboard->editItem($data, $var) ? true : false;
@@ -295,7 +311,16 @@ class c_dashboardController
         return $resultat;
     }
 
-    private function deleteItem($id, $dashboard, $var, $redirection)
+    /**
+     * Supprime un élément via son identifiant, le tableau de bord spécifié, la variable et la redirection.
+     *
+     * @param int $id L'identifiant de l'élément à supprimer.
+     * @param Dashboard $dashboard Le tableau de bord à utiliser pour la suppression.
+     * @param string $var La table  à utiliser pour la suppression.
+     * @param string $redirection La redirection après la suppression.
+     * @return bool Le résultat de la suppression (true si réussie, sinon false).
+     */
+    private function deleteItem(int $id, Dashboard $dashboard, string $var, string $redirection): bool
     {
         $resultat = $dashboard->deleteItem($id, $var) ? true : false;
         if ($resultat) {
@@ -306,7 +331,16 @@ class c_dashboardController
         return $resultat;
     }
 
-    private function restoreItem($id, $dashboard, $var, $redirection)
+    /**
+     * Restaure un élément via son identifiant, le tableau de bord spécifié, la variable et la redirection.
+     *
+     * @param int $id L'identifiant de l'élément à restaurer.
+     * @param Dashboard $dashboard Le tableau de bord à utiliser pour la restauration.
+     * @param string $var La table  à utiliser pour la restauration.
+     * @param string $redirection La redirection après la restauration.
+     * @return bool Le résultat de la restauration (true si réussie, sinon false).
+     */
+    private function restoreItem(int $id, Dashboard $dashboard, string $var, string $redirection): bool
     {
         if ($dashboard->restoreItem($id, $var)) {
             header("Location: $redirection");
@@ -315,7 +349,16 @@ class c_dashboardController
         return false;
     }
 
-    private function blockItem($id, $dashboard, $var, $redirection)
+    /**
+     * Bloque un élément via son identifiant, le tableau de bord spécifié, la variable et la redirection.
+     *
+     * @param int $id L'identifiant de l'élément à bloquer.
+     * @param Dashboard $dashboard Le tableau de bord à utiliser pour le blocage.
+     * @param string $var la table à utiliser pour le blocage.
+     * @param string $redirection La redirection après le blocage.
+     * @return bool Le résultat du blocage (true si réussi, sinon false).
+     */
+    private function blockItem(int $id, Dashboard $dashboard, string $var, string $redirection): bool
     {
         if ($dashboard->blockItem($id, $var)) {
             header("Location: $redirection");
@@ -324,7 +367,16 @@ class c_dashboardController
         return false;
     }
 
-    private function unblockItem($id, $dashboard, $var, $redirection)
+    /**
+     * Débloque un élément via son identifiant, le tableau de bord spécifié, la variable et la redirection.
+     *
+     * @param int $id L'identifiant de l'élément à débloquer.
+     * @param Dashboard $dashboard Le tableau de bord à utiliser pour le déblocage.
+     * @param string $var La table à utiliser pour le déblocage.
+     * @param string $redirection La redirection après le déblocage.
+     * @return bool Le résultat du déblocage (true si réussi, sinon false).
+     */
+    private function unblockItem(int $id, Dashboard $dashboard, string $var, string $redirection): bool
     {
         if ($dashboard->unblockItem($id, $var)) {
             header("Location: $redirection");
@@ -334,7 +386,15 @@ class c_dashboardController
         return false;
     }
 
-    private function acceptItem($id, $dashboard, $redirection)
+    /**
+     * Accepte un élément via son identifiant, le tableau de bord spécifié et la redirection.
+     *
+     * @param int $id L'identifiant de l'élément à accepter.
+     * @param Dashboard $dashboard Le tableau de bord à utiliser pour l'acceptation.
+     * @param string $redirection La redirection après l'acceptation.
+     * @return bool Le résultat de l'acceptation (true si réussie, sinon false).
+     */
+    private function acceptItem(int $id, Dashboard $dashboard, string $redirection): bool
     {
         if ($dashboard->acceptItem($id)) {
             header("Location: $redirection");
@@ -344,6 +404,14 @@ class c_dashboardController
         return false;
     }
 
+    /**
+     * Affiche le formulaire d'ajout d'utilisateur et traite sa soumission.
+     *
+     * Cette méthode vérifie d'abord les autorisations de l'utilisateur, récupère les rôles disponibles,
+     * puis gère la soumission du formulaire d'ajout d'utilisateur. Si le formulaire est soumis avec succès,
+     * l'utilisateur est ajouté à la base de données et redirigé vers la liste des utilisateurs.
+     * En cas d'erreur, un message d'erreur est affiché.
+     */
     public function users_add(): void
     {
         $this->security->checkAutorisation();
@@ -389,6 +457,15 @@ class c_dashboardController
         ]);
     }
 
+    /**
+     * Affiche les contenus associés à un sujet spécifique.
+     *
+     * Cette méthode vérifie d'abord les autorisations de l'utilisateur, puis récupère les contenus
+     * associés à un sujet spécifique à partir des paramètres d'URL. Ensuite, elle charge le template
+     * pour afficher les contenus.
+     *
+     * @param array $match Les paramètres d'URL associés à la route.
+     */
     public function contents($match): void
     {
         $this->security->checkAutorisation();
@@ -404,6 +481,12 @@ class c_dashboardController
         ]);
     }
 
+    /**
+     * Gère les actions de modification des contenus.
+     *
+     * Cette méthode vérifie d'abord les autorisations de l'utilisateur. Si la requête est de type POST,
+     * elle traite les actions de suppression ou de restauration de contenu. Sinon, elle redirige vers le tableau de bord.
+     */
     public function contents_edit(): void
     {
         $this->security->checkAutorisation();
@@ -422,22 +505,27 @@ class c_dashboardController
                 $this->deleteItem($data['id'], $dashboard, 'content', "contents/{$data['idTopic']}");
             } elseif (isset($_POST['submitRestore'])) {
                 $this->restoreItem($data['id'], $dashboard, 'content', "contents/{$data['idTopic']}");
-            }elseif (isset($_POST['submitShow'])) {
+            } elseif (isset($_POST['submitShow'])) {
                 // Déplacer le rendu du template en dehors de la condition
-            $template = $this->twig->getTwig()->load('dashboard/contents_show.html.twig');
-            $template->display([
-                'data' =>  $data,
-                'user' =>  $this->userSession
-            ]);
+                $template = $this->twig->getTwig()->load('dashboard/contents_show.html.twig');
+                $template->display([
+                    'data' =>  $data,
+                    'user' =>  $this->userSession
+                ]);
             };
-        }else{
+        } else {
             header('Location: dashboard');
             exit;
         }
-           
-       
     }
 
+    /**
+     * Affiche les articles en attente de validation.
+     *
+     * Cette méthode vérifie d'abord les autorisations de l'utilisateur, puis récupère les articles
+     * en attente de validation à partir du tableau de bord. Ensuite, elle charge le template pour
+     * afficher ces articles.
+     */
     public function validationPosts(): void
     {
         $this->security->checkAutorisation();
@@ -451,9 +539,15 @@ class c_dashboardController
             'postsWaitingValidation' => $dashboard->getTopicsWaitingValidation(),
             'user' =>  $this->userSession
         ]);
-       
     }
 
+    /**
+     * Gère les actions d'édition des articles en attente de validation.
+     *
+     * Cette méthode vérifie d'abord les autorisations de l'utilisateur. Si la requête est de type POST,
+     * elle traite les actions de suppression ou d'acceptation d'article en attente de validation. Ensuite,
+     * elle redirige vers le tableau de bord.
+     */
     public function editValidationPosts(): void
     {
         $this->security->checkAutorisation();
@@ -467,12 +561,11 @@ class c_dashboardController
 
             if (isset($_POST['submitDelete'])) {
                 $this->deleteItem($data['id'], $dashboard, 'topic', "validation-posts");
-            }elseif(isset($_POST['submitAccept'])){
+            } elseif (isset($_POST['submitAccept'])) {
                 $this->acceptItem($data['id'], $dashboard, "validation-posts");
             };
         }
-            header('Location: dashboard');
-            exit;
-       
+        header('Location: dashboard');
+        exit;
     }
 }

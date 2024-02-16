@@ -27,7 +27,22 @@ class User
      */
     public function setUser(string $pseudo, string $email, string $password, string $userRoleId, string $token, string $dateToken): bool
     {
-        return $this->db->createUser($pseudo, $email, $password, $userRoleId, $token, $dateToken);
+        try {
+            $query = "INSERT INTO user (pseudo, email, password, idRole, token, dateToken) VALUES (:pseudo, :email, :pass, :userRoleId, :token, :dateToken)";
+
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->bindParam(':pseudo', $pseudo, PDO::PARAM_STR);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->bindParam(':pass', $password, PDO::PARAM_STR);
+            $stmt->bindParam(':userRoleId', $userRoleId, PDO::PARAM_STR);
+            $stmt->bindParam(':token', $token, PDO::PARAM_STR);
+            $stmt->bindParam(':dateToken', $dateToken, PDO::PARAM_STR);
+
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
     }
 
 
@@ -39,7 +54,22 @@ class User
      */
     public function getUserMail(string $email): int
     {
-        return $this->db->getUserMail($email);
+        try {
+            $query = "
+                SELECT COUNT(*)
+                FROM user 
+                WHERE email = :email;
+            ";
+
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+
+            return $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
     }
 
     /**
@@ -60,7 +90,26 @@ class User
      */
     public function getUser(string $email): array|bool
     {
-        return $this->db->getUser($email);
+        try {
+            $query = "
+            SELECT user.*, roleName as role 
+            FROM user 
+            INNER JOIN role ON user.idRole = role.id 
+            WHERE (bloque IS NULL OR bloque <> 1) 
+            AND deletedAt IS NULL
+            AND emailCheck != 0 
+            AND email = :email;
+            ";
+
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
     }
 
     /**
@@ -73,7 +122,36 @@ class User
      */
     public function verificationEmailUser(string $email, string $token, string $date): bool
     {
-        return $this->db->verificationEmailUser($email, $token, $date);
+        try {
+            $query = "
+            UPDATE user SET emailCheck = 1 WHERE email = :email AND token = :token AND dateToken > :date AND emailCheck = 0
+            ";
+
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->bindParam(':token', $token, PDO::PARAM_STR);
+            $stmt->bindParam(':date', $date, PDO::PARAM_STR);
+            $stmt->execute();
+
+            // Vérifie si la mise à jour a affecté une ligne dans la base de données
+            if ($stmt->rowCount() > 0) {
+                // Mise à jour pour supprimer le token et la dateToken
+                $deleteQuery = "
+            UPDATE user SET token = NULL, dateToken = NULL WHERE email = :email
+            ";
+
+                $deleteStmt = $this->db->connect()->prepare($deleteQuery);
+                $deleteStmt->bindParam(':email', $email, PDO::PARAM_STR);
+                $deleteStmt->execute();
+
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
     }
 
     /**
@@ -86,7 +164,35 @@ class User
      */
     public function reVerificationEmailUser(string $email, string $token, string $dateToken): string|bool
     {
-        return $this->db->reVerificationEmailUser($email, $token, $dateToken);
+        try {
+            $query = "
+        SELECT pseudo, emailCheck 
+        FROM user 
+        WHERE email = :email 
+        AND emailCheck = 0
+        ";
+
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($result && $result['emailCheck'] == 0) {
+                // Appel à la méthode pour mettre à jour le token et la dateToken
+                if ($this->demandeResetPassword($email, $token, $dateToken)) {
+                    return $result['pseudo'];
+                } else {
+                    return false;
+                }
+            } else {
+                // L'email est déjà vérifié ou n'existe pas
+                return false;
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
     }
 
     /**
@@ -99,7 +205,29 @@ class User
      */
     public function demandeResetPassword(string $email, string $token, string $dateToken): bool
     {
-        return $this->db->updateTokenAndDateToken($email, $token, $dateToken);
+        try {
+            $updateQuery = "
+            UPDATE user 
+            SET token = :token, dateToken = :dateToken 
+            WHERE email = :email
+        ";
+
+            $updateStmt = $this->db->connect()->prepare($updateQuery);
+            $updateStmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $updateStmt->bindParam(':token', $token, PDO::PARAM_STR);
+            $updateStmt->bindParam(':dateToken', $dateToken, PDO::PARAM_STR);
+            $updateStmt->execute();
+
+            // Vérifier si au moins une ligne a été affectée par la mise à jour
+            if ($updateStmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
     }
 
     /**
@@ -112,7 +240,44 @@ class User
      * @return bool True si la mise à jour a réussi et au moins une ligne a été affectée, false sinon.
      */
 
-    public function updatePassword(string $email, string $password, string $token, string $dateToken){
-        return $this->db->updatePassword($email, $password, $token, $dateToken);
+    public function updatePassword(string $email, string $password, string $token, string $dateToken)
+    {
+        try {
+            $query = "
+            UPDATE user 
+            SET password = :password 
+            WHERE email = :email 
+            AND token = :token 
+            AND dateToken > :dateToken
+        ";
+
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->bindParam(':password', $password, PDO::PARAM_STR);
+            $stmt->bindParam(':token', $token, PDO::PARAM_STR);
+            $stmt->bindParam(':dateToken', $dateToken, PDO::PARAM_STR);
+            $stmt->execute();
+
+            // Vérifier si au moins une ligne a été affectée
+            if ($stmt->rowCount() > 0) {
+                // Mettre à jour le token et la dateToken à null
+                $nullUpdateQuery = "
+                UPDATE user 
+                SET token = NULL, dateToken = NULL 
+                WHERE email = :email
+            ";
+
+                $nullUpdateStmt = $this->db->connect()->prepare($nullUpdateQuery);
+                $nullUpdateStmt->bindParam(':email', $email, PDO::PARAM_STR);
+                $nullUpdateStmt->execute();
+
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
     }
 }

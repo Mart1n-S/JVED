@@ -34,17 +34,36 @@
       #a37137 100%
     )
     no-repeat;
-  --bg-color-white: #fff;
   --bg-color-button-purple: #aae467;
   --bg-color-button-orange: #b867e4;
-  --bg-color-red-pastel: #e46767;
-  --bg-color-bleu: #00b0ff;
-  --color-text-white: #fff;
-  --color-text-grey: #525252;
-  --color-text-black: #000000;
-  --color-text-purple: #6d67e4;
-  --color-text-green:green;
-  --color-text-red: red;
+}
+
+.template2 {
+  --bg-color-dark-1: #49632c;
+  --bg-color-dark-light: #394032;
+  --bg-color-2: radial-gradient(
+      211.88% 141.42% at 100% 100%,
+      #4ab9c5 0.01%,
+      #929a4e 52.08%,
+      #a33781 100%
+    )
+    no-repeat;
+  --bg-color-button-purple: #95d74a;
+  --bg-color-button-orange: #c48f1c;
+}
+
+.template3 {
+  --bg-color-dark-1: #5c48a3;
+  --bg-color-dark-light: #6f4d6f;
+  --bg-color-2: radial-gradient(
+      211.88% 141.42% at 100% 100%,
+      #4a5fc5 0.01%,
+      #9a7c4e 52.08%,
+      #37a37a 100%
+    )
+    no-repeat;
+  --bg-color-button-purple: #538519;
+  --bg-color-button-orange: #5731c9;
 }
 
 * {

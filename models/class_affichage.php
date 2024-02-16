@@ -17,21 +17,79 @@ class Affichage
     /**
      * Récupère les sujets les plus commentés pour les afficher sur la page d'accueil.
      *
-     * @return array Retourne un tableau associatif des sujets les plus commentés.
+     * @return array|null Retourne un tableau des sujets les plus commentés ou null en cas d'erreur
      */
-    public function getTopTopicsAccueil(): array
+    public function getTopTopicsAccueil(): array|null
     {
-        return $this->db->getTopTopics();
+        try {
+            $query = "
+                SELECT 
+                topic.id,
+                topic.nom, 
+                user.pseudo AS auteur, 
+                topic.updatedAt AS derniere_activite, 
+                COUNT(content.id) AS nb_messages,
+                cat.nom as categorieNom,
+                cat.id as categorieId
+            FROM 
+                topic 
+            LEFT JOIN 
+                content ON topic.id = content.idTopic
+            JOIN 
+                user ON topic.auteur = user.id
+            JOIN 
+                sujet ON topic.idSujet = sujet.id
+            JOIN 
+                categorie cat ON sujet.idCategorie = cat.id
+            WHERE 
+                topic.deletedAt IS NULL
+            AND 
+                topic.valide = 1
+            GROUP BY 
+                topic.id
+            ORDER BY 
+                nb_messages DESC, 
+                derniere_activite DESC
+            LIMIT 5;
+            ";
+
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
     }
 
-    /**
-     * Met à jour le template de l'utilisateur.
+   /**
+     * Met à jour le thème de l'utilisateur dans la base de données.
      *
-     * @return bool Retourne True si l'update a marché sinon false
+     * @param string $valueTheme Le thème à mettre à jour.
+     * @param int $idUser L'ID de l'utilisateur.
+     * @return bool Retourne true si la mise à jour est réussie, sinon false en cas d'échec.
      */
     public function updateTheme(string $valueTheme, int $idUser): bool
     {
-        return $this->db->updateThemeUser($valueTheme, $idUser);
+        try {
+            $query = "
+        UPDATE user
+        SET template = :valueTheme
+        WHERE id = :idUser;
+        ";
+
+            $stmt =  $this->db->connect()->prepare($query);
+            $stmt->bindParam(':valueTheme', $valueTheme, PDO::PARAM_STR);
+            $stmt->bindParam(':idUser', $idUser, PDO::PARAM_INT);
+            $stmt->execute();
+
+
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
     }
 
     /**
@@ -41,8 +99,26 @@ class Affichage
      */
     public function getAllCategorie(): ?array
     {
-        // Utilise la fonction getCategories de la base de données pour récupérer toutes les catégories.
-        return $this->db->getCategories();
+        try {
+            $query = "
+            SELECT categorie.*, COUNT(topic.id) AS nb_topic
+            FROM categorie
+            INNER JOIN sujet ON categorie.id = sujet.idCategorie
+            INNER JOIN topic ON sujet.id = topic.idSujet
+            WHERE categorie.deletedAt IS NULL
+            GROUP BY categorie.id;
+        ";
+
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->execute();
+
+            // Renvoie un tableau associatif des catégories récupérées depuis la base de données.
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // En cas d'erreur, affiche un message d'erreur et renvoie null.
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
     }
 
     /**
@@ -54,7 +130,46 @@ class Affichage
      */
     public function getTopicsFromCategorie(int $id): array|null
     {
-        return $this->db->getTopicsFromCategorie($id);
+        try {
+            $query = "
+            SELECT 
+            topic.id,
+            topic.nom, 
+            user.pseudo AS auteur, 
+            topic.updatedAt AS derniere_activite, 
+            COUNT(content.id) AS nb_messages
+        FROM 
+            topic 
+        LEFT JOIN 
+            content ON topic.id = content.idTopic
+        JOIN 
+            user ON topic.auteur = user.id
+        JOIN 
+            sujet ON topic.idSujet = sujet.id
+        JOIN 
+            categorie ON sujet.idCategorie = categorie.id
+        WHERE 
+            topic.deletedAt IS NULL
+        AND
+            topic.valide = 1
+        AND
+            categorie.id = :id
+        GROUP BY 
+            topic.id
+        ORDER BY 
+            nb_messages DESC, 
+            derniere_activite DESC;
+                ";
+
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
     }
 
     /**
@@ -66,6 +181,30 @@ class Affichage
      */
     public function getCommentairesFromTopic(int $id): array|bool
     {
-        return $this->db->getCommentairesFromTopic($id);
+        try {
+            $query = "
+        SELECT c.id, c.commentaire, u.pseudo as auteur, c.createdAt, cat.nom as nomCategorie, cat.id as idCategorie
+        FROM content c
+        JOIN user u ON c.auteur = u.id
+        JOIN topic t ON t.id = c.idTopic
+        JOIN sujet s ON s.id = t.idSujet
+        JOIN categorie cat ON s.idCategorie= cat.id
+        WHERE idTopic = :idTopic
+        AND c.deletedAt IS NULL
+        ORDER BY c.createdAt ASC;
+        ";
+
+            $stmt = $this->db->connect()->prepare($query);
+            $stmt->bindParam(':idTopic', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Récupération des résultats
+            $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $comments;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
     }
 }
