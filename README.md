@@ -43,8 +43,8 @@ PS : Si modification SCSS merci de lancer :
 
 ## 📸MCD
 
-![vue MCD](.github/assets/v2MCD.png)<br>
+![vue MCD](.github/assets/VFinalMCD.png)<br>
 
 ## 📸Diagramme de classe
 
-![vue diagramme_classe](.github/assets/diagrammeClasseV2.png)<br>
+![vue diagramme_classe](.github/assets/diagrammeClasse.png)<br>
