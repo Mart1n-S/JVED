@@ -111,6 +111,7 @@ body {
 
 footer {
   margin-top: 64px;
+  padding: 128px 0 12px 0;
   display: flex;
   justify-content: center;
   color: var(--color-text-white);
