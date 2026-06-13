@@ -26,6 +26,8 @@ services:
       MYSQL_PASSWORD: password
     volumes:
       - dbdata:/var/lib/mysql
+      # Import automatique du schéma + données au premier démarrage (uniquement si dbdata est vide)
+      - ./.github/bdd/jveddb.sql:/docker-entrypoint-initdb.d/jveddb.sql
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: phpmyadmin
